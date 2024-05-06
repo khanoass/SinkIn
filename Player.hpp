@@ -6,6 +6,7 @@
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/VertexArray.hpp>
 #include "Entity.hpp"
+#include "Ephemereal.hpp"
 #include "VeMa.hpp"
 #include <iostream>
 
@@ -29,12 +30,17 @@ private:
 	sf::Vector2f _movTarget;
 	sf::VertexArray _line;
 
+	// Attack
+	Ephemereal _attackEph;
+	sf::Texture _attackSheet;
+
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const
 	{
 #ifdef DEBUG
 		if (_moving) target.draw(_line);
 #endif
 		target.draw(_sprite);
+		target.draw(_attackEph);
 	}
 
 	void startMoving(const sf::Vector2f& target)
@@ -46,7 +52,7 @@ private:
 		_line[1].position = _movTarget;
 
 		_direction = vm::normalise((_movTarget - _position));
-		_sprite.setRotation(vm::angle(_direction) - 90);
+		_sprite.setRotation(vm::angle(_direction));
 	}
 
 	bool reachedTarget()
@@ -76,6 +82,8 @@ public:
 		_line.setPrimitiveType(sf::Lines);
 		_line.append(sf::Vertex(_position, sf::Color::Red));
 		_line.append(sf::Vertex(_position, sf::Color::Red));
+
+		_attackSheet.loadFromFile("assets/textures/attack_2.png");
 	}
 
 	void updateEvent(const sf::Event& event)
@@ -89,6 +97,17 @@ public:
 
 			Direction dir = None;
 			if (_room->pointInDoor(point, dir)) startMoving(point);
+		}
+
+		// Attack
+		if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Right)
+		{
+			sf::Vector2f point = { (float)event.mouseButton.x, (float)event.mouseButton.y };
+			sf::Vector2f dir = vm::normalise(point - _position);
+			sf::Vector2f pos = _position + sf::Vector2f(dir.x * 50, dir.y * 50);
+			float angle = vm::angle(dir);
+			_attackEph.spawn(pos, { 64, 64 }, _attackSheet, { 5, 2 }, 0.05, angle);
+			_sprite.setRotation(angle);
 		}
 	}
 
@@ -118,5 +137,8 @@ public:
 			_position = _room->spawn(dir);	
 			_sprite.setPosition(_position);
 		}
+
+		// Attack
+		_attackEph.update(dt, mousePos);
 	}
 };

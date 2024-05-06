@@ -46,12 +46,12 @@ public:
 		if (!_started) return false;
 		if (_clock.getElapsedTime().asSeconds() < _seconds) return false;
 
-		if (_iFrames.x < _numFrames.x)
+		if (_iFrames.x < _numFrames.x - 1)
 		{
 			_frame.left += _frameSize.x;
 			_iFrames.x++;
 		}
-		else if (_iFrames.y < _numFrames.y)
+		else if (_iFrames.y < _numFrames.y - 1)
 		{
 			_frame.left = 0;
 			_frame.top += _frameSize.y;

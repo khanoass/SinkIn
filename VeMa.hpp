@@ -31,6 +31,6 @@ namespace vm
 
 	static float angle(const sf::Vector2f& v)
 	{
-		return std::atan2(v.y, v.x) * 180 / (float)PI;
+		return std::atan2(v.y, v.x) * 180 / (float)PI - 90;
 	}
 }

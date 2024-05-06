@@ -51,7 +51,7 @@ public:
 		if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left)
 		{
 			sf::Vector2f point = { (float)event.mouseButton.x, (float)event.mouseButton.y };
-			_eph.spawn(point, { 64, 64 }, _ephSheet, { 0, 0, 64, 64 }, { 5, 2 }, 0.05f);
+			_eph.spawn(point, { 64, 64 }, _ephSheet, { 5, 2 }, 0.05f);
 		}
 	}
 
