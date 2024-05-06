@@ -60,7 +60,10 @@ public:
 	{
 		_room = map->currentRoom();
 		_position = _room->center();
-		_baseSpeed = 500;
+		_baseSpeed = 100;
+#ifdef DEBUG
+		_baseSpeed *= 7;
+#endif
 		_boosts = 0;
 
 		_tex.loadFromFile("assets/textures/placeholder_player.png");
@@ -89,7 +92,7 @@ public:
 		}
 	}
 
-	void update(float dt)
+	void update(float dt, const sf::Vector2f& mousePos)
 	{
 		// Movement update
 		if (_moving)

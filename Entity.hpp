@@ -3,8 +3,6 @@
 #include <SFML/Graphics/Drawable.hpp>
 #include <SFML/Window/Event.hpp>
 
-#define DEBUG
-
 class Entity : public sf::Drawable
 {
 private:
@@ -12,5 +10,5 @@ private:
 
 public:
 	virtual void updateEvent(const sf::Event& event) = 0;
-	virtual void update(float dt) = 0;
+	virtual void update(float dt, const sf::Vector2f& mousePos) = 0;
 };

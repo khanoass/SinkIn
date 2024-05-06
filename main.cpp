@@ -1,10 +1,14 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/System/Clock.hpp>
+
+//#define DEBUG
+
 #include "Game.hpp"
 
 int main()
 {
 	sf::RenderWindow window(sf::VideoMode(1200, 800), "Sink In", sf::Style::Titlebar | sf::Style::Close);
+	window.setMouseCursorVisible(false);
 	sf::Clock clock;
 	Game game;
 	sf::Event event;
@@ -18,7 +22,8 @@ int main()
 			game.updateEvent(event);
 		}
 
-		game.update(clock.restart().asSeconds());
+		sf::Vector2i pos = sf::Mouse::getPosition(window);
+		game.update(clock.restart().asSeconds(), { (float)pos.x, (float)pos.y });
 
 		window.clear();
 		window.draw(game);

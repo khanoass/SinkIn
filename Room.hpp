@@ -83,7 +83,7 @@ public:
 		return _shape.getGlobalBounds().contains(point);
 	}
 
-	bool pointInDoor(sf::Vector2f& point, Direction& direction)
+	bool pointInDoor(const sf::Vector2f& point, Direction& direction)
 	{
 		for (int i = 0; i < _doors.size(); i++)
 		{
@@ -142,7 +142,7 @@ public:
 
 	}
 
-	virtual void update(float dt)
+	virtual void update(float dt, const sf::Vector2f& mousePos)
 	{
 
 	}

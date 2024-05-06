@@ -49,7 +49,7 @@ public:
 
 	}
 
-	virtual void update(float dt)
+	virtual void update(float dt, const sf::Vector2f& mousePos)
 	{
 
 	}
