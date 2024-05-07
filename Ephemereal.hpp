@@ -44,6 +44,11 @@ public:
 		_sprite.setTexture(spritesheet);
 		_sprite.setTextureRect(_animation.frame());
 		_sprite.setRotation(angle);
+
+#ifdef DEBUG
+		std::cout << "Spawned eph" << std::endl;
+#endif // DEBUG
+
 	}
 
 	virtual void updateEvent(const sf::Event& event)
@@ -56,12 +61,7 @@ public:
 		if (_alive)
 		{
 			if (_animation.changed())
-			{
 				_sprite.setTextureRect(_animation.frame());
-#ifdef DEBUG
-				std::cout << _animation.frame().left << "," << _animation.frame().top << "\n";
-#endif
-			}
 
 			if (_animation.finished())
 				_alive = false;

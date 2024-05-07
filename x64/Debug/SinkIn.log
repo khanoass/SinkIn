@@ -1,5 +1,5 @@
 ﻿  Room.hpp
   main.cpp
-C:\Users\Rafael Félix\Documents\HSLU\Sem3\GAMEDES\Projekt\SinkIn\Player.hpp(109,1): warning C4305: 'argument' : troncation de 'double' à 'float'
+C:\Users\Rafael Félix\Documents\HSLU\Sem3\GAMEDES\Projekt\SinkIn\Player.hpp(128,1): warning C4305: 'argument' : troncation de 'double' à 'float'
   Génération de code en cours...
   SinkIn.vcxproj -> C:\Users\Rafael Félix\Documents\HSLU\Sem3\GAMEDES\Projekt\SinkIn\x64\Debug\SinkIn.exe

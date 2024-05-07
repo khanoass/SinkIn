@@ -7,7 +7,7 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RenderStates.hpp>
 #include "Direction.hpp"
-#include "Entity.hpp"
+#include "Boost.hpp"
 
 class Room : public Entity
 {
@@ -24,11 +24,16 @@ private:
 	sf::RectangleShape _shape;
 	std::vector<sf::RectangleShape> _doorsShape;
 
+	// Items
+	std::vector<std::shared_ptr<Item>> _items;
+
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const
 	{
 		target.draw(_shape);
 		for (const auto& ds : _doorsShape)
 			target.draw(ds);
+		for (const auto& i : _items)
+			target.draw(*i);
 	}
 
 	void initDoorFromDirection(sf::RectangleShape& shape, Direction dir, const sf::Vector2f& center)
@@ -60,6 +65,11 @@ public:
 		_shape.setSize(_size);
 		_shape.setOrigin({ _size.x / 2, _size.y / 2 });
 		_shape.setPosition(_center);
+	}
+
+	void setItems(const std::vector<std::shared_ptr<Item>>& items)
+	{
+		_items = items;
 	}
 
 	void setNextRooms(const std::vector<Direction>& doors, const std::vector<Room*>& next)
@@ -137,13 +147,22 @@ public:
 		return _nextRooms[dir];
 	}
 
+	std::shared_ptr<Item> closestReachableItem(const sf::Vector2f& position, float range)
+	{
+		for (const auto& i : _items)
+		{
+			if (!i->alive()) continue;
+			if (vm::dist(i->position(), position) < i->range() + range)
+				return i;
+		}
+		return nullptr;
+	}
+
 	virtual void updateEvent(const sf::Event& event)
 	{
-
 	}
 
 	virtual void update(float dt, const sf::Vector2f& mousePos)
 	{
-
 	}
 };

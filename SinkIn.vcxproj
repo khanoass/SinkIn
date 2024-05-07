@@ -135,11 +135,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.hpp" />
+    <ClInclude Include="Boost.hpp" />
     <ClInclude Include="Cursor.hpp" />
     <ClInclude Include="Direction.hpp" />
     <ClInclude Include="Entity.hpp" />
     <ClInclude Include="Ephemereal.hpp" />
     <ClInclude Include="Game.hpp" />
+    <ClInclude Include="Item.hpp" />
     <ClInclude Include="Map.hpp" />
     <ClInclude Include="Player.hpp" />
     <ClInclude Include="VeMa.hpp" />

@@ -1,7 +1,7 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/System/Clock.hpp>
 
-//#define DEBUG
+#define DEBUG
 
 #include "Game.hpp"
 
