@@ -7,8 +7,8 @@ class Boost : public Item
 protected:
 	virtual void picked() override
 	{
-		if(alive())
-			std::cout << "Boost picked" << std::endl;
+		if (alive())
+			Logger::log({ "Boost picked" });
 	}
 
 public:

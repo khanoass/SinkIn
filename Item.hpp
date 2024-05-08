@@ -7,6 +7,7 @@
 #include <SFML/Graphics/CircleShape.hpp>
 #include "Entity.hpp"
 #include "VeMa.hpp"
+#include "Logger.hpp"
 
 class Item : public Entity
 {
@@ -37,7 +38,8 @@ private:
 protected:
 	virtual void picked()
 	{
-		if (_alive) std::cout << "Item picked" << std::endl;
+		if (_alive) 
+			Logger::log({ "Item picked" });
 	}
 
 public:

@@ -20,6 +20,7 @@
     <ClInclude Include="Boost.hpp">
       <Filter>Items</Filter>
     </ClInclude>
+    <ClInclude Include="Logger.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Items">

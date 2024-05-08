@@ -7,6 +7,7 @@
 #include <sstream>
 #include "VeMa.hpp"
 #include "Room.hpp"
+#include "Logger.hpp"
 
 class Map : public Entity
 {
@@ -58,9 +59,9 @@ private:
 
 		pixelDoor[origin] = std::vector<Direction>();
 
-		std::cout << "First pass\n";
-
+		Logger::log({ "First pass" });
 		int counter = 0;
+
 		// First pass, door recon
 		while (!stack.empty())
 		{
@@ -99,25 +100,17 @@ private:
 			// Insert room, pixel and directions
 			auto it = pixelDoor.find(startPx);
 			if (it != pixelDoor.end())
-			{
 				it->second = doors;
-				std::cout << "+ Added pixelDoor at " << startPx.x << "," << startPx.y;
-			}
-			else
-			{
-				std::cout << "- Didn't find pixelDoor at " << startPx.x << "," << startPx.y << "";
-			}
+			else						
+				Logger::log({ "- Didn't find pixelDoor at ", std::to_string(startPx.x), ",", std::to_string(startPx.y) });
 
 			std::stringstream ss;
-			ss << counter << "st Room";
+			ss << counter << Logger::afterNumber(counter) << " Room";
 			_rooms.push_back(Room({ 50, 50, 50 }, { 1000, 600 }, center, ss.str()));
 
-			std::cout << " and Added room " << counter << "\n";
-
-			int k = _rooms.size() - 1;
+			Logger::log({ "+ Added pixelDoor at ", std::to_string(startPx.x), ",", std::to_string(startPx.y), " and added ", ss.str() });
 
 			pixels.push_back(startPx);
-
 			counter++;
 		}
 
@@ -129,7 +122,7 @@ private:
 			roomIp[px] = &_rooms[i];
 		}
 
-		std::cout << "Second pass\n";
+		Logger::log({ "Second pass" });
 
 		// Second pass, next rooms
 		for (int i = 0; i < _rooms.size(); i++)
@@ -148,15 +141,7 @@ private:
 
 			_rooms[i].setNextRooms(pixelDoor.at(ip), nextRooms);
 
-			std::cout << "Added next room pointers at " << ip.x << "," << ip.y << "\n";
-
-			//////////////////////////////////////////////////////////////////////////////////////////////
-/*
-			_rooms.push_back(Room({ 50, 50, 50 }, { 1000, 600 }, center, "Center room"));
-
-			_rooms[0].setNextRooms({ Up, Right, Down, Left }, { &_rooms[1], &_rooms[2], &_rooms[3], &_rooms[4] });
-*/
-			////////////////////////////////////////////////////////////////////////////////////////////////
+			Logger::log({ "Added next room pointers at ", std::to_string(ip.x), ",", std::to_string(ip.y) });
 
 			// Items
 			int nbBoosts = (i != 0) ? iRand(0, 8) : 1;
@@ -174,8 +159,7 @@ private:
 			_rooms[i].setItems(items);
 		}
 
-		// 50 rooms
-		std::cout << "Finished loading map, found " << _rooms.size() << " rooms.\n";
+			Logger::log({ "Finished loading map, found ", std::to_string(_rooms.size()), " rooms." });
 	}
 
 public:
@@ -188,7 +172,7 @@ public:
 		loadMapFromImage(buf, center);
 		_current = &_rooms[0];
 
-		std::cout << "Spawned in " << _current->name() << "\n";
+		Logger::log({ "Spawned in ", _current->name() });
 	}
 
 	Room* currentRoom() const

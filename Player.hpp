@@ -164,10 +164,7 @@ public:
 			_moving = false;
 			_position = _room->spawn(dir);
 			_sprite.setPosition(_position);
-
-#ifdef DEBUG
-			std::cout << "Player entered: " << _room->name() << std::endl;
-#endif
+			Logger::log({ "Player entered: ", _room->name() });
 		}
 
 #ifdef DEBUG

@@ -1,3 +1,3 @@
 ﻿  main.cpp
-C:\Users\Rafael Félix\Documents\HSLU\Sem3\GAMEDES\Projekt\SinkIn\Map.hpp(117,1): warning C4267: 'initialisation' : conversion de 'size_t' en 'int', perte possible de données
+C:\Users\Rafael Félix\Documents\HSLU\Sem3\GAMEDES\Projekt\SinkIn\Logger.hpp(30): warning C4715: 'Logger::afterNumber' : les chemins de contrôle ne retournent pas tous une valeur
   SinkIn.vcxproj -> C:\Users\Rafael Félix\Documents\HSLU\Sem3\GAMEDES\Projekt\SinkIn\x64\Debug\SinkIn.exe

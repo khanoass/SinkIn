@@ -45,10 +45,7 @@ public:
 		_sprite.setTextureRect(_animation.frame());
 		_sprite.setRotation(angle);
 
-#ifdef DEBUG
-		std::cout << "Spawned eph" << std::endl;
-#endif // DEBUG
-
+		Logger::log({ "Spawned eph at ", std::to_string(position.x), std::to_string(position.y) });
 	}
 
 	virtual void updateEvent(const sf::Event& event)

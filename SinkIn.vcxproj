@@ -142,6 +142,7 @@
     <ClInclude Include="Ephemereal.hpp" />
     <ClInclude Include="Game.hpp" />
     <ClInclude Include="Item.hpp" />
+    <ClInclude Include="Logger.hpp" />
     <ClInclude Include="Map.hpp" />
     <ClInclude Include="Player.hpp" />
     <ClInclude Include="VeMa.hpp" />
