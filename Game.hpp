@@ -22,7 +22,7 @@ private:
 
 public:
 	Game() :
-		_map(Map("", center)),
+		_map(Map("assets/maps/map1.png", center)),
 		_player(&_map),
 		_cursor(&_map)
 	{

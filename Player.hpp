@@ -125,7 +125,7 @@ public:
 			sf::Vector2f dir = vm::normalise(point - _position);
 			sf::Vector2f pos = _position + sf::Vector2f(dir.x * 50, dir.y * 50);
 			float angle = vm::angle(dir);
-			_attackEph.spawn(pos, { 64, 64 }, _attackSheet, { 5, 2 }, 0.05, angle);
+			_attackEph.spawn(pos, { 64, 64 }, _attackSheet, { 5, 2 }, (float)0.05, angle);
 			//_sprite.setRotation(angle);
 		}
 	}

@@ -33,4 +33,13 @@ namespace vm
 	{
 		return std::atan2(v.y, v.x) * 180 / (float)PI - 90;
 	}
+
+	struct Vector2iComparator {
+		bool operator() (const sf::Vector2i& lhs, const sf::Vector2i& rhs) const
+		{	
+			if (lhs.x < rhs.x)							return true;
+			else if (lhs.x == rhs.x && lhs.y < rhs.y)	return true;
+			return false;
+		}
+	};
 }
