@@ -1,13 +1,18 @@
 #pragma once
 
 #include <iostream>
+
 #include <SFML/Graphics/Sprite.hpp>
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
+
+#include "Debug.h"
 #include "Entity.hpp"
 #include "VeMa.hpp"
 #include "Logger.hpp"
+
+class Player; // To avoid circular reference problems
 
 class Item : public Entity
 {
@@ -36,7 +41,7 @@ private:
 	}
 
 protected:
-	virtual void picked()
+	virtual void picked(Player* player)
 	{
 		if (_alive) 
 			Logger::log({ "Item picked" });
@@ -85,9 +90,9 @@ public:
 		return _alive;
 	}
 
-	void pick()
+	void pick(Player* player)
 	{
-		picked();
+		picked(player);
 		_alive = false;
 	}
 

@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Map.hpp"
-#include "Player.hpp"
+#include "Map.h"
+#include "Player.h"
 #include "Cursor.hpp"
 
 class Game : public Entity
@@ -23,9 +23,12 @@ private:
 public:
 	Game() :
 		_map(Map("assets/maps/map1.png", center)),
-		_player(&_map),
+		_player(),
 		_cursor(&_map)
 	{
+		_map.setPlayer(&_player);
+		_map.generate();
+		_player.setMap(&_map);
 	}
 
 	virtual void updateEvent(const sf::Event& event)

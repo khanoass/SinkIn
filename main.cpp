@@ -1,8 +1,6 @@
 #include <SFML/Graphics/RenderWindow.hpp>
 #include <SFML/System/Clock.hpp>
 
-#define DEBUG
-
 #include "Game.hpp"
 
 int main()

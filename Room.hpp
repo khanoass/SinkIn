@@ -2,12 +2,14 @@
 
 #include <vector>
 #include <map>
+
 #include <SFML/Graphics/Color.hpp>
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RenderStates.hpp>
+
 #include "Direction.hpp"
-#include "Boost.hpp"
+#include "Item.hpp"
 
 class Room : public Entity
 {

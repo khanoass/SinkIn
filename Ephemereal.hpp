@@ -1,9 +1,12 @@
 #pragma once
 
 #include <iostream>
+
 #include <SFML/Graphics/Sprite.hpp>
+
 #include "Entity.hpp"
 #include "Animation.hpp"
+#include "Logger.hpp"
 
 class Ephemereal : public Entity
 {

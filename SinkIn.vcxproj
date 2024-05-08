@@ -130,21 +130,25 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Boost.cpp" />
+    <ClCompile Include="Map.cpp" />
+    <ClCompile Include="Player.cpp" />
     <ClCompile Include="Room.hpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Animation.hpp" />
-    <ClInclude Include="Boost.hpp" />
+    <ClInclude Include="Boost.h" />
     <ClInclude Include="Cursor.hpp" />
+    <ClInclude Include="Debug.h" />
     <ClInclude Include="Direction.hpp" />
     <ClInclude Include="Entity.hpp" />
     <ClInclude Include="Ephemereal.hpp" />
     <ClInclude Include="Game.hpp" />
     <ClInclude Include="Item.hpp" />
     <ClInclude Include="Logger.hpp" />
-    <ClInclude Include="Map.hpp" />
-    <ClInclude Include="Player.hpp" />
+    <ClInclude Include="Map.h" />
+    <ClInclude Include="Player.h" />
     <ClInclude Include="VeMa.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

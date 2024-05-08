@@ -27,5 +27,6 @@ namespace Logger
 		if (f == 1) return "st";
 		if (f == 2) return "nd";
 		if (f == 3) return "rd";
+		return "";
 	}
 }
