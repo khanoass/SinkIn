@@ -11,7 +11,7 @@ class Minimap : public Entity
 {
 private:
 	// Const
-	const sf::Vector2f _position = { 10, 10 };
+	const sf::Vector2f _position = { 50, 450 };
 	const sf::Vector2f _size = { 300, 300 };
 
 	const float _outlineBorder = 3.f;
@@ -42,18 +42,18 @@ public:
 		_minimap.setPrimitiveType(sf::Quads);
 		_doors.setPrimitiveType(sf::Lines);
 		
-		_bg.setPosition({ _position.x, _position.y });
+		_bg.setPosition({ _outlineBorder, _outlineBorder });
 		_bg.setFillColor(sf::Color(80, 80, 80));
 		_bg.setOutlineColor(sf::Color(120, 120, 120));
 		_bg.setOutlineThickness(_outlineBorder);
 
 		_texture.create((unsigned int)_size.x, (unsigned int)_size.y);
-		_bg.setSize({ _size.x - _outlineBorder * 4, _size.y - _outlineBorder * 4 });
+		_bg.setSize({ _size.x - _outlineBorder * 2, _size.y - _outlineBorder * 2 });
 
-		_panel.append(sf::Vertex({ 0, 0 }, { 0, 0 }));
-		_panel.append(sf::Vertex({ _size.x + _outlineBorder * 2, 0 }, { _size.x, 0 }));
-		_panel.append(sf::Vertex({ _size.x + _outlineBorder * 2, _size.y + _outlineBorder * 2 }, { _size.x, _size.y }));
-		_panel.append(sf::Vertex({ 0, _size.y + _outlineBorder * 2 }, { 0, _size.y }));
+		_panel.append(sf::Vertex({ _position.x, _position.y }, { 0, 0 }));
+		_panel.append(sf::Vertex({ _position.x + _size.x + _outlineBorder * 2, _position.y}, { _size.x, 0 }));
+		_panel.append(sf::Vertex({ _position.x + _size.x + _outlineBorder * 2, _position.y + _size.y + _outlineBorder * 2 }, { _size.x, _size.y }));
+		_panel.append(sf::Vertex({ _position.x, _position.y + _size.y + _outlineBorder * 2 }, { 0, _size.y }));
 	}
 
 	void setRooms(const std::vector<sf::Vector2i>& rooms, const sf::Vector2i& textureSize)
@@ -64,8 +64,8 @@ public:
 		for (int i = 0; i < _rooms.size(); i++)
 		{
 			sf::Vector2f p = {
-				ratio.x * (float)_rooms[i].x + _position.x,
-				ratio.y * (float)_rooms[i].y + _position.y
+				ratio.x * (float)_rooms[i].x + _outlineBorder,
+				ratio.y * (float)_rooms[i].y + _outlineBorder
 			};
 
 			_minimap.append(sf::Vertex({ p.x,			p.y },			 sf::Color::White));
@@ -80,8 +80,8 @@ public:
 				int h = 0, v = 0;
 				Directions::getHV(h, v, d);
 
-				_doors.append({ { p.x + 3, p.y + 3 }, sf::Color::White });
-				_doors.append({ { p.x + 3 + h * 15,  p.y + 3 + v * 15 }, sf::Color::White });
+				_doors.append({ { p.x + ratio.x / 2, p.y + ratio.y / 2 }, sf::Color::White });
+				_doors.append({ { p.x + ratio.x / 2 + h * 10,  p.y + ratio.y / 2 + v * 10 }, sf::Color::White });
 			}
 		}
 

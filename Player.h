@@ -19,7 +19,7 @@ class Player : public LiveEntity
 {
 private:
 	const float _boostsFactor = 1.5f;
-	const float _baseSpeed = 100.f;
+	const float _baseSpeed = 200.f;
 
 	// Data
 	Map* _map;
