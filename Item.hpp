@@ -95,12 +95,4 @@ public:
 		picked(player);
 		_alive = false;
 	}
-
-	virtual void updateEvent(const sf::Event& event)
-	{
-	}
-
-	virtual void update(float dt, const sf::Vector2f& mousePos)
-	{
-	}
 };

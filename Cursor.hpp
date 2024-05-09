@@ -1,9 +1,9 @@
 #pragma once
 
-#include "Entity.hpp"
+#include "LiveEntity.hpp"
 #include "Ephemereal.hpp"
 
-class Cursor : public Entity
+class Cursor : public LiveEntity
 {
 private:
 	// Data

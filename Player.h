@@ -7,6 +7,7 @@
 #include <SFML/Graphics/VertexArray.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
 
+#include "LiveEntity.hpp"
 #include "Debug.h"
 #include "VeMa.hpp"
 #include "Ephemereal.hpp"
@@ -14,7 +15,7 @@
 class Map;
 class Room;
 
-class Player : public Entity
+class Player : public LiveEntity
 {
 private:
 	const float _boostsFactor = 1.5f;

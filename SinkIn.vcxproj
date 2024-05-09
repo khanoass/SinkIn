@@ -148,7 +148,10 @@
     <ClInclude Include="Item.hpp" />
     <ClInclude Include="Logger.hpp" />
     <ClInclude Include="Map.h" />
+    <ClInclude Include="Minimap.hpp" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="Tree.hpp" />
+    <ClInclude Include="LiveEntity.hpp" />
     <ClInclude Include="VeMa.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

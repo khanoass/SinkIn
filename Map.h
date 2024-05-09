@@ -22,6 +22,10 @@ private:
 
 	Room* _current;
 	std::vector<Room> _rooms;
+	std::vector<sf::Vector2i> _pixelRoom;
+	std::map<sf::Vector2i, Room*, vm::Vector2iComparator> _pixelRoomMap;
+
+	sf::Vector2i _textureSize;
 
 	sf::Texture _boostTexture;
 
@@ -44,9 +48,11 @@ public:
 
 	Room* currentRoom() const;
 
+	Room* atPixel(const sf::Vector2i& px);
+
+	sf::Vector2i textureSize() const;
+
+	std::vector<sf::Vector2i> pixelRooms() const;
+
 	void exitRoom(Direction door);
-
-	virtual void updateEvent(const sf::Event& event);
-
-	virtual void update(float dt, const sf::Vector2f& mousePos);
 };

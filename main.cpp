@@ -8,7 +8,7 @@ int main()
 	sf::RenderWindow window(sf::VideoMode(1200, 800), "Sink In", sf::Style::Titlebar | sf::Style::Close);
 	window.setMouseCursorVisible(false);
 	sf::Clock clock;
-	Game game;
+	Game game({ 600, 400 });
 	sf::Event event;
 
 	while (window.isOpen())

@@ -55,6 +55,15 @@
     <ClInclude Include="Ephemereal.hpp">
       <Filter>Entities</Filter>
     </ClInclude>
+    <ClInclude Include="Minimap.hpp">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Tree.hpp">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="LiveEntity.hpp">
+      <Filter>Entities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Util">
@@ -71,6 +80,9 @@
     </Filter>
     <Filter Include="Entities\Items">
       <UniqueIdentifier>{1ec614b9-3a4d-4c67-9d41-9ea8a281259f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GUI">
+      <UniqueIdentifier>{8c6b310a-4cda-43c9-a083-50a1015e4e89}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

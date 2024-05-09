@@ -20,6 +20,7 @@ private:
 	sf::Vector2f _center;
 	sf::Vector2f _size;
 	std::string _name;
+	sf::Vector2i _pixel;
 	
 	// Cosmetic
 	sf::Color _bg;
@@ -56,12 +57,13 @@ private:
 public:
 	Room() {}
 
-	Room(const sf::Color& bg, const sf::Vector2f& size, const sf::Vector2f& center, const std::string& name = "")
+	Room(const sf::Color& bg, const sf::Vector2f& size, const sf::Vector2f& center, const sf::Vector2i& pixel, const std::string& name = "")
 	{
 		_center = center;
 		_bg = bg;
 		_size = size;
 		_name = name;
+		_pixel = pixel;
 
 		_shape.setFillColor(_bg);
 		_shape.setSize(_size);
@@ -72,6 +74,16 @@ public:
 	void setItems(const std::vector<std::shared_ptr<Item>>& items)
 	{
 		_items = items;
+	}
+
+	sf::Vector2i pixel() const
+	{
+		return _pixel;
+	}
+
+	std::vector<Direction> doors() const
+	{
+		return _doors;
 	}
 
 	void setNextRooms(const std::vector<Direction>& doors, const std::vector<Room*>& next)
@@ -169,13 +181,5 @@ public:
 				return i;
 		}
 		return nullptr;
-	}
-
-	virtual void updateEvent(const sf::Event& event)
-	{
-	}
-
-	virtual void update(float dt, const sf::Vector2f& mousePos)
-	{
 	}
 };

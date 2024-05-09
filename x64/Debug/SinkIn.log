@@ -1,4 +1,11 @@
-﻿  Player.cpp
+﻿  Boost.cpp
+  Map.cpp
+  Player.cpp
 C:\Users\Rafael Félix\Documents\HSLU\Sem3\GAMEDES\Projekt\SinkIn\Player.cpp(73,57): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
-C:\Users\Rafael Félix\Documents\HSLU\Sem3\GAMEDES\Projekt\SinkIn\Player.cpp(113,58): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+C:\Users\Rafael Félix\Documents\HSLU\Sem3\GAMEDES\Projekt\SinkIn\Player.cpp(112,58): warning C4244: 'argument' : conversion de 'int' en 'float', perte possible de données
+  Room.hpp
+  main.cpp
+C:\Users\Rafael Félix\Documents\HSLU\Sem3\GAMEDES\Projekt\SinkIn\Minimap.hpp(105,10): warning C4244: 'initialisation' : conversion de '__int64' en 'int', perte possible de données
+C:\Users\Rafael Félix\Documents\HSLU\Sem3\GAMEDES\Projekt\SinkIn\Minimap.hpp(123,10): warning C4244: 'initialisation' : conversion de '__int64' en 'int', perte possible de données
+  Génération de code en cours...
   SinkIn.vcxproj -> C:\Users\Rafael Félix\Documents\HSLU\Sem3\GAMEDES\Projekt\SinkIn\x64\Debug\SinkIn.exe

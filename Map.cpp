@@ -34,12 +34,12 @@ bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& center)
 	// Doors
 	std::vector<sf::Vector2i> pixels;
 	std::map<sf::Vector2i, std::vector<Direction>, vm::Vector2iComparator> pixelDoor;
-	std::map<sf::Vector2i, Room*, vm::Vector2iComparator> roomIp;
 
 	// Routing pixel
 	sf::Color rounting = image.getPixel(0, 0);
 	sf::Vector2i origin = { (int)rounting.r, (int)rounting.g };
 	stack.push(origin);
+	_pixelRoom.push_back(origin);
 
 	pixelDoor[origin] = std::vector<Direction>();
 
@@ -77,6 +77,7 @@ bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& center)
 				{
 					pixelDoor[origin] = std::vector<Direction>();
 					stack.push({ origin.x, origin.y });
+					_pixelRoom.push_back(origin);
 				}
 			}
 		}
@@ -90,7 +91,7 @@ bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& center)
 
 		std::stringstream ss;
 		ss << counter << Logger::afterNumber(counter) << " Room";
-		_rooms.push_back(Room({ 50, 50, 50 }, { 1000, 600 }, center, ss.str()));
+		_rooms.push_back(Room({ 50, 50, 50 }, { 1000, 600 }, center, startPx, ss.str()));
 
 		Logger::log({ "+ Added pixelDoor at ", std::to_string(startPx.x), ",", std::to_string(startPx.y), " and added ", ss.str() });
 
@@ -103,7 +104,7 @@ bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& center)
 	for (int i = 0; i < _rooms.size(); i++)
 	{
 		sf::Vector2i px = pixels[i];
-		roomIp[px] = &_rooms[i];
+		_pixelRoomMap[px] = &_rooms[i];
 	}
 
 	Logger::log({ "Second pass" });
@@ -119,7 +120,7 @@ bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& center)
 		{
 			// Add direction + room
 			sf::Vector2i no = getNextRoomOrigin(ip, d);
-			Room* next = roomIp[no];
+			Room* next = _pixelRoomMap[no];
 			nextRooms.push_back(next);
 		}
 
@@ -168,6 +169,8 @@ bool Map::generate()
 	if (!loadMapFromImage(buf, _center))
 		return false;
 	_current = &_rooms[0];
+	sf::Vector2u size = buf.getSize();
+	_textureSize = { (int)size.x, (int)size.y };
 	Logger::log({ "Spawned in ", _current->name() });
 	return true;
 }
@@ -177,15 +180,22 @@ Room* Map::currentRoom() const
 	return _current;
 }
 
+Room* Map::atPixel(const sf::Vector2i& px)
+{
+	return _pixelRoomMap[px];
+}
+
+std::vector<sf::Vector2i> Map::pixelRooms() const
+{
+	return _pixelRoom;
+}
+
 void Map::exitRoom(Direction door)
 {
 	_current = _current->nextRoom(door);
 }
 
-void Map::updateEvent(const sf::Event& event)
+sf::Vector2i Map::textureSize() const
 {
-}
-
-void Map::update(float dt, const sf::Vector2f& mousePos)
-{
+	return _textureSize;
 }
