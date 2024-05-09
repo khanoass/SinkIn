@@ -31,6 +31,8 @@ private:
 
 	Player* _player;
 
+	bool _changedRoom = false;
+
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
 	sf::Vector2i getNextRoomOrigin(const sf::Vector2i& pixel, Direction direction) const;
@@ -55,4 +57,6 @@ public:
 	std::vector<sf::Vector2i> pixelRooms() const;
 
 	void exitRoom(Direction door);
+
+	bool changedRoom() const;
 };

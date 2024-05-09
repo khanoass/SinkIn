@@ -6,15 +6,17 @@
 #include <SFML/Graphics/RenderTexture.hpp>
 
 #include "Map.h"
+#include "Widget.hpp"
 
-class Minimap : public Entity
+class Minimap : public Widget
 {
 private:
 	// Const
-	const sf::Vector2f _position = { 50, 450 };
-	const sf::Vector2f _size = { 300, 300 };
+	const sf::Vector2f _position = { 10, 10 };
+	const sf::Vector2f _size = { 250, 250 };
 
 	const float _outlineBorder = 3.f;
+	const float _lineLength = 12.f;
 
 	// Data
 	std::vector<sf::Vector2i> _rooms;
@@ -28,9 +30,31 @@ private:
 	sf::RenderTexture _texture;
 	sf::RectangleShape _bg;
 
-	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const
+	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override
 	{
 		target.draw(_panel, &_texture.getTexture());
+	}
+
+	void resetTexture()
+	{
+		_texture.clear(sf::Color::Transparent);
+		_texture.draw(_bg);
+		_texture.draw(_doors);
+		_texture.draw(_minimap);
+		_texture.display();
+	}
+
+	void foundRoom(const sf::Vector2i& room)
+	{
+		auto it = std::find(_rooms.begin(), _rooms.end(), room);
+		if (it != _rooms.end())
+		{
+			int v = int((it - _rooms.begin()) * 4);
+			for (int i = v; i < v + 4; i++)
+				_minimap[i].color = sf::Color::Cyan;
+		}
+
+		resetTexture();
 	}
 
 public:
@@ -43,8 +67,8 @@ public:
 		_doors.setPrimitiveType(sf::Lines);
 		
 		_bg.setPosition({ _outlineBorder, _outlineBorder });
-		_bg.setFillColor(sf::Color(80, 80, 80));
-		_bg.setOutlineColor(sf::Color(120, 120, 120));
+		_bg.setFillColor(sf::Color(80, 80, 80, 128));
+		_bg.setOutlineColor(sf::Color(120, 120, 120, 128));
 		_bg.setOutlineThickness(_outlineBorder);
 
 		_texture.create((unsigned int)_size.x, (unsigned int)_size.y);
@@ -80,31 +104,9 @@ public:
 				int h = 0, v = 0;
 				Directions::getHV(h, v, d);
 
-				_doors.append({ { p.x + ratio.x / 2, p.y + ratio.y / 2 }, sf::Color::White });
-				_doors.append({ { p.x + ratio.x / 2 + h * 10,  p.y + ratio.y / 2 + v * 10 }, sf::Color::White });
+				_doors.append(sf::Vertex({ p.x + ratio.x / 2, p.y + ratio.y / 2 }, sf::Color::White));
+				_doors.append(sf::Vertex({ p.x + ratio.x / 2 + h * _lineLength,  p.y + ratio.y / 2 + v * _lineLength }, sf::Color::White));
 			}
-		}
-
-		resetTexture();
-	}
-
-	void resetTexture()
-	{
-		_texture.clear();
-		_texture.draw(_bg);
-		_texture.draw(_doors);
-		_texture.draw(_minimap);
-		_texture.display();
-	}
-
-	void foundRoom(const sf::Vector2i& room)
-	{
-		auto it = std::find(_rooms.begin(), _rooms.end(), room);
-		if (it != _rooms.end())
-		{
-			int v = (it - _rooms.begin()) * 4;
-			for(int i = v; i < v + 4; i++)
-				_minimap[i].color = sf::Color::Cyan;
 		}
 
 		resetTexture();
@@ -112,20 +114,29 @@ public:
 
 	void setActiveRoom(const sf::Vector2i& room)
 	{
-		auto currentRoom =	std::find(_rooms.begin(), _rooms.end(), _current);
-		auto newRoom =		std::find(_rooms.begin(), _rooms.end(), room);
+		auto currentRoom = std::find(_rooms.begin(), _rooms.end(), _current);
+		auto newRoom = std::find(_rooms.begin(), _rooms.end(), room);
 
-		if(currentRoom != _rooms.end())
+		if (currentRoom != _rooms.end())
 			foundRoom({ currentRoom->x, currentRoom->y });
 
 		if (newRoom != _rooms.end())
 		{
-			int v = (newRoom - _rooms.begin()) * 4;
+			int v = int((newRoom - _rooms.begin()) * 4);
 			for (int i = v; i < v + 4; i++)
-				_minimap[i].color = sf::Color::Red;
+				_minimap[i].color = sf::Color(128, 0, 0, 128);
 			_current = { newRoom->x, newRoom->y };
 		}
 
 		resetTexture();
+	}
+
+	virtual void update(float dt, const sf::Vector2f& mousePos) override
+	{
+		if (_map->changedRoom())
+		{
+			foundRoom(_map->currentRoom()->pixel());
+			setActiveRoom(_map->currentRoom()->pixel());
+		}
 	}
 };

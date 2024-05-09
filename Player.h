@@ -59,6 +59,8 @@ public:
 	void setMap(Map* map);
 	void boost();
 
+	sf::Vector2f position() const;
+
 	void updateEvent(const sf::Event& event);
 	void update(float dt, const sf::Vector2f& mousePos);
 };

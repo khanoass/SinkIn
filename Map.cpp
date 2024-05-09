@@ -193,6 +193,12 @@ std::vector<sf::Vector2i> Map::pixelRooms() const
 void Map::exitRoom(Direction door)
 {
 	_current = _current->nextRoom(door);
+	_changedRoom = true;
+}
+
+bool Map::changedRoom() const
+{
+	return false; // TODO
 }
 
 sf::Vector2i Map::textureSize() const

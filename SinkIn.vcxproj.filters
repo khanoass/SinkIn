@@ -64,6 +64,12 @@
     <ClInclude Include="LiveEntity.hpp">
       <Filter>Entities</Filter>
     </ClInclude>
+    <ClInclude Include="GUI.hpp">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Widget.hpp">
+      <Filter>GUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Util">

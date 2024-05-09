@@ -3,7 +3,7 @@
 #include "Map.h"
 #include "Player.h"
 #include "Cursor.hpp"
-#include "Minimap.hpp"
+#include "GUI.hpp"
 
 class Game : public LiveEntity
 {
@@ -13,14 +13,12 @@ private:
 	Map _map;
 	Player _player;
 	Cursor _cursor;
-	Minimap _minimap;
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const
 	{
 		target.draw(_map);
 		target.draw(_cursor);
 		target.draw(_player);
-		target.draw(_minimap);
 	}
 
 public:
@@ -28,14 +26,21 @@ public:
 		_center(center),
 		_map(Map("assets/maps/map1_normal.png", center)),
 		_player(),
-		_cursor(&_map),
-		_minimap(&_map)
+		_cursor(&_map)
 	{
 		_map.setPlayer(&_player);
 		_map.generate();
 		_player.setMap(&_map);
-		_minimap.setRooms(_map.pixelRooms(), _map.textureSize());
-		_minimap.setActiveRoom(_map.currentRoom()->pixel());
+	}
+
+	sf::Vector2f getPlayerPosition() const
+	{
+		return _player.position();
+	}
+
+	Map* getMapPtr()
+	{
+		return &_map;
 	}
 
 	virtual void updateEvent(const sf::Event& event)
@@ -46,15 +51,7 @@ public:
 
 	virtual void update(float dt, const sf::Vector2f& mousePos)
 	{
-		Room* old = _map.currentRoom();
-
 		_player.update(dt, mousePos);
 		_cursor.update(dt, mousePos);
-
-		if (_map.currentRoom() != old)
-		{
-			_minimap.foundRoom(_map.currentRoom()->pixel());
-			_minimap.setActiveRoom(_map.currentRoom()->pixel());
-		}
 	}
 };

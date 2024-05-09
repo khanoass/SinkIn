@@ -22,6 +22,11 @@ namespace vm
 		return norm(a - b);
 	}
 
+	static sf::Vector2f lerp(const sf::Vector2f& start, const sf::Vector2f& end, float t)
+	{
+		return start + t * (end - start);
+	}
+
 	static sf::Vector2f normalise(const sf::Vector2f& v)
 	{
 		float length = std::sqrt(v.x * v.x + v.y * v.y);

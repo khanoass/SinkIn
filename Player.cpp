@@ -70,8 +70,13 @@ void Player::setMap(Map* map)
 void Player::boost()
 {
 	_boosts++;
-	float s = _baseSpeed + ((_boostsFactor * std::log10f(1 + _boosts)) * _baseSpeed);
+	float s = _baseSpeed + ((_boostsFactor * std::log10f(float(1 + _boosts))) * _baseSpeed);
 	Logger::log({ "Player boosted to ", std::to_string(_boosts), ", speed: ", std::to_string(s) });
+}
+
+sf::Vector2f Player::position() const
+{
+	return _position;
 }
 
 void Player::updateEvent(const sf::Event& event)
@@ -109,7 +114,7 @@ void Player::update(float dt, const sf::Vector2f& mousePos)
 	if (_moving)
 	{
 		// a log(1 + x) function to calculate speed
-		float s = _baseSpeed + ((_boostsFactor * std::log10f(1 + _boosts)) * _baseSpeed);
+		float s = _baseSpeed + ((_boostsFactor * std::log10f(float(1 + _boosts))) * _baseSpeed);
 		_position.x += _direction.x * s * dt;
 		_position.y += _direction.y * s * dt;
 
