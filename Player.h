@@ -17,7 +17,7 @@ class Room;
 class Player : public Entity
 {
 private:
-	const float _boostsFactor = 0.5f;
+	const float _boostsFactor = 1.5f;
 	const float _baseSpeed = 100.f;
 
 	// Data

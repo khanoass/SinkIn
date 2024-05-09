@@ -70,7 +70,8 @@ void Player::setMap(Map* map)
 void Player::boost()
 {
 	_boosts++;
-	Logger::log({ "Player boosted to ", std::to_string(_boosts) });
+	float s = _baseSpeed + ((_boostsFactor * std::log10f(1 + _boosts)) * _baseSpeed);
+	Logger::log({ "Player boosted to ", std::to_string(_boosts), ", speed: ", std::to_string(s) });
 }
 
 void Player::updateEvent(const sf::Event& event)
@@ -108,16 +109,30 @@ void Player::update(float dt, const sf::Vector2f& mousePos)
 	if (_moving)
 	{
 		// a log(1 + x) function to calculate speed
-		float a = 1.5;
-		float s = _baseSpeed + ((a * std::log10f(1 + _boosts)) * _baseSpeed);
+		float s = _baseSpeed + ((_boostsFactor * std::log10f(1 + _boosts)) * _baseSpeed);
 		_position.x += _direction.x * s * dt;
 		_position.y += _direction.y * s * dt;
-
-		Logger::log({ std::to_string(s), "\t", std::to_string(_boosts) });
 
 #ifdef DEBUG
 		_line[0].position = _position;
 #endif
+
+		std::vector<sf::Vector2f> border = {
+			sf::Vector2f(_room->center().x - _room->size().x / 2, _room->center().x + _room->size().x / 2),
+			sf::Vector2f(_room->center().y - _room->size().y / 2, _room->center().y + _room->size().y / 2)
+		};
+
+		// Out-of-bounds checking
+		sf::Vector2f old(_position);
+		if (_position.x - _size.x / 2 < border[0].x && !_room->pointInDoor(_position - sf::Vector2f(_size.x / 2, 0)))
+			_position.x = border[0].x + _size.x / 2;
+		if (_position.x + _size.x / 2 > border[0].y && !_room->pointInDoor(_position + sf::Vector2f(_size.x / 2, 0)))
+			_position.x = border[0].y - _size.x / 2;
+		if (_position.y - _size.y / 2 < border[1].x && !_room->pointInDoor(_position - sf::Vector2f(0, _size.y / 2)))
+			_position.y = border[1].x + _size.y / 2;
+		if (_position.y + _size.y / 2 > border[1].y && !_room->pointInDoor(_position + sf::Vector2f(0, _size.y / 2)))
+			_position.y = border[1].y - _size.y / 2;
+		if (_position != old) _moving = false;
 
 		_sprite.setPosition(_position);
 		if (reachedTarget()) _moving = false;

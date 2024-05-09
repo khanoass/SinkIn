@@ -108,9 +108,20 @@ public:
 		return false;
 	}
 
+	bool pointInDoor(const sf::Vector2f& point)
+	{
+		Direction dir = None;
+		return pointInDoor(point, dir);
+	}
+
 	sf::Vector2f center() const
 	{
 		return _center;
+	}
+
+	sf::Vector2f size() const
+	{
+		return _size;
 	}
 
 	std::string name() const

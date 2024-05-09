@@ -3,36 +3,30 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Boost.cpp">
-      <Filter>Items</Filter>
+      <Filter>Entities\Items</Filter>
     </ClCompile>
     <ClCompile Include="Player.cpp">
-      <Filter>Player</Filter>
+      <Filter>Entities\Player</Filter>
     </ClCompile>
     <ClCompile Include="Room.hpp">
-      <Filter>Map</Filter>
+      <Filter>Entities\Map</Filter>
     </ClCompile>
     <ClCompile Include="Map.cpp">
-      <Filter>Map</Filter>
+      <Filter>Entities\Map</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Game.hpp" />
-    <ClInclude Include="Direction.hpp" />
-    <ClInclude Include="Entity.hpp" />
-    <ClInclude Include="Cursor.hpp" />
-    <ClInclude Include="Animation.hpp" />
-    <ClInclude Include="Ephemereal.hpp" />
     <ClInclude Include="Item.hpp">
-      <Filter>Items</Filter>
+      <Filter>Entities\Items</Filter>
     </ClInclude>
     <ClInclude Include="Boost.h">
-      <Filter>Items</Filter>
+      <Filter>Entities\Items</Filter>
     </ClInclude>
     <ClInclude Include="Player.h">
-      <Filter>Player</Filter>
+      <Filter>Entities\Player</Filter>
     </ClInclude>
     <ClInclude Include="Map.h">
-      <Filter>Map</Filter>
+      <Filter>Entities\Map</Filter>
     </ClInclude>
     <ClInclude Include="Logger.hpp">
       <Filter>Util</Filter>
@@ -43,19 +37,40 @@
     <ClInclude Include="Debug.h">
       <Filter>Util</Filter>
     </ClInclude>
+    <ClInclude Include="Entity.hpp">
+      <Filter>Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Cursor.hpp">
+      <Filter>Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Animation.hpp">
+      <Filter>Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.hpp">
+      <Filter>Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Direction.hpp">
+      <Filter>Entities</Filter>
+    </ClInclude>
+    <ClInclude Include="Ephemereal.hpp">
+      <Filter>Entities</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <Filter Include="Items">
-      <UniqueIdentifier>{1ec614b9-3a4d-4c67-9d41-9ea8a281259f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Player">
-      <UniqueIdentifier>{d1e328eb-9201-4804-a60c-7d346de9b40f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Map">
-      <UniqueIdentifier>{393649a1-4a6a-49d6-a6d4-f47c910c0bb2}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Util">
       <UniqueIdentifier>{87bc0f02-b9e3-4f42-97a5-fa4ca1dcbc00}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Entities">
+      <UniqueIdentifier>{28c43da6-3740-4cd6-ad48-016d299ad3e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Entities\Map">
+      <UniqueIdentifier>{393649a1-4a6a-49d6-a6d4-f47c910c0bb2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Entities\Player">
+      <UniqueIdentifier>{d1e328eb-9201-4804-a60c-7d346de9b40f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Entities\Items">
+      <UniqueIdentifier>{1ec614b9-3a4d-4c67-9d41-9ea8a281259f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
