@@ -21,7 +21,7 @@ int main()
 	sf::Clock clock;
 
 	sf::View view(sf::FloatRect(0, 0, (float)size.x, (float)size.y));
-	view.zoom(0.75f);
+	view.zoom(0.9f);
 	sf::View guiView(sf::FloatRect(0, 0, (float)size.x, (float)size.y));
 
 	while (window.isOpen())

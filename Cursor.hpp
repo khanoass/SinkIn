@@ -6,11 +6,10 @@
 class Cursor : public LiveEntity
 {
 private:
-	const float _reach = 300.f; // TODO: Implement this in player click move event
-
 	// Data
 	sf::Vector2f _size;
 	Map* _map;
+	Player* _player;
 	Ephemereal _eph;
 
 	// Cosmetic
@@ -26,11 +25,12 @@ private:
 	}
 
 public:
-	Cursor(Map* map)
+	Cursor(Map* map, Player* player)
 	{
 		_size = { 32, 32 };
 
 		_map = map;
+		_player = player;
 
 		_sprite.setOrigin({ _size.x / 2, _size.y / 2 });
 		sf::Vector2i pos = sf::Mouse::getPosition();
@@ -53,29 +53,24 @@ public:
 		if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left)
 		{
 			sf::Vector2f point = { (float)event.mouseButton.x, (float)event.mouseButton.y };
+			sf::Vector2f final = _player->finalPosition(point);
 			auto r = _map->currentRoom();
 			Direction d = None;
-			if(r->pointInRoom(point) || r->pointInDoor(point, d))
-				_eph.spawn(point, { 64, 64 }, _ephSheet, { 5, 2 }, 0.05f);
+			if(r->pointInRoom(final) || r->pointInDoor(final, d))
+				_eph.spawn(final, { 64, 64 }, _ephSheet, { 5, 2 }, 0.05f);
 		}
 	}
 
 	virtual void update(float dt, const sf::Vector2f& mousePos)
 	{
-		// Check for reach
-		sf::Vector2f player = _map->getPlayerPosition();
-		sf::Vector2f diff = mousePos - player;
-		float dist = vm::norm(diff);
-		sf::Vector2f finalPos = mousePos;
-		if (dist > _reach)
-			finalPos = (player + vm::normalise(diff) * _reach);
-		_sprite.setPosition(finalPos);
+		auto final = _player->finalPosition(mousePos);
+		_sprite.setPosition(final);
 
 		Room* r = _map->currentRoom();
 		Direction dir = None;
 
-		if (r->pointInRoom(finalPos))			_sprite.setTexture(_f1);
-		else if (r->pointInDoor(finalPos, dir))	_sprite.setTexture(_f3);
+		if (r->pointInRoom(final))				_sprite.setTexture(_f1);
+		else if (r->pointInDoor(final, dir))	_sprite.setTexture(_f3);
 		else									_sprite.setTexture(_f2);
 
 		_eph.update(dt, mousePos);

@@ -5,6 +5,7 @@ void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	target.draw(_sprite);
 	target.draw(_attackEph);
+	target.draw(_reachShape);
 #ifdef DEBUG
 	if (_moving) target.draw(_line);
 	target.draw(_hitbox);
@@ -46,6 +47,14 @@ Player::Player()
 
 	_range = 35.f;
 
+	_reachShape.setRadius(300.f);
+	_reachShape.setFillColor(sf::Color::Transparent);
+	_reachShape.setOutlineColor(sf::Color::White);
+	_reachShape.setOutlineThickness(1.f);
+	_reachShape.setPointCount(1000);
+	_reachShape.setOrigin(300.f, 300.f);
+	_sprite.setPosition(_position);
+
 #ifdef DEBUG
 	_hitbox.setFillColor(sf::Color::Transparent);
 	_hitbox.setOutlineColor(sf::Color::Red);
@@ -65,6 +74,7 @@ void Player::setMap(Map* map)
 	_room = map->currentRoom();
 	_position = _room->center();
 	_sprite.setPosition(_position);
+	_reachShape.setPosition(_position);
 }
 
 void Player::boost()
@@ -79,17 +89,35 @@ sf::Vector2f Player::position() const
 	return _position;
 }
 
+float Player::reach() const
+{
+	return _reach;
+}
+
+sf::Vector2f Player::finalPosition(const sf::Vector2f& mousePos) const
+{
+	// Check for reach
+	sf::Vector2f player = _position;
+	sf::Vector2f diff = mousePos - player;
+	float dist = vm::norm(diff);
+	sf::Vector2f finalPos = mousePos;
+	if (dist > _reach)
+		finalPos = (player + vm::normalise(diff) * _reach);
+	return finalPos;
+}
+
 void Player::updateEvent(const sf::Event& event)
 {
 	// Start moving with click
 	if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left)
 	{
 		sf::Vector2f point = { (float)event.mouseButton.x, (float)event.mouseButton.y };
+		sf::Vector2f final = finalPosition(point);
 
-		if (_room->pointInRoom(point)) startMoving(point);
+		if (_room->pointInRoom(final)) startMoving(final);
 
 		Direction dir = None;
-		if (_room->pointInDoor(point, dir)) startMoving(point);
+		if (_room->pointInDoor(final, dir)) startMoving(final);
 	}
 
 	// Attack
@@ -140,6 +168,8 @@ void Player::update(float dt, const sf::Vector2f& mousePos)
 		if (_position != old) _moving = false;
 
 		_sprite.setPosition(_position);
+		_reachShape.setPosition(_position);
+
 		if (reachedTarget()) _moving = false;
 	}
 
@@ -160,6 +190,7 @@ void Player::update(float dt, const sf::Vector2f& mousePos)
 		_moving = false;
 		_position = _room->spawn(dir);
 		_sprite.setPosition(_position);
+		_reachShape.setPosition(_position);
 		Logger::log({ "Player entered: ", _room->name() });
 	}
 	else

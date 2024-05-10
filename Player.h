@@ -20,6 +20,7 @@ class Player : public LiveEntity
 private:
 	const float _boostsFactor = 1.5f;
 	const float _baseSpeed = 200.f;
+	const float _reach = 300.f;
 
 	// Data
 	Map* _map;
@@ -31,6 +32,7 @@ private:
 	// Cosmetic
 	sf::Texture _tex;
 	sf::Sprite _sprite;
+	sf::CircleShape _reachShape;
 
 	// Movement
 	bool _moving = false;
@@ -60,6 +62,9 @@ public:
 	void boost();
 
 	sf::Vector2f position() const;
+	float reach() const;
+
+	sf::Vector2f finalPosition(const sf::Vector2f& mousePos) const;
 
 	void updateEvent(const sf::Event& event);
 	void update(float dt, const sf::Vector2f& mousePos);

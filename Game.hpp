@@ -26,7 +26,7 @@ public:
 		_center(center),
 		_map(Map("assets/maps/map1_normal.png", center)),
 		_player(),
-		_cursor(&_map)
+		_cursor(&_map, &_player)
 	{
 		_map.setPlayer(&_player);
 		_map.generate();
