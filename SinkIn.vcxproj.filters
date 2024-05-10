@@ -70,6 +70,7 @@
     <ClInclude Include="Widget.hpp">
       <Filter>GUI</Filter>
     </ClInclude>
+    <ClInclude Include="Camera.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Util">

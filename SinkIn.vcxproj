@@ -139,6 +139,7 @@
   <ItemGroup>
     <ClInclude Include="Animation.hpp" />
     <ClInclude Include="Boost.h" />
+    <ClInclude Include="Camera.hpp" />
     <ClInclude Include="Cursor.hpp" />
     <ClInclude Include="Debug.h" />
     <ClInclude Include="Direction.hpp" />
