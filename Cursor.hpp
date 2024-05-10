@@ -6,6 +6,8 @@
 class Cursor : public LiveEntity
 {
 private:
+	const float _reach = 300.f; // TODO: Implement this in player click move event
+
 	// Data
 	sf::Vector2f _size;
 	Map* _map;
@@ -60,13 +62,20 @@ public:
 
 	virtual void update(float dt, const sf::Vector2f& mousePos)
 	{
-		_sprite.setPosition(mousePos);
+		// Check for reach
+		sf::Vector2f player = _map->getPlayerPosition();
+		sf::Vector2f diff = mousePos - player;
+		float dist = vm::norm(diff);
+		sf::Vector2f finalPos = mousePos;
+		if (dist > _reach)
+			finalPos = (player + vm::normalise(diff) * _reach);
+		_sprite.setPosition(finalPos);
 
 		Room* r = _map->currentRoom();
 		Direction dir = None;
 
-		if (r->pointInRoom(mousePos))			_sprite.setTexture(_f1);
-		else if (r->pointInDoor(mousePos, dir))	_sprite.setTexture(_f3);
+		if (r->pointInRoom(finalPos))			_sprite.setTexture(_f1);
+		else if (r->pointInDoor(finalPos, dir))	_sprite.setTexture(_f3);
 		else									_sprite.setTexture(_f2);
 
 		_eph.update(dt, mousePos);

@@ -50,6 +50,8 @@ public:
 
 	Room* currentRoom() const;
 
+	sf::Vector2f getPlayerPosition() const;
+
 	Room* atPixel(const sf::Vector2i& px);
 
 	sf::Vector2i textureSize() const;

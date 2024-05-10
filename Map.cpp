@@ -196,6 +196,11 @@ void Map::exitRoom(Direction door)
 	_changedRoom = true;
 }
 
+sf::Vector2f Map::getPlayerPosition() const
+{
+	return _player->position();
+}
+
 bool Map::changedRoom() const
 {
 	return _changedRoom;
