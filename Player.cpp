@@ -162,6 +162,11 @@ void Player::update(float dt, const sf::Vector2f& mousePos)
 		_sprite.setPosition(_position);
 		Logger::log({ "Player entered: ", _room->name() });
 	}
+	else
+	{
+		if (_map->changedRoom())
+			_map->resetChangedRoom();
+	}
 
 #ifdef DEBUG
 	_hitbox.setPosition(_position);

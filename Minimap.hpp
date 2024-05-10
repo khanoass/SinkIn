@@ -124,7 +124,7 @@ public:
 		{
 			int v = int((newRoom - _rooms.begin()) * 4);
 			for (int i = v; i < v + 4; i++)
-				_minimap[i].color = sf::Color(128, 0, 0, 128);
+				_minimap[i].color = sf::Color(230, 20, 20);
 			_current = { newRoom->x, newRoom->y };
 		}
 

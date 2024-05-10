@@ -58,5 +58,7 @@ public:
 
 	void exitRoom(Direction door);
 
+	void resetChangedRoom();
+
 	bool changedRoom() const;
 };

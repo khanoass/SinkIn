@@ -198,7 +198,12 @@ void Map::exitRoom(Direction door)
 
 bool Map::changedRoom() const
 {
-	return false; // TODO
+	return _changedRoom;
+}
+
+void Map::resetChangedRoom()
+{
+	_changedRoom = false;
 }
 
 sf::Vector2i Map::textureSize() const
