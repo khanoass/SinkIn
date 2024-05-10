@@ -1,6 +1,4 @@
 #include <SFML/Graphics/RenderWindow.hpp>
-#include <SFML/System/Clock.hpp>
-#include <SFML/Graphics/View.hpp>
 
 #include "Game.hpp"
 #include "Camera.hpp"
@@ -11,11 +9,11 @@ int main()
 
 	sf::RenderWindow window(sf::VideoMode(size.x, size.y), "Sink In", sf::Style::Titlebar | sf::Style::Close);
 	window.setMouseCursorVisible(false);
-	
+
 	Game game({ (float)size.x / 2, (float)size.y / 2 });
 	GUI gui(game.getMapPtr());
-
-	Camera camera(size), guiCamera(size);
+	
+	Camera camera(size, 0.9f), guiCamera(size);
 
 	sf::Event event;
 	sf::Clock clock;
@@ -33,9 +31,14 @@ int main()
 		sf::Vector2i pos = sf::Mouse::getPosition(window);
 		sf::Vector2f posf = { (float)pos.x, (float)pos.y };
 		float dt = clock.restart().asSeconds();
+
+		camera.updatePlayerSmooth(dt, game.getPlayerPosition(), game.getMapPtr()->changedRoom());
 		game.update(dt, posf);
 		gui.update(dt, posf);
-		camera.updatePlayerSmooth(dt, game.getPlayerPosition(), game.getMapPtr()->changedRoom());
+
+		sf::Vector2f viPos = camera.playerSmoothCenter(dt, game.getPlayerPosition(), game.getMapPtr()->changedRoom());
+		sf::Vector2i screenPosition = window.mapCoordsToPixel(viPos, camera.view());
+		game.setVignettePosition({ (float)screenPosition.x, (float)screenPosition.y });
 
 		window.clear();
 

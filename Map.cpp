@@ -4,7 +4,7 @@
 
 void Map::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	target.draw(*_current);
+	target.draw(*_current, states);
 }
 
 sf::Vector2i Map::getNextRoomOrigin(const sf::Vector2i& pixel, Direction direction) const
@@ -91,7 +91,7 @@ bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& center)
 
 		std::stringstream ss;
 		ss << counter << Logger::afterNumber(counter) << " Room";
-		_rooms.push_back(Room({ 50, 50, 50 }, { 1000, 600 }, center, startPx, ss.str()));
+		_rooms.push_back(std::make_shared<Room>(Room(_shaderTex, { 1000, 600 }, center, startPx, ss.str())));
 
 		Logger::log({ "+ Added pixelDoor at ", std::to_string(startPx.x), ",", std::to_string(startPx.y), " and added ", ss.str() });
 
@@ -104,7 +104,7 @@ bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& center)
 	for (int i = 0; i < _rooms.size(); i++)
 	{
 		sf::Vector2i px = pixels[i];
-		_pixelRoomMap[px] = &_rooms[i];
+		_pixelRoomMap[px] = _rooms[i].get();
 	}
 
 	Logger::log({ "Second pass" });
@@ -124,7 +124,7 @@ bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& center)
 			nextRooms.push_back(next);
 		}
 
-		_rooms[i].setNextRooms(pixelDoor.at(ip), nextRooms);
+		_rooms[i]->setNextRooms(pixelDoor.at(ip), nextRooms);
 
 		Logger::log({ "Added next room pointers at ", std::to_string(ip.x), ",", std::to_string(ip.y) });
 
@@ -142,7 +142,7 @@ bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& center)
 
 			items.push_back(std::make_shared<Boost>(Boost(pos, _boostTexture)));
 		}
-		_rooms[i].setItems(items);
+		_rooms[i]->setItems(items);
 	}
 
 	Logger::log({ "Finished loading map, found ", std::to_string(_rooms.size()), " rooms." });
@@ -153,6 +153,10 @@ Map::Map(const std::string& filename, const sf::Vector2f& center)
 	: _current(nullptr), _player(nullptr)
 {
 	_boostTexture.loadFromFile("assets/textures/item.png");
+
+	_shaderTex = std::make_shared<sf::Shader>();
+	_shaderTex->loadFromFile("assets/shaders/room.vert", "assets/shaders/room.frag");
+
 	_filename = filename;
 	_center = center;
 }
@@ -168,7 +172,7 @@ bool Map::generate()
 	buf.loadFromFile(_filename);
 	if (!loadMapFromImage(buf, _center))
 		return false;
-	_current = &_rooms[0];
+	_current = _rooms[0].get();
 	sf::Vector2u size = buf.getSize();
 	_textureSize = { (int)size.x, (int)size.y };
 	Logger::log({ "Spawned in ", _current->name() });
@@ -206,9 +210,26 @@ bool Map::changedRoom() const
 	return _changedRoom;
 }
 
+std::shared_ptr<sf::Shader> Map::getTexShaderPtr() const
+{
+	return _shaderTex;
+}
+
 void Map::resetChangedRoom()
 {
 	_changedRoom = false;
+}
+
+void Map::updateEvent(const sf::Event& event)
+{
+	for (const auto& r : _rooms)
+		r->updateEvent(event);
+}
+
+void Map::update(float dt, const sf::Vector2f& mousePos)
+{
+	for (const auto& r : _rooms)
+		r->update(dt, mousePos);
 }
 
 sf::Vector2i Map::textureSize() const

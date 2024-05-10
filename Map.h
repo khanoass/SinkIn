@@ -13,7 +13,7 @@
 class Player;
 class Boost;
 
-class Map : public Entity
+class Map : public LiveEntity
 {
 private:
 	// Data
@@ -21,7 +21,7 @@ private:
 	sf::Vector2f _center;
 
 	Room* _current;
-	std::vector<Room> _rooms;
+	std::vector<std::shared_ptr<Room>> _rooms;
 	std::vector<sf::Vector2i> _pixelRoom;
 	std::map<sf::Vector2i, Room*, vm::Vector2iComparator> _pixelRoomMap;
 
@@ -30,6 +30,8 @@ private:
 	sf::Texture _boostTexture;
 
 	Player* _player;
+
+	std::shared_ptr<sf::Shader> _shaderTex;
 
 	bool _changedRoom = false;
 
@@ -54,6 +56,8 @@ public:
 
 	Room* atPixel(const sf::Vector2i& px);
 
+	std::shared_ptr<sf::Shader> getTexShaderPtr() const;
+
 	sf::Vector2i textureSize() const;
 
 	std::vector<sf::Vector2i> pixelRooms() const;
@@ -63,4 +67,8 @@ public:
 	void resetChangedRoom();
 
 	bool changedRoom() const;
+
+	virtual void updateEvent(const sf::Event& event);
+
+	virtual void update(float dt, const sf::Vector2f& mousePos);
 };

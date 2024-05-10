@@ -23,7 +23,7 @@ private:
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const
 	{
 		if (_alive)
-			target.draw(_sprite);
+			target.draw(_sprite, states);
 	}
 
 public:

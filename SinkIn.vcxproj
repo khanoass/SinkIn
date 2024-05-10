@@ -157,6 +157,11 @@
     <ClInclude Include="VeMa.hpp" />
     <ClInclude Include="Widget.hpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="assets\shaders\film.glsl" />
+    <None Include="assets\shaders\room.frag" />
+    <None Include="assets\shaders\room.vert" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

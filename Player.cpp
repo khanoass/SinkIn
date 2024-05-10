@@ -3,11 +3,11 @@
 
 void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	target.draw(_sprite);
-	target.draw(_attackEph);
-	target.draw(_reachShape);
+	target.draw(_sprite, states);
+	target.draw(_attackEph, states);
 #ifdef DEBUG
-	if (_moving) target.draw(_line);
+	if (_moving) target.draw(_line, states);
+	target.draw(_reachShape, states);
 	target.draw(_hitbox);
 #endif
 }
@@ -46,13 +46,6 @@ Player::Player()
 	_attackSheet.loadFromFile("assets/textures/attack_2.png");
 
 	_range = 35.f;
-
-	_reachShape.setRadius(300.f);
-	_reachShape.setFillColor(sf::Color::Transparent);
-	_reachShape.setOutlineColor(sf::Color::White);
-	_reachShape.setOutlineThickness(1.f);
-	_reachShape.setPointCount(1000);
-	_reachShape.setOrigin(300.f, 300.f);
 	_sprite.setPosition(_position);
 
 #ifdef DEBUG
@@ -61,6 +54,13 @@ Player::Player()
 	_hitbox.setRadius(_range);
 	_hitbox.setOrigin(_range, _range);
 	_hitbox.setOutlineThickness(2.f);
+
+	_reachShape.setRadius(300.f);
+	_reachShape.setFillColor(sf::Color::Transparent);
+	_reachShape.setOutlineColor(sf::Color(0, 0, 255, 255));
+	_reachShape.setOutlineThickness(1.f);
+	_reachShape.setPointCount(1000);
+	_reachShape.setOrigin(300.f, 300.f);
 
 	_line.setPrimitiveType(sf::Lines);
 	_line.append(sf::Vertex(_position, sf::Color::Red));
@@ -74,7 +74,11 @@ void Player::setMap(Map* map)
 	_room = map->currentRoom();
 	_position = _room->center();
 	_sprite.setPosition(_position);
+	
+#ifdef DEBUG
 	_reachShape.setPosition(_position);
+#endif
+
 }
 
 void Player::boost()
@@ -148,6 +152,7 @@ void Player::update(float dt, const sf::Vector2f& mousePos)
 
 #ifdef DEBUG
 		_line[0].position = _position;
+		_reachShape.setPosition(_position);
 #endif
 
 		std::vector<sf::Vector2f> border = {
@@ -168,7 +173,6 @@ void Player::update(float dt, const sf::Vector2f& mousePos)
 		if (_position != old) _moving = false;
 
 		_sprite.setPosition(_position);
-		_reachShape.setPosition(_position);
 
 		if (reachedTarget()) _moving = false;
 	}
@@ -190,7 +194,12 @@ void Player::update(float dt, const sf::Vector2f& mousePos)
 		_moving = false;
 		_position = _room->spawn(dir);
 		_sprite.setPosition(_position);
+
+#ifdef DEBUG
 		_reachShape.setPosition(_position);
+#endif
+
+
 		Logger::log({ "Player entered: ", _room->name() });
 	}
 	else

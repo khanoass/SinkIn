@@ -33,9 +33,9 @@ private:
 	{
 		if (_alive)
 		{
-			target.draw(_sprite);
+			target.draw(_sprite, states);
 #ifdef DEBUG
-			target.draw(_hitbox);
+			target.draw(_hitbox, states);
 #endif
 		}
 	}

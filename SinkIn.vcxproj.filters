@@ -91,5 +91,19 @@
     <Filter Include="GUI">
       <UniqueIdentifier>{8c6b310a-4cda-43c9-a083-50a1015e4e89}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{642cf0a8-0a17-4ca3-b5fd-e44bc3cf84ce}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="assets\shaders\room.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="assets\shaders\room.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="assets\shaders\film.glsl">
+      <Filter>Shaders</Filter>
+    </None>
   </ItemGroup>
 </Project>

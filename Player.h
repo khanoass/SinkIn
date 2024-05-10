@@ -32,7 +32,6 @@ private:
 	// Cosmetic
 	sf::Texture _tex;
 	sf::Sprite _sprite;
-	sf::CircleShape _reachShape;
 
 	// Movement
 	bool _moving = false;
@@ -48,6 +47,7 @@ private:
 
 #ifdef DEBUG
 	sf::CircleShape _hitbox;
+	sf::CircleShape _reachShape;
 #endif
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;

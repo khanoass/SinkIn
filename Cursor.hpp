@@ -20,8 +20,8 @@ private:
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const
 	{
-		target.draw(_eph);
-		target.draw(_sprite);
+		target.draw(_eph, states);
+		target.draw(_sprite, states);
 	}
 
 public:

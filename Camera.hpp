@@ -7,7 +7,7 @@ class Camera
 private:
 	// Smooth camera settings
 	const float _camFactor = 1.75f;
-	const float _clampThreshold = 0.2;
+	const float _clampThreshold = 0.2f;
 
 	// Data
 	sf::View _view;
@@ -19,15 +19,17 @@ public:
 		_view.zoom(zoom);
 	}
 
-	void updatePlayerSmooth(float dt, const sf::Vector2f& playerPos, bool changedRoom)
+	sf::Vector2f playerSmoothCenter(float dt, const sf::Vector2f& playerPos, bool changedRoom)
 	{
 		sf::Vector2f movement = playerPos - _view.getCenter();
 		if (vm::norm(movement) < _clampThreshold)
-			_view.setCenter(playerPos);
-		else if (changedRoom)
-			_view.setCenter(playerPos); // TODO: Change to match direction
-		else
-			_view.setCenter(_view.getCenter() + (movement * dt * _camFactor));
+			return playerPos;
+		return _view.getCenter() + (movement * dt * _camFactor);
+	}
+
+	void updatePlayerSmooth(float dt, const sf::Vector2f& playerPos, bool changedRoom)
+	{
+		_view.setCenter(playerSmoothCenter(dt, playerPos, changedRoom));
 	}
 
 	sf::View& view()
