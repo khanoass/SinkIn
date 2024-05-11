@@ -1,0 +1,10 @@
+﻿  Boost.cpp
+C:\Users\Rafael Félix\Documents\HSLU\Sem3\GAMEDES\Projekt\SinkIn\Item.hpp(5,10): fatal  error C1083: Impossible d'ouvrir le fichier include : 'SFML/Graphics/Sprite.hpp' : No such file or directory
+  Map.cpp
+C:\Users\Rafael Félix\Documents\HSLU\Sem3\GAMEDES\Projekt\SinkIn\Player.h(3,10): fatal  error C1083: Impossible d'ouvrir le fichier include : 'SFML/Graphics/Sprite.hpp' : No such file or directory
+  Player.cpp
+C:\Users\Rafael Félix\Documents\HSLU\Sem3\GAMEDES\Projekt\SinkIn\Player.h(3,10): fatal  error C1083: Impossible d'ouvrir le fichier include : 'SFML/Graphics/Sprite.hpp' : No such file or directory
+  Room.hpp
+C:\Users\Rafael Félix\Documents\HSLU\Sem3\GAMEDES\Projekt\SinkIn\Room.hpp(6,10): fatal  error C1083: Impossible d'ouvrir le fichier include : 'SFML/Graphics/Color.hpp' : No such file or directory
+  main.cpp
+C:\Users\Rafael Félix\Documents\HSLU\Sem3\GAMEDES\Projekt\SinkIn\main.cpp(1,10): fatal  error C1083: Impossible d'ouvrir le fichier include : 'SFML/Graphics/RenderWindow.hpp' : No such file or directory

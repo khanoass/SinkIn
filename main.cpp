@@ -1,3 +1,5 @@
+#include <iomanip>
+
 #include <SFML/Graphics/RenderWindow.hpp>
 
 #include "Game.hpp"
@@ -16,7 +18,8 @@ int main()
 	Camera camera(size, 0.9f), guiCamera(size);
 
 	sf::Event event;
-	sf::Clock clock;
+	sf::Clock clock, fpsClock;
+	sf::Time currentTime, lastTime;
 
 	while (window.isOpen())
 	{
@@ -31,6 +34,12 @@ int main()
 		sf::Vector2i pos = sf::Mouse::getPosition(window);
 		sf::Vector2f posf = { (float)pos.x, (float)pos.y };
 		float dt = clock.restart().asSeconds();
+
+		// FPS
+		currentTime = fpsClock.getElapsedTime();
+		float fps = 1.f / (currentTime.asSeconds() - lastTime.asSeconds());
+		gui.setFPS((int)fps);
+		lastTime = currentTime;
 
 		camera.updatePlayerSmooth(dt, game.getPlayerPosition(), game.getMapPtr()->changedRoom());
 		game.update(dt, posf);

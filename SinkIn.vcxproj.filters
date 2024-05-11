@@ -37,22 +37,7 @@
     <ClInclude Include="Debug.h">
       <Filter>Util</Filter>
     </ClInclude>
-    <ClInclude Include="Entity.hpp">
-      <Filter>Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="Cursor.hpp">
-      <Filter>Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="Animation.hpp">
-      <Filter>Entities</Filter>
-    </ClInclude>
     <ClInclude Include="Game.hpp">
-      <Filter>Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="Direction.hpp">
-      <Filter>Entities</Filter>
-    </ClInclude>
-    <ClInclude Include="Ephemereal.hpp">
       <Filter>Entities</Filter>
     </ClInclude>
     <ClInclude Include="Minimap.hpp">
@@ -61,9 +46,6 @@
     <ClInclude Include="Tree.hpp">
       <Filter>Util</Filter>
     </ClInclude>
-    <ClInclude Include="LiveEntity.hpp">
-      <Filter>Entities</Filter>
-    </ClInclude>
     <ClInclude Include="GUI.hpp">
       <Filter>GUI</Filter>
     </ClInclude>
@@ -71,6 +53,27 @@
       <Filter>GUI</Filter>
     </ClInclude>
     <ClInclude Include="Camera.hpp" />
+    <ClInclude Include="FpsCounter.hpp">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Animation.hpp">
+      <Filter>Entities\Others</Filter>
+    </ClInclude>
+    <ClInclude Include="Cursor.hpp">
+      <Filter>Entities\Others</Filter>
+    </ClInclude>
+    <ClInclude Include="Entity.hpp">
+      <Filter>Entities\Others</Filter>
+    </ClInclude>
+    <ClInclude Include="Ephemereal.hpp">
+      <Filter>Entities\Others</Filter>
+    </ClInclude>
+    <ClInclude Include="LiveEntity.hpp">
+      <Filter>Entities\Others</Filter>
+    </ClInclude>
+    <ClInclude Include="Direction.hpp">
+      <Filter>Util</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Util">
@@ -94,15 +97,15 @@
     <Filter Include="Shaders">
       <UniqueIdentifier>{642cf0a8-0a17-4ca3-b5fd-e44bc3cf84ce}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Entities\Others">
+      <UniqueIdentifier>{ab2a8e7a-7e83-4154-92f5-e2683a906578}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="assets\shaders\room.frag">
       <Filter>Shaders</Filter>
     </None>
     <None Include="assets\shaders\room.vert">
-      <Filter>Shaders</Filter>
-    </None>
-    <None Include="assets\shaders\film.glsl">
       <Filter>Shaders</Filter>
     </None>
   </ItemGroup>

@@ -145,6 +145,7 @@
     <ClInclude Include="Direction.hpp" />
     <ClInclude Include="Entity.hpp" />
     <ClInclude Include="Ephemereal.hpp" />
+    <ClInclude Include="FpsCounter.hpp" />
     <ClInclude Include="Game.hpp" />
     <ClInclude Include="GUI.hpp" />
     <ClInclude Include="Item.hpp" />
@@ -158,7 +159,6 @@
     <ClInclude Include="Widget.hpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="assets\shaders\film.glsl" />
     <None Include="assets\shaders\room.frag" />
     <None Include="assets\shaders\room.vert" />
   </ItemGroup>

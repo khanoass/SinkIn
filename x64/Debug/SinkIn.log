@@ -1,5 +1,7 @@
-﻿  Map.cpp
+﻿  Boost.cpp
+  Map.cpp
   Player.cpp
+  Room.hpp
   main.cpp
   Génération de code en cours...
   SinkIn.vcxproj -> C:\Users\Rafael Félix\Documents\HSLU\Sem3\GAMEDES\Projekt\SinkIn\x64\Debug\SinkIn.exe

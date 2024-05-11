@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Minimap.hpp"
+#include "FpsCounter.hpp"
 
 class GUI : public LiveEntity
 {
@@ -8,7 +9,10 @@ private:
 	// Data
 	std::vector<Widget*> _widgets;
 	Map* _map;
+
+	// Widgets
 	Minimap _minimap;
+	FpsCounter _fps;
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const
 	{
@@ -24,6 +28,14 @@ public:
 		_minimap.setRooms(_map->pixelRooms(), _map->textureSize());
 		_minimap.setActiveRoom(_map->currentRoom()->pixel());
 		_widgets.push_back(&_minimap);
+
+		// FPS
+		_widgets.push_back(&_fps);
+	}
+
+	void setFPS(int fps)
+	{
+		_fps.setFPS(fps);
 	}
 
 	virtual void updateEvent(const sf::Event& event)
