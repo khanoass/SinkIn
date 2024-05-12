@@ -107,7 +107,7 @@ public:
 		_buffer->clear();
 
 		sf::RenderStates bufferstates;
-		bufferstates.blendMode = sf::BlendMultiply;
+		bufferstates.blendMode = sf::BlendNone;
 
 		_buffer->draw(_shape);
 		for (const auto& ds : _doorsShape)

@@ -22,7 +22,7 @@ public:
 	sf::Vector2f playerSmoothCenter(float dt, const sf::Vector2f& playerPos, bool changedRoom)
 	{
 		sf::Vector2f movement = playerPos - _view.getCenter();
-		if (vm::norm(movement) < _clampThreshold)
+		if (vm::norm(movement) < _clampThreshold || changedRoom)
 			return playerPos;
 		return _view.getCenter() + (movement * dt * _camFactor);
 	}

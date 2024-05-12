@@ -8,7 +8,7 @@ void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const
 #ifdef DEBUG
 	if (_moving) target.draw(_line, states);
 	target.draw(_reachShape, states);
-	target.draw(_hitbox);
+	target.draw(_hitbox, states);
 #endif
 }
 
@@ -153,6 +153,7 @@ void Player::update(float dt, const sf::Vector2f& mousePos)
 #ifdef DEBUG
 		_line[0].position = _position;
 		_reachShape.setPosition(_position);
+		_hitbox.setPosition(_position);
 #endif
 
 		std::vector<sf::Vector2f> border = {
@@ -199,7 +200,6 @@ void Player::update(float dt, const sf::Vector2f& mousePos)
 		_reachShape.setPosition(_position);
 #endif
 
-
 		Logger::log({ "Player entered: ", _room->name() });
 	}
 	else
@@ -207,8 +207,4 @@ void Player::update(float dt, const sf::Vector2f& mousePos)
 		if (_map->changedRoom())
 			_map->resetChangedRoom();
 	}
-
-#ifdef DEBUG
-	_hitbox.setPosition(_position);
-#endif
 }
