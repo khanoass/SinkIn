@@ -4,7 +4,6 @@
 void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	target.draw(_sprite, states);
-	target.draw(_attackEph, states);
 #ifdef DEBUG
 	if (_moving) target.draw(_line, states);
 	target.draw(_reachShape, states);
@@ -30,20 +29,17 @@ bool Player::reachedTarget()
 	return vm::dist(_position, _movTarget) < 10.f;
 }
 
-Player::Player()
-	: _map(nullptr), _room(nullptr)
+Player::Player(ResManager* res)
+	: _map(nullptr), _room(nullptr), _activeWeapon(nullptr)
 {
 	_position = { 0, 0 };
 	_boosts = 0;
 
-	_tex.loadFromFile("assets/textures/placeholder_player.png");
 	_size = { 60, 60 };
 
 	_sprite.setOrigin({ _size.x / 2, _size.y / 2 });
 	_sprite.setPosition(_position);
-	_sprite.setTexture(_tex);
-
-	_attackSheet.loadFromFile("assets/textures/attack_2.png");
+	_sprite.setTexture(res->textures.player);
 
 	_range = 35.f;
 	_sprite.setPosition(_position);
@@ -88,6 +84,21 @@ void Player::boost()
 	Logger::log({ "Player boosted to ", std::to_string(_boosts), ", speed: ", std::to_string(s) });
 }
 
+void Player::pickupWeapon(Weapon* weapon)
+{
+	_activeWeapon = weapon;
+}
+
+Weapon* Player::activeWeapon()
+{
+	return _activeWeapon;
+}
+
+sf::Vector2f Player::direction() const
+{
+	return _lookDirection;
+}
+
 sf::Vector2f Player::position() const
 {
 	return _position;
@@ -124,22 +135,20 @@ void Player::updateEvent(const sf::Event& event)
 		if (_room->pointInDoor(final, dir)) startMoving(final);
 	}
 
-	// Attack
-	if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Right)
+	// Shoot
+	if (_activeWeapon != nullptr && event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Right)
 	{
 		sf::Vector2f point = { (float)event.mouseButton.x, (float)event.mouseButton.y };
-		sf::Vector2f dir = vm::normalise(point - _position);
-		sf::Vector2f pos = _position + sf::Vector2f(dir.x * 50, dir.y * 50);
-		float angle = vm::angle(dir);
-		_attackEph.spawn(pos, { 64, 64 }, _attackSheet, { 5, 2 }, (float)0.05, angle);
-		//_sprite.setRotation(angle);
+		sf::Vector2f final = finalPosition(point);
+		_activeWeapon->shoot(final);
 	}
 }
 
 void Player::update(float dt, const sf::Vector2f& mousePos)
 {
 	// Rotation follow mouse
-	float angle = vm::angle(vm::normalise(mousePos - _position));
+	_lookDirection = vm::normalise((mousePos - _position));
+	float angle = vm::angle(_lookDirection);
 	_sprite.setRotation(angle);
 
 	// Movement update
@@ -178,13 +187,14 @@ void Player::update(float dt, const sf::Vector2f& mousePos)
 		if (reachedTarget()) _moving = false;
 	}
 
-	// Attack
-	_attackEph.update(dt, mousePos);
-
 	// Items
 	std::shared_ptr<Item> item = _room->closestReachableItem(_position, _range);
 	if (item != nullptr)
 		item->pick(this);
+
+	// Weapon
+	if(_activeWeapon != nullptr)
+		_activeWeapon->update(dt, mousePos);
 
 	// Room exit
 	Direction dir = None;

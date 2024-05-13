@@ -11,16 +11,20 @@
 #include "Entity.hpp"
 #include "VeMa.hpp"
 #include "Logger.hpp"
+#include "ResManager.hpp"
 
 class Player; // To avoid circular reference problems
 
 class Item : public Entity
 {
-private:
+protected:
+	// Const
+	const float _range = 15.f;
+
 	// Data
 	sf::Vector2f _position, _size, _player;
 	bool _alive = true;
-	float _range;
+	sf::Texture* _groundTexture;
 
 	// Cosmetic
 	sf::Sprite _sprite;
@@ -29,6 +33,7 @@ private:
 	sf::CircleShape _hitbox;
 #endif
 
+protected:
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const
 	{
 		if (_alive)
@@ -40,7 +45,6 @@ private:
 		}
 	}
 
-protected:
 	virtual void picked(Player* player)
 	{
 		if (_alive) 
@@ -48,17 +52,16 @@ protected:
 	}
 
 public:
-	Item(const sf::Vector2f& position, const sf::Vector2f& size, const sf::Texture& texture, float range)
+	Item(const sf::Vector2f& position, const sf::Vector2f& size, sf::Texture* groundTexture)
 	{
 		_position = position;
 		_size = size;
 
+		_groundTexture = groundTexture;
 		_sprite.setOrigin(_size.x / 2, _size.y / 2);
 		_sprite.setPosition(_position);
 		_sprite.setScale({ 2.f, 2.f });
-		_sprite.setTexture(texture);
-
-		_range = range;
+		_sprite.setTexture(*_groundTexture);
 
 #ifdef DEBUG
 		_hitbox.setFillColor(sf::Color::Transparent);

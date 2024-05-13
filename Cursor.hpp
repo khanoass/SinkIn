@@ -14,9 +14,11 @@ private:
 
 	// Cosmetic
 	sf::Sprite _sprite;
-	sf::Texture _f1, _f2, _f3;
+	sf::Texture* _f1;
+	sf::Texture* _f2;
+	sf::Texture* _f3;
+	sf::Texture* _ephSheet;
 	bool _canMove;
-	sf::Texture _ephSheet;
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const
 	{
@@ -25,7 +27,7 @@ private:
 	}
 
 public:
-	Cursor(Map* map, Player* player)
+	Cursor(Map* map, Player* player, ResManager* res)
 	{
 		_size = { 32, 32 };
 
@@ -37,15 +39,18 @@ public:
 		_sprite.setPosition((float)pos.x, (float)pos.y);
 		_sprite.setScale(3.f, 3.f);
 
-		_f1.loadFromFile("assets/textures/f1.png");
-		_f2.loadFromFile("assets/textures/f2.png");
-		_f3.loadFromFile("assets/textures/f3.png");
+		_f1 = &res->textures.cursor_yes;
+		_f2 = &res->textures.cursor_no;
+		_f3 = &res->textures.cursor_door;
+		_ephSheet = &res->textures.eph;
 
-		_ephSheet.loadFromFile("assets/textures/eph.png");
-
-		_sprite.setTexture(_f1);
-
+		_sprite.setTexture(*_f1);
 		_canMove = true;
+	}
+
+	sf::Vector2f finalPosition() const
+	{
+		return _sprite.getPosition();
 	}
 
 	virtual void updateEvent(const sf::Event& event)
@@ -69,9 +74,9 @@ public:
 		Room* r = _map->currentRoom();
 		Direction dir = None;
 
-		if (r->pointInRoom(final))				_sprite.setTexture(_f1);
-		else if (r->pointInDoor(final, dir))	_sprite.setTexture(_f3);
-		else									_sprite.setTexture(_f2);
+		if (r->pointInRoom(final))				_sprite.setTexture(*_f1);
+		else if (r->pointInDoor(final, dir))	_sprite.setTexture(*_f3);
+		else									_sprite.setTexture(*_f2);
 
 		_eph.update(dt, mousePos);
 	}

@@ -14,6 +14,9 @@
     <ClCompile Include="Map.cpp">
       <Filter>Entities\Map</Filter>
     </ClCompile>
+    <ClCompile Include="Weapon.cpp">
+      <Filter>Entities\Items</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Item.hpp">
@@ -72,6 +75,18 @@
       <Filter>Entities\Others</Filter>
     </ClInclude>
     <ClInclude Include="Direction.hpp">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="Weapon.h">
+      <Filter>Entities\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="Pistol.hpp">
+      <Filter>Entities\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="Random.hpp">
+      <Filter>Util</Filter>
+    </ClInclude>
+    <ClInclude Include="ResManager.hpp">
       <Filter>Util</Filter>
     </ClInclude>
   </ItemGroup>

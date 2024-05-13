@@ -2,16 +2,17 @@
 
 #include <iostream>
 #include <string>
-#include <random>
 #include <stack>
 #include <sstream>
 
 #include "VeMa.hpp"
 #include "Room.hpp"
 #include "Logger.hpp"
+#include "ResManager.hpp"
 
 class Player;
 class Boost;
+class Glock;
 
 class Map : public LiveEntity
 {
@@ -19,6 +20,7 @@ private:
 	// Data
 	std::string _filename;
 	sf::Vector2f _center;
+	ResManager* _res;
 
 	Room* _current;
 	std::vector<std::shared_ptr<Room>> _rooms;
@@ -27,11 +29,9 @@ private:
 
 	sf::Vector2i _textureSize;
 
-	sf::Texture _boostTexture;
-
 	Player* _player;
 
-	std::shared_ptr<sf::Shader> _shaderTex;
+	sf::Shader* _shaderTex;
 
 	bool _changedRoom = false;
 
@@ -39,12 +39,10 @@ private:
 
 	sf::Vector2i getNextRoomOrigin(const sf::Vector2i& pixel, Direction direction) const;
 
-	int iRand(int min, int max);
-
 	bool loadMapFromImage(const sf::Image& image, const sf::Vector2f& center);
 
 public:
-	Map(const std::string& filename, const sf::Vector2f& center);
+	Map(const std::string& filename, const sf::Vector2f& center, ResManager* res);
 
 	void setPlayer(Player* player);
 
@@ -56,7 +54,7 @@ public:
 
 	Room* atPixel(const sf::Vector2i& px);
 
-	std::shared_ptr<sf::Shader> getTexShaderPtr() const;
+	sf::Shader* getTexShaderPtr();
 
 	sf::Vector2i textureSize() const;
 

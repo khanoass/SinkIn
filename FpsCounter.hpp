@@ -17,7 +17,7 @@ private:
 	// Cosmetic
 	sf::VertexArray _panel;
 	sf::Text _text;
-	sf::Font _font;
+	sf::Font* _font;
 	const sf::Color _bg = { 80, 80, 80, 100 };
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override
@@ -35,12 +35,15 @@ public:
 		_panel.append(sf::Vertex({ _position.x + _size.x, _position.y + _size.y }, _bg));
 		_panel.append(sf::Vertex({ _position.x, _position.y + _size.y }, _bg));
 
-		_font.loadFromFile("assets/fonts/Sunny Spells Basic.ttf");
-
-		_text.setFont(_font);
 		_text.setCharacterSize(_charSize);
 		_text.setFillColor(sf::Color(255, 255, 255, 128));
 		_text.setPosition({ _position.x + _margin.x, _position.y + _margin.y });
+	}
+
+	void setFont(sf::Font* font)
+	{
+		_font = font;
+		_text.setFont(*_font);
 	}
 
 	void setFPS(int fps)

@@ -63,7 +63,7 @@ private:
 	}
 
 public:
-	Room(std::shared_ptr<sf::Shader>& texShader, const sf::Vector2f& size, const sf::Vector2f& center, const sf::Vector2i& pixel, const std::string& name = "")
+	Room(sf::Shader* texShader, const sf::Vector2f& size, const sf::Vector2f& center, const sf::Vector2i& pixel, const std::string& name = "")
 		: _shaderTexture(texShader), _size(size), _center(center), _name(name), _pixel(pixel)
 	{
 		_bg = { 50, 50, 50 };

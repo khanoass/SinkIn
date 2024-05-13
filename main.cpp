@@ -1,9 +1,8 @@
-#include <iomanip>
-
 #include <SFML/Graphics/RenderWindow.hpp>
 
 #include "Game.hpp"
 #include "Camera.hpp"
+#include "ResManager.hpp"
 
 int main()
 {
@@ -12,8 +11,10 @@ int main()
 	sf::RenderWindow window(sf::VideoMode(size.x, size.y), "Sink In", sf::Style::Titlebar | sf::Style::Close);
 	window.setMouseCursorVisible(false);
 
-	Game game({ (float)size.x / 2, (float)size.y / 2 });
-	GUI gui(game.getMapPtr());
+	ResManager res;
+
+	Game game({ (float)size.x / 2, (float)size.y / 2 }, &res);
+	GUI gui(game.getMapPtr(), &res);
 	
 	Camera camera(size, 0.9f), guiCamera(size);
 

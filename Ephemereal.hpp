@@ -32,7 +32,7 @@ public:
 		_alive = false;
 	}
 
-	void spawn(const sf::Vector2f& position, const sf::Vector2f& size, const sf::Texture& spritesheet, const sf::Vector2i& numFrames, float seconds, float angle = 0)
+	void spawn(const sf::Vector2f& position, const sf::Vector2f& size, sf::Texture* spritesheet, const sf::Vector2i& numFrames, float seconds, float angle = 0)
 	{
 		_position = position;
 		_size = size;
@@ -44,7 +44,7 @@ public:
 
 		_sprite.setPosition(_position);
 		_sprite.setOrigin(_size.x / 2, _size.y / 2);
-		_sprite.setTexture(spritesheet);
+		_sprite.setTexture(*spritesheet);
 		_sprite.setTextureRect(_animation.frame());
 		_sprite.setRotation(angle);
 

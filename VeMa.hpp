@@ -39,6 +39,23 @@ namespace vm
 		return std::atan2(v.y, v.x) * 180 / (float)PI - 90;
 	}
 
+	inline float degToRad(float degrees)
+	{
+		return degrees * (float)PI / 180.f;
+	}
+
+	static sf::Vector2f rotateVector(const sf::Vector2f& v, float angle)
+	{
+		float rad = degToRad(angle);
+		float cosTheta = cos(rad);
+		float sinTheta = sin(rad);
+
+		return sf::Vector2f(
+			cosTheta * v.x - sinTheta * v.y,
+			sinTheta * v.x + cosTheta * v.y
+		);
+	}
+
 	struct Vector2iComparator {
 		bool operator() (const sf::Vector2i& lhs, const sf::Vector2i& rhs) const
 		{	

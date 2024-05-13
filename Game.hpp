@@ -10,6 +10,7 @@
 class Game : public LiveEntity
 {
 private:
+	// Data
 	sf::Vector2f _center;
 
 	Map _map;
@@ -19,16 +20,16 @@ private:
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const
 	{
 		target.draw(_map, states);
-		target.draw(_cursor, states);
 		target.draw(_player, states);
+		target.draw(_cursor, states);
 	}
 
 public:
-	Game(const sf::Vector2f& center) :
+	Game(const sf::Vector2f& center, ResManager* res) :
 		_center(center),
-		_map(Map("assets/maps/map1_normal.png", center)),
-		_player(),
-		_cursor(&_map, &_player)
+		_map(Map("assets/maps/map1_normal.png", center, res)),
+		_player(res),
+		_cursor(&_map, &_player, res)
 	{
 		_map.setPlayer(&_player);
 		_map.generate();
@@ -59,9 +60,9 @@ public:
 
 	virtual void update(float dt, const sf::Vector2f& mousePos)
 	{
-		_player.update(dt, mousePos);
 		_cursor.update(dt, mousePos);
-		_map.update(dt, mousePos);
+		_player.update(dt, _cursor.finalPosition());
+		_map.update(dt, _cursor.finalPosition());
 
 		_map.getTexShaderPtr()->setUniform("screenSize", sf::Glsl::Vec2({ _center.x*2, _center.y*2 }));
 		_map.getTexShaderPtr()->setUniform("radius", 0.5f);

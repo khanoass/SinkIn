@@ -2,6 +2,7 @@
 
 #include "Minimap.hpp"
 #include "FpsCounter.hpp"
+#include "ResManager.hpp"
 
 class GUI : public LiveEntity
 {
@@ -21,7 +22,7 @@ private:
 	}
 
 public:
-	GUI(Map* map) :
+	GUI(Map* map, ResManager* res) :
 		_map(map), _minimap(_map)
 	{
 		// Minimap
@@ -30,6 +31,7 @@ public:
 		_widgets.push_back(&_minimap);
 
 		// FPS
+		_fps.setFont(&res->fonts.font);
 		_widgets.push_back(&_fps);
 	}
 

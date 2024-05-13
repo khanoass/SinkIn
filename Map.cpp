@@ -1,6 +1,7 @@
 #include "Player.h"
 #include "Map.h"
 #include "Boost.h"
+#include "Pistol.hpp"
 
 void Map::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
@@ -13,14 +14,6 @@ sf::Vector2i Map::getNextRoomOrigin(const sf::Vector2i& pixel, Direction directi
 	Directions::getHV(h, v, direction);
 	sf::Vector2i next = { pixel.x + h * 3, pixel.y + v * 3 };
 	return next;
-}
-
-int Map::iRand(int min, int max)
-{
-	std::random_device rd;
-	std::mt19937 rng(rd());
-	std::uniform_int_distribution<int> uni(min, max);
-	return uni(rng);
 }
 
 bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& center)
@@ -129,19 +122,35 @@ bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& center)
 		Logger::log({ "Added next room pointers at ", std::to_string(ip.x), ",", std::to_string(ip.y) });
 
 		// Items
-		int nbBoosts = (i != 0) ? iRand(0, 8) : 1;
+		int nbBoosts = (i != 0) ? Random::iRand(0, 8) : 1;
 		if (nbBoosts > 5) nbBoosts = 1;
 		std::vector<std::shared_ptr<Item>> items;
+
+		// Boosts
 		for (int i = 0; i < nbBoosts; i++)
 		{
 			sf::Vector2f pos = { 0, 0 };
 			do
 			{
-				pos = { (float)iRand(150, 1050), (float)iRand(150, 650) };
+				pos = { (float)Random::iRand(150, 1050), (float)Random::iRand(150, 650) };
 			} while (vm::dist(pos, center) < 200.f);
 
-			items.push_back(std::make_shared<Boost>(Boost(pos, _boostTexture)));
+			items.push_back(std::make_shared<Boost>(Boost(pos, _res)));
 		}
+
+		// Glock
+		if (i == 0)
+		{
+			sf::Vector2f pos = { 0, 0 };
+			do
+			{
+				pos = { (float)Random::iRand(150, 1050), (float)Random::iRand(150, 650) };
+			} while (vm::dist(pos, center) < 200.f);
+
+			items.push_back(std::make_shared<Pistol>(Pistol(pos, _res)));
+		}
+
+
 		_rooms[i]->setItems(items);
 	}
 
@@ -149,14 +158,9 @@ bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& center)
 	return true;
 }
 
-Map::Map(const std::string& filename, const sf::Vector2f& center)
-	: _current(nullptr), _player(nullptr)
+Map::Map(const std::string& filename, const sf::Vector2f& center, ResManager* res)
+	: _current(nullptr), _player(nullptr), _shaderTex(&res->shaders.map), _res(res)
 {
-	_boostTexture.loadFromFile("assets/textures/item.png");
-
-	_shaderTex = std::make_shared<sf::Shader>();
-	_shaderTex->loadFromFile("assets/shaders/room.vert", "assets/shaders/room.frag");
-
 	_filename = filename;
 	_center = center;
 }
@@ -210,7 +214,7 @@ bool Map::changedRoom() const
 	return _changedRoom;
 }
 
-std::shared_ptr<sf::Shader> Map::getTexShaderPtr() const
+sf::Shader* Map::getTexShaderPtr()
 {
 	return _shaderTex;
 }

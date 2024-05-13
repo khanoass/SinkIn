@@ -11,6 +11,8 @@
 #include "Debug.h"
 #include "VeMa.hpp"
 #include "Ephemereal.hpp"
+#include "Weapon.h"
+#include "ResManager.hpp"
 
 class Map;
 class Room;
@@ -26,7 +28,7 @@ private:
 	Map* _map;
 	Room* _room;
 
-	sf::Vector2f _position, _direction, _size;
+	sf::Vector2f _position, _direction, _size, _lookDirection;
 	int _boosts;
 
 	// Cosmetic
@@ -38,12 +40,11 @@ private:
 	sf::Vector2f _movTarget;
 	sf::VertexArray _line;
 
-	// Attack
-	Ephemereal _attackEph;
-	sf::Texture _attackSheet;
-
 	// Items
 	float _range;
+
+	// Weapons
+	Weapon* _activeWeapon;
 
 #ifdef DEBUG
 	sf::CircleShape _hitbox;
@@ -56,10 +57,17 @@ private:
 	bool reachedTarget();
 
 public:
-	Player();
+	Player(ResManager* res);
 
 	void setMap(Map* map);
+	
+	// Item interaction
 	void boost();
+	void pickupWeapon(Weapon* weapon);
+
+	Weapon* activeWeapon();
+
+	sf::Vector2f direction() const;
 
 	sf::Vector2f position() const;
 	float reach() const;
