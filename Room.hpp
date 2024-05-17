@@ -11,8 +11,8 @@
 #include <SFML/Graphics/RenderTexture.hpp>
 
 #include "Direction.hpp"
-#include "Item.hpp"
 #include "LiveEntity.hpp"
+#include "Items.hpp"
 
 class Room : public LiveEntity
 {
@@ -34,7 +34,7 @@ private:
 	sf::VertexArray _canvas;
 
 	// Items
-	std::vector<std::shared_ptr<Item>> _items;
+	Items* _items;
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const
 	{
@@ -82,7 +82,7 @@ public:
 		_canvas.append(sf::Vertex({ 0, _center.y * 2 },				{ 0, _center.y * 2 }));
 	}
 
-	void setItems(const std::vector<std::shared_ptr<Item>>& items)
+	void setItems(Items* items)
 	{
 		_items = items;
 	}
@@ -107,13 +107,12 @@ public:
 		_buffer->clear();
 
 		sf::RenderStates bufferstates;
-		bufferstates.blendMode = sf::BlendNone;
+		bufferstates.blendMode = sf::BlendAlpha;
 
-		_buffer->draw(_shape);
+		_buffer->draw(_shape, bufferstates);
 		for (const auto& ds : _doorsShape)
-			_buffer->draw(ds);
-		for (const auto& i : _items)
-			_buffer->draw(*i);
+			_buffer->draw(ds, bufferstates);
+		_buffer->draw(*_items, bufferstates);
 
 		_buffer->display();
 	}
@@ -202,16 +201,5 @@ public:
 	Room* nextRoom(Direction dir)
 	{
 		return _nextRooms[dir];
-	}
-
-	std::shared_ptr<Item> closestReachableItem(const sf::Vector2f& position, float range)
-	{
-		for (const auto& i : _items)
-		{
-			if (!i->alive()) continue;
-			if (vm::dist(i->position(), position) < i->range() + range)
-				return i;
-		}
-		return nullptr;
 	}
 };

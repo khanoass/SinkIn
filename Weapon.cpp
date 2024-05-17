@@ -1,9 +1,11 @@
 #include "Weapon.h"
 #include "Player.h"
 
+enum Weapon::Mode;
+
 sf::Vector2f Weapon::tubeExit(const sf::Vector2f& mousePos) const
 {
-	auto newexit = vm::rotateVector(_tubeExit, gunDir(mousePos));
+	auto newexit = vm::rotateVector(_tubeExit, vm::angle(gunDir(mousePos)));
 	return newexit + gunCenter();
 }
 
@@ -15,9 +17,9 @@ sf::Vector2f Weapon::gunCenter() const
 	return finalPos;
 }
 
-float Weapon::gunDir(const sf::Vector2f& mousePos) const
+sf::Vector2f Weapon::gunDir(const sf::Vector2f& mousePos) const
 {
-	return vm::angle(vm::normalise(gunCenter() - mousePos));
+	return vm::normalise(gunCenter() - mousePos);
 }
 
 void Weapon::draw(sf::RenderTarget& target, sf::RenderStates states) const
@@ -38,17 +40,23 @@ void Weapon::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	}
 }
 
-void Weapon::picked(Player* player)
+void Weapon::picked(const std::shared_ptr<Player>& player)
 {
 	if (_alive)
 	{
 		_player = player;
 
 		Logger::log({ "Weapon picked" });
-		_player->pickupWeapon(this);
-
-		_active = true;
+		if (_player->pickupWeapon(shared_from_this()))
+		{
+			_active = true;
+			_alive = false;
+		}
 	}
+}
+
+Weapon::Weapon() : Item({0, 0}, {0, 0}, nullptr)
+{
 }
 
 Weapon::Weapon(const sf::Vector2f& position, const sf::Vector2f& size, const sf::Vector2f& origin, sf::Texture* textureGround, sf::Texture* textureHold, sf::Texture* textureMuzzle)
@@ -65,6 +73,13 @@ Weapon::Weapon(const sf::Vector2f& position, const sf::Vector2f& size, const sf:
 	_pickedUp.setTexture(*textureHold);
 	_ammo = 20;
 
+	_shot = 0;
+	_shooting = false;
+
+	_speed = 0;
+	_direction = { 0, 0 };
+	_friction = 0;
+
 #ifdef DEBUG
 	_gunorigin.setFillColor(sf::Color::Blue);
 	_gunorigin.setRadius(5.f);
@@ -78,7 +93,7 @@ Weapon::Weapon(const sf::Vector2f& position, const sf::Vector2f& size, const sf:
 
 void Weapon::shoot(const sf::Vector2f& mousePos)
 {
-	// TODO Cooldown, reload time, semi/auto
+	// TODO Cooldown, reload time, semi/auto, knockback
 	// TODO bug crash when spam shoot
 
 	if (_ammo == 0)
@@ -89,12 +104,22 @@ void Weapon::shoot(const sf::Vector2f& mousePos)
 
 	Logger::log({ "pew !" });
 
-	_ammo--;
+	// Cooldown
+	if (_cooldown > 0)
+	{
+		Logger::log({ "cooldown..." });
+		return;
+	}
+	_cooldown = _fireRate;
 
+	_ammo--;
+	_shot++;
+
+	// Bullet
 	Bullet bullet;
 	bullet.position = tubeExit(mousePos);
 	bullet.size = _bulletSize;
-	bullet.lifespan = _bulletLifespan;
+	bullet.timeleft = _bulletLifespan;
 	bullet.speed = _bulletSpeed;
 	bullet.damage = _bulletDamage;
 
@@ -103,7 +128,6 @@ void Weapon::shoot(const sf::Vector2f& mousePos)
 	direction = vm::rotateVector(direction, angle);
 
 	bullet.direction = direction;
-	bullet.clock.restart();
 
 	_bulletArray.insert(_bulletArray.end(), {
 		sf::Vertex(bullet.position, sf::Color::Yellow),
@@ -123,18 +147,70 @@ void Weapon::reload()
 {
 }
 
+Weapon::Mode Weapon::mode() const
+{
+	return _mode;
+}
+
+int Weapon::ammo() const
+{
+	return _ammo;
+}
+
+bool Weapon::shooting() const
+{
+	return _shooting;
+}
+
+void Weapon::setShooting(bool shooting)
+{
+	_shooting = shooting;
+}
+
+int Weapon::shot() const
+{
+	return _shot;
+}
+
+void Weapon::resetShot()
+{
+	_shot = 0;
+}
+
 void Weapon::setActive(bool active)
 {
 	_active = active;
 }
 
+void Weapon::drop(const sf::Vector2f& mousePos)
+{
+	_alive = true;
+	_direction = gunDir(mousePos);
+	_speed = 100;
+	_friction = 0.8;
+	Logger::log({ "Weapon dropped" });
+}
+
 void Weapon::update(float dt, const sf::Vector2f& mousePos)
 {
+	// Drop
+	if (_alive && _direction != sf::Vector2f(0, 0) && _speed != 0)
+	{
+		_position.x += _direction.x * _speed * dt;
+		_position.y += _direction.y * _speed * dt;
+		_speed *= _friction;
+	}
+
+	// Cooldown update
+	if (_cooldown > 0)
+		_cooldown -= dt;
+
 	// Remove timedout bullets
 	for (int i = 0; i < _bullets.size(); i++)
 	{
 		const auto& b = _bullets[i];
-		if (b.clock.getElapsedTime().asSeconds() > b.lifespan)
+		b.timeleft - dt;
+		if (b.timeleft <= 0)
 		{
 			_bullets.erase(std::find(_bullets.begin(), _bullets.end(), b));
 			int vi = i * 4;
@@ -163,7 +239,7 @@ void Weapon::update(float dt, const sf::Vector2f& mousePos)
 	auto pos = gunCenter();
 
 	_pickedUp.setPosition(pos);
-	_pickedUp.setRotation(gunDir(mousePos));
+	_pickedUp.setRotation(vm::angle(gunDir(mousePos)));
 
 #ifdef DEBUG
 	_gunorigin.setPosition(pos);

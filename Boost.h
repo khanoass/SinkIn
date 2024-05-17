@@ -5,7 +5,7 @@
 class Boost : public Item
 {
 protected:
-	virtual void picked(Player* _player) override;
+	virtual void picked(const std::shared_ptr<Player>& _player) override;
 
 public:
 	Boost(const sf::Vector2f& position, ResManager* res)

@@ -14,13 +14,14 @@ private:
 	sf::Vector2f _center;
 
 	Map _map;
-	Player _player;
+	std::shared_ptr<Player> _player;
 	Cursor _cursor;
+	Items _items;
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const
 	{
 		target.draw(_map, states);
-		target.draw(_player, states);
+		target.draw(*_player, states);
 		target.draw(_cursor, states);
 	}
 
@@ -28,17 +29,18 @@ public:
 	Game(const sf::Vector2f& center, ResManager* res) :
 		_center(center),
 		_map(Map("assets/maps/map1_normal.png", center, res)),
-		_player(res),
-		_cursor(&_map, &_player, res)
+		_player(std::make_shared<Player>(res)),
+		_cursor(&_map, _player, res)
 	{
-		_map.setPlayer(&_player);
+		_map.setPlayer(_player);
+		_map.setItems(&_items);
 		_map.generate();
-		_player.setMap(&_map);
+		_player->setMap(&_map);
 	}
 
 	sf::Vector2f getPlayerPosition() const
 	{
-		return _player.position();
+		return _player->position();
 	}
 
 	Map* getMapPtr()
@@ -53,7 +55,7 @@ public:
 
 	virtual void updateEvent(const sf::Event& event)
 	{
-		_player.updateEvent(event);
+		_player->updateEvent(event);
 		_cursor.updateEvent(event);
 		_map.updateEvent(event);
 	}
@@ -61,7 +63,7 @@ public:
 	virtual void update(float dt, const sf::Vector2f& mousePos)
 	{
 		_cursor.update(dt, mousePos);
-		_player.update(dt, _cursor.finalPosition());
+		_player->update(dt, _cursor.finalPosition());
 		_map.update(dt, _cursor.finalPosition());
 
 		_map.getTexShaderPtr()->setUniform("screenSize", sf::Glsl::Vec2({ _center.x*2, _center.y*2 }));

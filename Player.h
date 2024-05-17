@@ -17,7 +17,7 @@
 class Map;
 class Room;
 
-class Player : public LiveEntity
+class Player : public LiveEntity, public std::enable_shared_from_this<Player>
 {
 private:
 	const float _boostsFactor = 1.5f;
@@ -44,7 +44,8 @@ private:
 	float _range;
 
 	// Weapons
-	Weapon* _activeWeapon;
+	bool _hasWeapon;
+	std::shared_ptr<Weapon> _activeWeapon;
 
 #ifdef DEBUG
 	sf::CircleShape _hitbox;
@@ -56,6 +57,8 @@ private:
 	void startMoving(const sf::Vector2f& target);
 	bool reachedTarget();
 
+	void shoot(const sf::Event& event);
+
 public:
 	Player(ResManager* res);
 
@@ -63,7 +66,8 @@ public:
 	
 	// Item interaction
 	void boost();
-	void pickupWeapon(Weapon* weapon);
+	bool pickupWeapon(const std::shared_ptr<Weapon>& weapon);
+	void dropWeapon(const sf::Vector2f& mousePos);
 
 	Weapon* activeWeapon();
 

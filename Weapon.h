@@ -10,8 +10,7 @@
 struct Bullet
 {
 	sf::Vector2f position, size, direction, origin;
-	float lifespan, speed, damage;
-	sf::Clock clock;
+	float timeleft, speed, damage;
 
 	bool operator== (const Bullet& other)
 	{
@@ -19,15 +18,14 @@ struct Bullet
 			position == other.position &&
 			size == other.size &&
 			direction == other.direction &&
-			lifespan == other.lifespan &&
+			timeleft == other.timeleft &&
 			speed == other.speed &&
 			origin == other.origin &&
-			damage == other.damage &&
-			clock.getElapsedTime() == other.clock.getElapsedTime();
+			damage == other.damage;
 	}
 };
 
-class Weapon : public Item
+class Weapon : public Item, public std::enable_shared_from_this<Weapon>
 {
 public:
 	enum Mode;
@@ -35,7 +33,11 @@ public:
 private:
 	// Data
 	std::vector<Bullet> _bullets;
-	bool _active;  
+	bool _active;
+	sf::Vector2f _direction;
+	float _speed, _friction;
+	int _shot;
+	bool _shooting;
 
 	// Cosmetic
 	sf::Sprite _pickedUp;
@@ -47,16 +49,16 @@ private:
 
 	sf::Vector2f tubeExit(const sf::Vector2f& mousePos) const;
 	sf::Vector2f gunCenter() const;
-	float gunDir(const sf::Vector2f& mousePos) const;
+	sf::Vector2f gunDir(const sf::Vector2f& mousePos) const;
 
 	// Flash animation
 	Ephemereal _eph;
 	sf::Texture* _ephSheet;
 
-protected:
-	// TODO: optimise (bullets vector useless?)
+	float _cooldown = 0;
 
-	Player* _player;
+protected:
+	std::shared_ptr<Player> _player;
 	int _ammo;
 
 	// Must be defined!
@@ -67,7 +69,7 @@ protected:
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
-	virtual void picked(Player* player);
+	virtual void picked(const std::shared_ptr<Player>& player);
 
 public:
 	enum Mode
@@ -75,13 +77,26 @@ public:
 		Auto, SemiAuto, Burst3
 	};
 
+	Weapon();
+
 	Weapon(const sf::Vector2f& position, const sf::Vector2f& size, const sf::Vector2f& origin, sf::Texture* textureGround, sf::Texture* textureHold, sf::Texture* textureMuzzle);
 
 	void shoot(const sf::Vector2f& dir);
 
 	void reload();
 
+	Mode mode() const;
+
+	int ammo() const;
+
+	bool shooting() const;
+	void setShooting(bool shooting);
+	int shot() const;
+	void resetShot();
+
 	void setActive(bool active);
+
+	void drop(const sf::Vector2f& mousePos);
 
 	void update(float dt, const sf::Vector2f& mousePos);
 };

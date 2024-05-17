@@ -89,6 +89,9 @@
     <ClInclude Include="ResManager.hpp">
       <Filter>Util</Filter>
     </ClInclude>
+    <ClInclude Include="Items.hpp">
+      <Filter>Entities\Items</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Util">

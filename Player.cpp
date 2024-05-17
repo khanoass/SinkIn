@@ -4,6 +4,8 @@
 void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	target.draw(_sprite, states);
+	if (_hasWeapon)
+		target.draw(*_activeWeapon, states);
 #ifdef DEBUG
 	if (_moving) target.draw(_line, states);
 	target.draw(_reachShape, states);
@@ -29,6 +31,13 @@ bool Player::reachedTarget()
 	return vm::dist(_position, _movTarget) < 10.f;
 }
 
+void Player::shoot(const sf::Event& event)
+{
+	sf::Vector2f point = { (float)event.mouseButton.x, (float)event.mouseButton.y };
+	sf::Vector2f final = finalPosition(point);
+	_activeWeapon->shoot(final);
+}
+
 Player::Player(ResManager* res)
 	: _map(nullptr), _room(nullptr), _activeWeapon(nullptr)
 {
@@ -36,6 +45,8 @@ Player::Player(ResManager* res)
 	_boosts = 0;
 
 	_size = { 60, 60 };
+
+	_hasWeapon = false;
 
 	_sprite.setOrigin({ _size.x / 2, _size.y / 2 });
 	_sprite.setPosition(_position);
@@ -74,7 +85,6 @@ void Player::setMap(Map* map)
 #ifdef DEBUG
 	_reachShape.setPosition(_position);
 #endif
-
 }
 
 void Player::boost()
@@ -84,14 +94,25 @@ void Player::boost()
 	Logger::log({ "Player boosted to ", std::to_string(_boosts), ", speed: ", std::to_string(s) });
 }
 
-void Player::pickupWeapon(Weapon* weapon)
+bool Player::pickupWeapon(const std::shared_ptr<Weapon>& weapon)
 {
+	if (_hasWeapon)
+		return false;
 	_activeWeapon = weapon;
+	_hasWeapon = true;
+	return true;
+}
+
+void Player::dropWeapon(const sf::Vector2f& mousePos)
+{
+	if (!_hasWeapon) return;
+	_activeWeapon->drop(mousePos);
+	_hasWeapon = false;
 }
 
 Weapon* Player::activeWeapon()
 {
-	return _activeWeapon;
+	return _activeWeapon.get();
 }
 
 sf::Vector2f Player::direction() const
@@ -135,12 +156,41 @@ void Player::updateEvent(const sf::Event& event)
 		if (_room->pointInDoor(final, dir)) startMoving(final);
 	}
 
-	// Shoot
-	if (_activeWeapon != nullptr && event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Right)
+	// Weapon
+	if (_hasWeapon)
 	{
-		sf::Vector2f point = { (float)event.mouseButton.x, (float)event.mouseButton.y };
-		sf::Vector2f final = finalPosition(point);
-		_activeWeapon->shoot(final);
+		// Shoot
+		Weapon::Mode mode = _activeWeapon->mode();
+
+		switch (mode)
+		{
+		case Weapon::Auto:
+			if (!_activeWeapon->shooting())
+			{
+				if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Right)
+					_activeWeapon->setShooting(true);
+			}
+			else shoot(event);
+			break;
+		case Weapon::SemiAuto:
+			if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Right)
+				shoot(event);
+			break;
+		case Weapon::Burst3:
+			if (!_activeWeapon->shooting())
+			{
+				if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Right)
+					_activeWeapon->setShooting(true);
+			}
+			else if (_activeWeapon->shot() < 3)
+				shoot(event);
+			else if (_activeWeapon->shot() >= 3)
+			{
+				_activeWeapon->setShooting(false);
+				_activeWeapon->resetShot();
+			}
+			break;
+		}
 	}
 }
 
@@ -150,6 +200,10 @@ void Player::update(float dt, const sf::Vector2f& mousePos)
 	_lookDirection = vm::normalise((mousePos - _position));
 	float angle = vm::angle(_lookDirection);
 	_sprite.setRotation(angle);
+
+	// Drop weapon
+	if (_hasWeapon && sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
+		dropWeapon(mousePos);
 
 	// Movement update
 	if (_moving)
@@ -188,12 +242,12 @@ void Player::update(float dt, const sf::Vector2f& mousePos)
 	}
 
 	// Items
-	std::shared_ptr<Item> item = _room->closestReachableItem(_position, _range);
+	std::shared_ptr<Item> item = _map->items()->closestReachableItem(_position, _range);
 	if (item != nullptr)
-		item->pick(this);
+		item->pick(shared_from_this());
 
 	// Weapon
-	if(_activeWeapon != nullptr)
+	if(_hasWeapon)
 		_activeWeapon->update(dt, mousePos);
 
 	// Room exit

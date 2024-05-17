@@ -9,10 +9,9 @@
 #include "Room.hpp"
 #include "Logger.hpp"
 #include "ResManager.hpp"
+#include "Items.hpp"
 
 class Player;
-class Boost;
-class Glock;
 
 class Map : public LiveEntity
 {
@@ -21,6 +20,7 @@ private:
 	std::string _filename;
 	sf::Vector2f _center;
 	ResManager* _res;
+	Items* _items;
 
 	Room* _current;
 	std::vector<std::shared_ptr<Room>> _rooms;
@@ -29,7 +29,7 @@ private:
 
 	sf::Vector2i _textureSize;
 
-	Player* _player;
+	std::shared_ptr<Player> _player;
 
 	sf::Shader* _shaderTex;
 
@@ -44,11 +44,15 @@ private:
 public:
 	Map(const std::string& filename, const sf::Vector2f& center, ResManager* res);
 
-	void setPlayer(Player* player);
+	void setPlayer(const std::shared_ptr<Player>& player);
 
 	bool generate();
 
 	Room* currentRoom() const;
+
+	void setItems(Items* items);
+
+	Items* items();
 
 	sf::Vector2f getPlayerPosition() const;
 

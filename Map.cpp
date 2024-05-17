@@ -46,6 +46,9 @@ bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& center)
 		sf::Vector2i startPx = stack.top();
 		stack.pop();
 
+		// Room name
+		std::stringstream name;
+
 		// Doors
 		sf::Color doorsc[doorsNb];
 		for (int i = 0; i < doorsNb; i++)
@@ -82,11 +85,11 @@ bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& center)
 		else
 			Logger::log({ "- Didn't find pixelDoor at ", std::to_string(startPx.x), ",", std::to_string(startPx.y) });
 
-		std::stringstream ss;
-		ss << counter << Logger::afterNumber(counter) << " Room";
-		_rooms.push_back(std::make_shared<Room>(Room(_shaderTex, { 1000, 600 }, center, startPx, ss.str())));
+		name << counter << Logger::afterNumber(counter) << " Room";
+		_rooms.push_back(std::make_shared<Room>(Room(_shaderTex, { 1000, 600 }, center, startPx, name.str())));
+		_items->addRoom(name.str());
 
-		Logger::log({ "+ Added pixelDoor at ", std::to_string(startPx.x), ",", std::to_string(startPx.y), " and added ", ss.str() });
+		Logger::log({ "+ Added pixelDoor at ", std::to_string(startPx.x), ",", std::to_string(startPx.y), " and added ", name.str() });
 
 		pixels.push_back(startPx);
 		counter++;
@@ -105,6 +108,8 @@ bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& center)
 	// Second pass, next rooms
 	for (int i = 0; i < _rooms.size(); i++)
 	{
+		std::shared_ptr<Room> room = _rooms[i];
+
 		sf::Vector2i ip = pixels[i];
 		std::vector<Room*> nextRooms;
 		std::vector<Direction> dir = pixelDoor[ip];
@@ -122,36 +127,55 @@ bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& center)
 		Logger::log({ "Added next room pointers at ", std::to_string(ip.x), ",", std::to_string(ip.y) });
 
 		// Items
-		int nbBoosts = (i != 0) ? Random::iRand(0, 8) : 1;
-		if (nbBoosts > 5) nbBoosts = 1;
-		std::vector<std::shared_ptr<Item>> items;
 
-		// Boosts
-		for (int i = 0; i < nbBoosts; i++)
-		{
-			sf::Vector2f pos = { 0, 0 };
-			do
-			{
-				pos = { (float)Random::iRand(150, 1050), (float)Random::iRand(150, 650) };
-			} while (vm::dist(pos, center) < 200.f);
-
-			items.push_back(std::make_shared<Boost>(Boost(pos, _res)));
-		}
-
-		// Glock
+		// 1st level
 		if (i == 0)
 		{
-			sf::Vector2f pos = { 0, 0 };
-			do
-			{
-				pos = { (float)Random::iRand(150, 1050), (float)Random::iRand(150, 650) };
-			} while (vm::dist(pos, center) < 200.f);
+			// Boost
+			_items->add(std::make_shared<Boost>(Boost({ center.x, center.y - 100 }, _res)), room->name());
 
-			items.push_back(std::make_shared<Pistol>(Pistol(pos, _res)));
+			// Pistol
+			_items->add(std::make_shared<Pistol>(Pistol({ center.x, center.y + 100 }, _res)), room->name());
 		}
 
+		// Rest
+		else
+		{
+			// RNG
+			int nbBoosts = (i != 0) ? Random::iRand(0, 8) : 1;
+			if (nbBoosts > 5) nbBoosts = 1;
+			int r1 = Random::iRand(0, 100);
+			int r2 = Random::iRand(0, 100);
+			int nbPistols = (r1 < 85) ? 0 : 1;
+			int nbSMG = (r2 < 95) ? 0 : 1;
 
-		_rooms[i]->setItems(items);
+			// Boosts
+			for (int i = 0; i < nbBoosts; i++)
+			{
+				sf::Vector2f pos = { 0, 0 };
+				do
+					pos = { (float)Random::iRand(150, 1050), (float)Random::iRand(150, 650) };
+				while (vm::dist(pos, center) < 200.f);
+				_items->add(std::make_shared<Boost>(Boost(pos, _res)), room->name());
+			}
+			
+			// Pistols
+			for (int i = 0; i < nbPistols; i++)
+			{
+				sf::Vector2f pos = { 0, 0 };
+				do
+					pos = { (float)Random::iRand(150, 1050), (float)Random::iRand(150, 650) };
+				while (vm::dist(pos, center) < 200.f);
+				_items->add(std::make_shared<Pistol>(Pistol(pos, _res)), room->name());
+			}
+
+			// SMG
+			for (int i = 0; i < nbSMG; i++)
+			{
+				// TODO
+			}
+		}
+		_rooms[i]->setItems(_items);
 	}
 
 	Logger::log({ "Finished loading map, found ", std::to_string(_rooms.size()), " rooms." });
@@ -159,13 +183,13 @@ bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& center)
 }
 
 Map::Map(const std::string& filename, const sf::Vector2f& center, ResManager* res)
-	: _current(nullptr), _player(nullptr), _shaderTex(&res->shaders.map), _res(res)
+	: _current(nullptr), _player(nullptr), _shaderTex(&res->shaders.map), _res(res), _items(nullptr)
 {
 	_filename = filename;
 	_center = center;
 }
 
-void Map::setPlayer(Player* player)
+void Map::setPlayer(const std::shared_ptr<Player>& player)
 {
 	_player = player;
 }
@@ -177,6 +201,7 @@ bool Map::generate()
 	if (!loadMapFromImage(buf, _center))
 		return false;
 	_current = _rooms[0].get();
+	_items->setCurrentRoom(_current->name());
 	sf::Vector2u size = buf.getSize();
 	_textureSize = { (int)size.x, (int)size.y };
 	Logger::log({ "Spawned in ", _current->name() });
@@ -198,10 +223,22 @@ std::vector<sf::Vector2i> Map::pixelRooms() const
 	return _pixelRoom;
 }
 
+void Map::setItems(Items* items)
+{
+	_items = items;
+}
+
+Items* Map::items()
+{
+	if (_items == nullptr) return nullptr;
+	return _items;
+}
+
 void Map::exitRoom(Direction door)
 {
 	_current = _current->nextRoom(door);
 	_changedRoom = true;
+	_items->setCurrentRoom(_current->name());
 }
 
 sf::Vector2f Map::getPlayerPosition() const

@@ -148,6 +148,7 @@
     <ClInclude Include="Ephemereal.hpp" />
     <ClInclude Include="FpsCounter.hpp" />
     <ClInclude Include="Game.hpp" />
+    <ClInclude Include="Items.hpp" />
     <ClInclude Include="Pistol.hpp" />
     <ClInclude Include="GUI.hpp" />
     <ClInclude Include="Item.hpp" />

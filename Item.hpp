@@ -45,7 +45,7 @@ protected:
 		}
 	}
 
-	virtual void picked(Player* player)
+	virtual void picked(const std::shared_ptr<Player>& player)
 	{
 		if (_alive) 
 			Logger::log({ "Item picked" });
@@ -93,7 +93,7 @@ public:
 		return _alive;
 	}
 
-	void pick(Player* player)
+	void pick(const std::shared_ptr<Player>& player)
 	{
 		picked(player);
 		_alive = false;

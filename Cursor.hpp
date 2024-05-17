@@ -9,7 +9,7 @@ private:
 	// Data
 	sf::Vector2f _size;
 	Map* _map;
-	Player* _player;
+	std::shared_ptr<Player> _player;
 	Ephemereal _eph;
 
 	// Cosmetic
@@ -27,7 +27,7 @@ private:
 	}
 
 public:
-	Cursor(Map* map, Player* player, ResManager* res)
+	Cursor(Map* map, const std::shared_ptr<Player>& player, ResManager* res)
 	{
 		_size = { 32, 32 };
 
