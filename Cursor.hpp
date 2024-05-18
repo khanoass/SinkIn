@@ -74,7 +74,8 @@ public:
 		Room* r = _map->currentRoom();
 		Direction dir = None;
 
-		if (r->pointInRoom(final))				_sprite.setTexture(*_f1);
+		if (r->pointInRoom(final) &&
+			!_player->pointInPlayer(final))		_sprite.setTexture(*_f1);
 		else if (r->pointInDoor(final, dir))	_sprite.setTexture(*_f3);
 		else									_sprite.setTexture(*_f2);
 

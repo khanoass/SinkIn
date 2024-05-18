@@ -134,6 +134,11 @@ float Player::reach() const
 	return _reach;
 }
 
+bool Player::pointInPlayer(const sf::Vector2f& point) const
+{
+	return _sprite.getGlobalBounds().contains(point);
+}
+
 sf::Vector2f Player::finalPosition(const sf::Vector2f& mousePos) const
 {
 	// Check for reach
@@ -206,7 +211,7 @@ void Player::update(float dt, const sf::Vector2f& mousePos)
 	_sprite.setRotation(angle);
 
 	// Drop weapon
-	if (_hasWeapon && !_activeWeapon->dropping() && sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
+	if (_hasWeapon && !_activeWeapon->dropping() && !pointInPlayer(mousePos) && sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
 		dropWeapon(mousePos);
 
 	// Movement update
