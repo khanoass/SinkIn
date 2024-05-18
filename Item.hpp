@@ -76,6 +76,13 @@ public:
 	sf::Vector2f position() const
 	{
 		return _position;
+
+	}
+	
+	void setGroundPosition(const sf::Vector2f& position)
+	{
+		_position = position;
+		_sprite.setPosition(_position);
 	}
 
 	sf::Vector2f size() const

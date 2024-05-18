@@ -4,7 +4,7 @@
   Room.hpp
   main.cpp
   Weapon.cpp
-C:\Users\Rafael Félix\Documents\HSLU\Sem3\GAMEDES\Projekt\SinkIn\Weapon.cpp(190,17): warning C4305: '=' : troncation de 'double' à 'float'
-C:\Users\Rafael Félix\Documents\HSLU\Sem3\GAMEDES\Projekt\SinkIn\Weapon.cpp(212,14): warning C4552: '-' : résultat de l'expression non utilisé
+C:\Users\Rafael Félix\Documents\HSLU\Sem3\GAMEDES\Projekt\SinkIn\Weapon.cpp(190,18): warning C4305: '=' : troncation de 'double' à 'float'
+C:\Users\Rafael Félix\Documents\HSLU\Sem3\GAMEDES\Projekt\SinkIn\Weapon.cpp(232,14): warning C4552: '-' : résultat de l'expression non utilisé
   Génération de code en cours...
   SinkIn.vcxproj -> C:\Users\Rafael Félix\Documents\HSLU\Sem3\GAMEDES\Projekt\SinkIn\x64\Debug\SinkIn.exe

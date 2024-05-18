@@ -107,6 +107,10 @@ void Player::dropWeapon(const sf::Vector2f& mousePos)
 {
 	if (!_hasWeapon) return;
 	_activeWeapon->drop(mousePos);
+}
+
+void Player::setActiveWeaponNone()
+{
 	_hasWeapon = false;
 }
 
@@ -202,7 +206,7 @@ void Player::update(float dt, const sf::Vector2f& mousePos)
 	_sprite.setRotation(angle);
 
 	// Drop weapon
-	if (_hasWeapon && sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
+	if (_hasWeapon && !_activeWeapon->dropping() && sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
 		dropWeapon(mousePos);
 
 	// Movement update

@@ -42,13 +42,12 @@ void Weapon::draw(sf::RenderTarget& target, sf::RenderStates states) const
 
 void Weapon::picked(const std::shared_ptr<Player>& player)
 {
-	if (_alive)
+	if (_alive && !_dropping)
 	{
 		_player = player;
-
-		Logger::log({ "Weapon picked" });
 		if (_player->pickupWeapon(shared_from_this()))
 		{
+			Logger::log({ "Weapon picked" });
 			_active = true;
 			_alive = false;
 		}
@@ -185,20 +184,41 @@ void Weapon::setActive(bool active)
 void Weapon::drop(const sf::Vector2f& mousePos)
 {
 	_alive = true;
-	_direction = gunDir(mousePos);
-	_speed = 100;
-	_friction = 0.8;
+	_active = false;
+	_direction = -gunDir(mousePos);
+	_speed = 1000;
+	_friction = 0.95;
+	_position = tubeExit(mousePos) - _direction * 10.f;
+	setGroundPosition(_position);
+	_dropping = true;
 	Logger::log({ "Weapon dropped" });
+}
+
+bool Weapon::dropping() const
+{
+	return _dropping;
 }
 
 void Weapon::update(float dt, const sf::Vector2f& mousePos)
 {
 	// Drop
-	if (_alive && _direction != sf::Vector2f(0, 0) && _speed != 0)
+	if (_dropping && vm::norm(_direction) > 0 && _speed > 0)
 	{
-		_position.x += _direction.x * _speed * dt;
-		_position.y += _direction.y * _speed * dt;
-		_speed *= _friction;
+		if (_speed < 1)
+		{
+			_direction = { 0, 0 };
+			_speed = 0;
+			_player->setActiveWeaponNone();
+			_dropping = false;
+		}
+		else
+		{
+			_position.x += _direction.x * _speed * dt;
+			_position.y += _direction.y * _speed * dt;
+			_speed *= _friction;
+		}
+
+		setGroundPosition(_position);
 	}
 
 	// Cooldown update

@@ -56,6 +56,7 @@ private:
 	sf::Texture* _ephSheet;
 
 	float _cooldown = 0;
+	bool _dropping = false;
 
 protected:
 	std::shared_ptr<Player> _player;
@@ -97,6 +98,7 @@ public:
 	void setActive(bool active);
 
 	void drop(const sf::Vector2f& mousePos);
+	bool dropping() const;
 
 	void update(float dt, const sf::Vector2f& mousePos);
 };

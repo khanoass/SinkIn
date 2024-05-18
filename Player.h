@@ -68,6 +68,7 @@ public:
 	void boost();
 	bool pickupWeapon(const std::shared_ptr<Weapon>& weapon);
 	void dropWeapon(const sf::Vector2f& mousePos);
+	void setActiveWeaponNone();
 
 	Weapon* activeWeapon();
 
