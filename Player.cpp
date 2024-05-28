@@ -100,6 +100,10 @@ bool Player::pickupWeapon(const std::shared_ptr<Weapon>& weapon)
 		return false;
 	_activeWeapon = weapon;
 	_hasWeapon = true;
+	_activeWeapon->setBounds(
+		{ _room->center().x - _room->size().x / 2, _room->center().x + _room->size().x / 2 },
+		{ _room->center().y - _room->size().y / 2, _room->center().y + _room->size().y / 2 }
+	);
 	return true;
 }
 
@@ -114,9 +118,16 @@ void Player::setActiveWeaponNone()
 	_hasWeapon = false;
 }
 
-Weapon* Player::activeWeapon()
+void Player::setKnockback(float knockback, const sf::Vector2f& direction)
 {
-	return _activeWeapon.get();
+	_knockback = knockback;
+	_knockbackDirection = direction;
+	_knockedback = true;
+}
+
+std::shared_ptr<Weapon> Player::activeWeapon()
+{
+	return _activeWeapon;
 }
 
 sf::Vector2f Player::direction() const
@@ -132,6 +143,12 @@ sf::Vector2f Player::position() const
 float Player::reach() const
 {
 	return _reach;
+}
+
+int Player::ammo() const
+{
+	if (!_hasWeapon) return 0;
+	return _activeWeapon->ammo();
 }
 
 bool Player::pointInPlayer(const sf::Vector2f& point) const
@@ -159,7 +176,7 @@ void Player::updateEvent(const sf::Event& event)
 		sf::Vector2f point = { (float)event.mouseButton.x, (float)event.mouseButton.y };
 		sf::Vector2f final = finalPosition(point);
 
-		if (_room->pointInRoom(final)) startMoving(final);
+		if (_room->pointInRoom(final) && !pointInPlayer(final)) startMoving(final);
 
 		Direction dir = None;
 		if (_room->pointInDoor(final, dir)) startMoving(final);
@@ -215,12 +232,25 @@ void Player::update(float dt, const sf::Vector2f& mousePos)
 		dropWeapon(mousePos);
 
 	// Movement update
-	if (_moving)
+	if (_moving || _knockedback)
 	{
-		// a log(1 + x) function to calculate speed
-		float s = _baseSpeed + ((_boostsFactor * std::log10f(float(1 + _boosts))) * _baseSpeed);
-		_position.x += _direction.x * s * dt;
-		_position.y += _direction.y * s * dt;
+		if (_moving)
+		{
+			// a log(1 + x) function to calculate speed
+			float s = _baseSpeed + ((_boostsFactor * std::log10f(float(1 + _boosts))) * _baseSpeed);
+			_position.x += _direction.x * s * dt;
+			_position.y += _direction.y * s * dt;
+		}
+
+		if (_knockedback)
+		{
+			_position.x += _knockbackDirection.x * _knockback * dt;
+			_position.y += _knockbackDirection.y * _knockback * dt;
+			_knockback *= _friction;
+
+			if (_knockback < 1)
+				_knockedback = false;
+		}
 
 #ifdef DEBUG
 		_line[0].position = _position;

@@ -43,6 +43,11 @@ public:
 		return _player->position();
 	}
 
+	int getPlayerAmmo() const
+	{
+		return _player->ammo();
+	}
+
 	Map* getMapPtr()
 	{
 		return &_map;

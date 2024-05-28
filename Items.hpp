@@ -40,6 +40,15 @@ public:
 		_currentItems = &_itemsRoom[name];
 	}
 
+	void changeItemRoom(const std::shared_ptr<Item>& item, const std::string& oldRoom, const std::string& newRoom)
+	{
+		std::vector<std::shared_ptr<Item>>& ri = _itemsRoom[oldRoom];
+		auto it = std::find(ri.begin(), ri.end(), item);
+		ri.erase(it);
+		std::vector<std::shared_ptr<Item>>& rn = _itemsRoom[newRoom];
+		rn.push_back(item);
+	}
+
 	std::shared_ptr<Item> closestReachableItem(const sf::Vector2f& position, float range)
 	{
 		for (const auto& i : *_currentItems)

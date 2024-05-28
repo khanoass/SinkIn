@@ -79,10 +79,11 @@ public:
 
 	}
 	
-	void setGroundPosition(const sf::Vector2f& position)
+	void setGroundSettings(const sf::Vector2f& position, float angle)
 	{
 		_position = position;
 		_sprite.setPosition(_position);
+		_sprite.setRotation(angle);
 	}
 
 	sf::Vector2f size() const

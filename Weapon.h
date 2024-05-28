@@ -35,9 +35,10 @@ private:
 	std::vector<Bullet> _bullets;
 	bool _active;
 	sf::Vector2f _direction;
-	float _speed, _friction;
+	float _speed, _friction, _angle, _rotSpeed, _rotFriction;
 	int _shot;
 	bool _shooting;
+	std::vector<sf::Vector2f> _bounds;
 
 	// Cosmetic
 	sf::Sprite _pickedUp;
@@ -65,7 +66,8 @@ protected:
 	// Must be defined!
 	sf::Vector2f _holdOffset, _tubeExit, _bulletSize, _origin;
 	int _magSize;
-	float _recoil, _fireRate, _bulletLifespan, _bulletSpeed, _spread, _reloadTime, _bulletDamage;
+	float _recoil, _fireRate, _bulletLifespan, _bulletSpeed, _spread, _reloadTime, _bulletDamage,
+		_dropSpeed, _dropRotationSpeed;
 	Mode _mode;
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
@@ -83,6 +85,8 @@ public:
 	Weapon(const sf::Vector2f& position, const sf::Vector2f& size, const sf::Vector2f& origin, sf::Texture* textureGround, sf::Texture* textureHold, sf::Texture* textureMuzzle);
 
 	void shoot(const sf::Vector2f& dir);
+
+	void setBounds(const sf::Vector2f& boundsX, const sf::Vector2f& boundsY);
 
 	void reload();
 

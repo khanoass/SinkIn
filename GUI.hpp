@@ -2,6 +2,7 @@
 
 #include "Minimap.hpp"
 #include "FpsCounter.hpp"
+#include "AmmoCounter.hpp"
 #include "ResManager.hpp"
 
 class GUI : public LiveEntity
@@ -14,6 +15,7 @@ private:
 	// Widgets
 	Minimap _minimap;
 	FpsCounter _fps;
+	AmmoCounter _ammo;
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const
 	{
@@ -33,11 +35,21 @@ public:
 		// FPS
 		_fps.setFont(&res->fonts.font);
 		_widgets.push_back(&_fps);
+
+		// Ammo
+		_ammo.setFont(&res->fonts.font);
+		//_ammo.setTexture(&res->textures.bullets);
+		_widgets.push_back(&_ammo);
 	}
 
 	void setFPS(int fps)
 	{
 		_fps.setFPS(fps);
+	}
+
+	void setAmmo(int ammo) 
+	{
+		_ammo.setAmmo(ammo);
 	}
 
 	virtual void updateEvent(const sf::Event& event)

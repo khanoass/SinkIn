@@ -23,6 +23,7 @@ private:
 	const float _boostsFactor = 1.5f;
 	const float _baseSpeed = 200.f;
 	const float _reach = 300.f;
+	const float _friction = 0.95;
 
 	// Data
 	Map* _map;
@@ -39,6 +40,11 @@ private:
 	bool _moving = false;
 	sf::Vector2f _movTarget;
 	sf::VertexArray _line;
+
+	// Knockback
+	bool _knockedback = false;
+	sf::Vector2f _knockbackDirection;
+	float _knockback;
 
 	// Items
 	float _range;
@@ -69,13 +75,15 @@ public:
 	bool pickupWeapon(const std::shared_ptr<Weapon>& weapon);
 	void dropWeapon(const sf::Vector2f& mousePos);
 	void setActiveWeaponNone();
+	void setKnockback(float knockback, const sf::Vector2f& direction);
 
-	Weapon* activeWeapon();
+	std::shared_ptr<Weapon> activeWeapon();
 
 	sf::Vector2f direction() const;
 
 	sf::Vector2f position() const;
 	float reach() const;
+	int ammo() const;
 
 	bool pointInPlayer(const sf::Vector2f& point) const;
 

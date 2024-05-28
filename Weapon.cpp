@@ -92,16 +92,14 @@ Weapon::Weapon(const sf::Vector2f& position, const sf::Vector2f& size, const sf:
 
 void Weapon::shoot(const sf::Vector2f& mousePos)
 {
-	// TODO Cooldown, reload time, semi/auto, knockback
-	// TODO bug crash when spam shoot
+	if (_player->pointInPlayer(mousePos))
+		return;
 
 	if (_ammo == 0)
 	{
 		Logger::log({ "no ammo..." });
 		return;
 	}
-
-	Logger::log({ "pew !" });
 
 	// Cooldown
 	if (_cooldown > 0)
@@ -110,6 +108,8 @@ void Weapon::shoot(const sf::Vector2f& mousePos)
 		return;
 	}
 	_cooldown = _fireRate;
+
+	Logger::log({ "pew !" });
 
 	_ammo--;
 	_shot++;
@@ -140,6 +140,15 @@ void Weapon::shoot(const sf::Vector2f& mousePos)
 	// Muzzle flash
 	sf::Vector2f pos = tubeExit(mousePos);
 	_eph.spawn(pos, { 64, 64 }, _ephSheet, { 5, 2 }, (float)0.05, angle);
+
+	// Knockback
+	_player->setKnockback(_recoil, gunDir(mousePos));
+}
+
+void Weapon::setBounds(const sf::Vector2f& boundsX, const sf::Vector2f& boundsY)
+{
+	_bounds.push_back(boundsX);
+	_bounds.push_back(boundsY);
 }
 
 void Weapon::reload()
@@ -186,10 +195,13 @@ void Weapon::drop(const sf::Vector2f& mousePos)
 	_alive = true;
 	_active = false;
 	_direction = -gunDir(mousePos);
-	_speed = 1000;
+	_speed = _dropSpeed;
+	_rotSpeed = _dropRotationSpeed;
 	_friction = 0.95;
+	_rotFriction = 0.98;
+	_angle = 0;
 	_position = tubeExit(mousePos) - _direction * 10.f;
-	setGroundPosition(_position);
+	setGroundSettings(_position, _angle);
 	_dropping = true;
 	Logger::log({ "Weapon dropped" });
 }
@@ -215,10 +227,16 @@ void Weapon::update(float dt, const sf::Vector2f& mousePos)
 		{
 			_position.x += _direction.x * _speed * dt;
 			_position.y += _direction.y * _speed * dt;
+			_angle += _rotSpeed * dt;
 			_speed *= _friction;
+			_rotSpeed *= _rotFriction;
+
+			// Collisions with walls
+			if (_position.x < _bounds[0].x || _position.x > _bounds[0].y)	_direction.x *= -1.f;
+			if (_position.y < _bounds[1].x || _position.y > _bounds[1].y)	_direction.y *= -1.f;
 		}
 
-		setGroundPosition(_position);
+		setGroundSettings(_position, _angle);
 	}
 
 	// Cooldown update
@@ -228,11 +246,10 @@ void Weapon::update(float dt, const sf::Vector2f& mousePos)
 	// Remove timedout bullets
 	for (int i = 0; i < _bullets.size(); i++)
 	{
-		const auto& b = _bullets[i];
-		b.timeleft - dt;
-		if (b.timeleft <= 0)
+		_bullets[i].timeleft -= dt;
+		if (_bullets[i].timeleft <= 0)
 		{
-			_bullets.erase(std::find(_bullets.begin(), _bullets.end(), b));
+			_bullets.erase(_bullets.begin() + i);
 			int vi = i * 4;
 			_bulletArray.erase(_bulletArray.begin() + vi, _bulletArray.begin() + vi + 4);
 		}
@@ -244,6 +261,10 @@ void Weapon::update(float dt, const sf::Vector2f& mousePos)
 		auto& b = _bullets[i];
 		b.position.x += b.direction.x * b.speed * dt;
 		b.position.y += b.direction.y * b.speed * dt;
+
+		// Collisions with walls
+		if (b.position.x < _bounds[0].x || b.position.x > _bounds[0].y)	b.direction.x *= -1.f;
+		if (b.position.y < _bounds[1].x || b.position.y > _bounds[1].y)	b.direction.y *= -1.f;
 
 		int vi = i * 4;
 

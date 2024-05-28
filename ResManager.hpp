@@ -13,10 +13,11 @@ public:
 			cursor_yes, cursor_no, cursor_door,
 			player,
 			boost,
-			attack,
+			muzzle,
 			eph,
 			glock_ground,
-			glock_hold;
+			glock_hold,
+			bullets;
 	};
 
 	struct Fonts
@@ -40,12 +41,13 @@ public:
 		textures.glock_ground.loadFromFile("assets/textures/glock_ground_2.png");
 		textures.glock_hold.loadFromFile("assets/textures/glock_hold_2.png");
 		textures.player.loadFromFile("assets/textures/placeholder_player.png");
-		textures.attack.loadFromFile("assets/textures/attack.png");
+		textures.muzzle.loadFromFile("assets/textures/attack.png");
 		textures.cursor_no.loadFromFile("assets/textures/f2.png");
 		textures.cursor_yes.loadFromFile("assets/textures/f1.png");
 		textures.cursor_door.loadFromFile("assets/textures/f3.png");
 		textures.eph.loadFromFile("assets/textures/eph.png");
 		textures.boost.loadFromFile("assets/textures/item.png");
+		textures.bullets.loadFromFile("assets/textures/bullets.png");
 
 		fonts.font.loadFromFile("assets/fonts/Sunny Spells Basic.ttf");
 

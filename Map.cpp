@@ -236,9 +236,11 @@ Items* Map::items()
 
 void Map::exitRoom(Direction door)
 {
+	auto old = _current;
 	_current = _current->nextRoom(door);
 	_changedRoom = true;
 	_items->setCurrentRoom(_current->name());
+	_items->changeItemRoom(_player->activeWeapon(), old->name(), _current->name());
 }
 
 sf::Vector2f Map::getPlayerPosition() const
