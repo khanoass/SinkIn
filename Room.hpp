@@ -19,7 +19,7 @@ class Room : public LiveEntity
 private:
 	// Data
 	std::vector<Direction> _doors;
-	std::map<Direction, Room*> _nextRooms;
+	std::map<Direction, std::shared_ptr<Room>> _nextRooms;
 	sf::Vector2f _center;
 	sf::Vector2f _size;
 	std::string _name;
@@ -34,7 +34,7 @@ private:
 	sf::VertexArray _canvas;
 
 	// Items
-	Items* _items;
+	std::shared_ptr<Items> _items;
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const
 	{
@@ -63,7 +63,7 @@ private:
 	}
 
 public:
-	Room(sf::Shader* texShader, const sf::Vector2f& size, const sf::Vector2f& center, const sf::Vector2i& pixel, const std::string& name = "")
+	Room(std::shared_ptr<sf::Shader> texShader, const sf::Vector2f& size, const sf::Vector2f& center, const sf::Vector2i& pixel, const std::string& name = "")
 		: _shaderTexture(texShader), _size(size), _center(center), _name(name), _pixel(pixel)
 	{
 		_bg = { 50, 50, 50 };
@@ -82,7 +82,7 @@ public:
 		_canvas.append(sf::Vertex({ 0, _center.y * 2 },				{ 0, _center.y * 2 }));
 	}
 
-	void setItems(Items* items)
+	void setItems(std::shared_ptr<Items> items)
 	{
 		_items = items;
 	}
@@ -117,7 +117,7 @@ public:
 		_buffer->display();
 	}
 
-	void setNextRooms(const std::vector<Direction>& doors, const std::vector<Room*>& next)
+	void setNextRooms(const std::vector<Direction>& doors, const std::vector<std::shared_ptr<Room>>& next)
 	{
 		_doors = doors;
 		for (int i = 0; i < _doors.size(); i++)
@@ -198,7 +198,7 @@ public:
 		return border;
 	}
 
-	Room* nextRoom(Direction dir)
+	std::shared_ptr<Room> nextRoom(Direction dir)
 	{
 		return _nextRooms[dir];
 	}

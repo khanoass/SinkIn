@@ -14,9 +14,9 @@ private:
 
 	// Cosmetic
 	sf::Sprite _sprite;
-	sf::Texture* _f1;
-	sf::Texture* _f2;
-	sf::Texture* _f3;
+	sf::Texture* _y;
+	sf::Texture* _n;
+	sf::Texture* _d;
 	sf::Texture* _ephSheet;
 	bool _canMove;
 
@@ -39,12 +39,12 @@ public:
 		_sprite.setPosition((float)pos.x, (float)pos.y);
 		_sprite.setScale(3.f, 3.f);
 
-		_f1 = &res->textures.cursor_yes;
-		_f2 = &res->textures.cursor_no;
-		_f3 = &res->textures.cursor_door;
+		_y = &res->textures.cursor_yes;
+		_n = &res->textures.cursor_no;
+		_d = &res->textures.cursor_door;
 		_ephSheet = &res->textures.eph;
 
-		_sprite.setTexture(*_f1);
+		_sprite.setTexture(*_y);
 		_canMove = true;
 	}
 
@@ -71,13 +71,13 @@ public:
 		auto final = _player->finalCursorPosition(mousePos);
 		_sprite.setPosition(final);
 
-		Room* r = _map->currentRoom();
+		std::shared_ptr<Room> r = _map->currentRoom();
 		Direction dir = None;
 
 		if (r->pointInRoom(final) &&
-			!_player->pointInPlayer(final))		_sprite.setTexture(*_f1);
-		else if (r->pointInDoor(final, dir))	_sprite.setTexture(*_f3);
-		else									_sprite.setTexture(*_f2);
+			!_player->pointInPlayer(final))		_sprite.setTexture(*_y);
+		else if (r->pointInDoor(final, dir))	_sprite.setTexture(*_d);
+		else									_sprite.setTexture(*_n);
 
 		_eph.update(dt, mousePos);
 	}

@@ -20,18 +20,17 @@ private:
 	std::string _filename;
 	sf::Vector2f _center;
 	ResManager* _res;
-	Items* _items;
+	std::shared_ptr<Items> _items;
 
-	Room* _current;
+	std::shared_ptr<Room> _current;
 	std::vector<std::shared_ptr<Room>> _rooms;
 	std::vector<sf::Vector2i> _pixelRoom;
-	std::map<sf::Vector2i, Room*, vm::Vector2iComparator> _pixelRoomMap;
+	std::map<sf::Vector2i, std::shared_ptr<Room>, vm::Vector2iComparator> _pixelRoomMap;
 
 	sf::Vector2i _textureSize;
 
 	std::shared_ptr<Player> _player;
-
-	sf::Shader* _shaderTex;
+	std::shared_ptr<sf::Shader> _shaderTex;
 
 	bool _changedRoom = false;
 
@@ -48,17 +47,16 @@ public:
 
 	bool generate();
 
-	Room* currentRoom() const;
+	std::shared_ptr<Room> currentRoom() const;
 
-	void setItems(Items* items);
-
-	Items* items();
+	void setItems(const std::shared_ptr<Items>& items);
+	std::shared_ptr<Items> items();
 
 	sf::Vector2f getPlayerPosition() const;
 
-	Room* atPixel(const sf::Vector2i& px);
+	std::shared_ptr<Room> atPixel(const sf::Vector2i& px);
 
-	sf::Shader* getTexShaderPtr();
+	std::shared_ptr<sf::Shader> getTexShaderPtr();
 
 	sf::Vector2i textureSize() const;
 

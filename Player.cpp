@@ -177,10 +177,12 @@ void Player::updateEvent(const sf::Event& event)
 		sf::Vector2f point = { (float)event.mouseButton.x, (float)event.mouseButton.y };
 		sf::Vector2f final = finalCursorPosition(point);
 
-		if (_room->pointInRoom(final) && !pointInPlayer(final)) startMoving(final);
+		if (_room->pointInRoom(final) && !pointInPlayer(final))
+			startMoving(final);
 
 		Direction dir = None;
-		if (_room->pointInDoor(final, dir)) startMoving(final);
+		if (_room->pointInDoor(final, dir))
+			startMoving(final);
 	}
 
 	// Weapon

@@ -1,2 +1,15 @@
 /.vs/**
 /x64/**
+x64/Debug/Weapon.obj
+x64/Debug/vc143.pdb
+x64/Debug/vc143.idb
+x64/Debug/SinkIn.pdb
+x64/Debug/SinkIn.ilk
+x64/Debug/SinkIn.exe
+x64/Debug/Room.obj
+x64/Debug/Player.obj
+x64/Debug/Map.obj
+x64/Debug/main.obj
+x64/Debug/Boost.obj
+*.obj
+*.obj

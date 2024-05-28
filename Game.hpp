@@ -16,7 +16,7 @@ private:
 	Map _map;
 	std::shared_ptr<Player> _player;
 	Cursor _cursor;
-	Items _items;
+	std::shared_ptr<Items> _items;
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const
 	{
@@ -32,8 +32,9 @@ public:
 		_player(std::make_shared<Player>(res)),
 		_cursor(&_map, _player, res)
 	{
+		_items = std::make_shared<Items>();
 		_map.setPlayer(_player);
-		_map.setItems(&_items);
+		_map.setItems(_items);
 		_map.generate();
 		_player->setMap(&_map);
 	}

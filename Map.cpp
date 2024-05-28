@@ -100,7 +100,7 @@ bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& center)
 	for (int i = 0; i < _rooms.size(); i++)
 	{
 		sf::Vector2i px = pixels[i];
-		_pixelRoomMap[px] = _rooms[i].get();
+		_pixelRoomMap[px] = _rooms[i];
 	}
 
 	Logger::log({ "Second pass" });
@@ -111,14 +111,14 @@ bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& center)
 		std::shared_ptr<Room> room = _rooms[i];
 
 		sf::Vector2i ip = pixels[i];
-		std::vector<Room*> nextRooms;
+		std::vector<std::shared_ptr<Room>> nextRooms;
 		std::vector<Direction> dir = pixelDoor[ip];
 
 		for (const auto& d : dir)
 		{
 			// Add direction + room
 			sf::Vector2i no = getNextRoomOrigin(ip, d);
-			Room* next = _pixelRoomMap[no];
+			std::shared_ptr<Room> next = _pixelRoomMap[no];
 			nextRooms.push_back(next);
 		}
 
@@ -200,7 +200,7 @@ bool Map::generate()
 	buf.loadFromFile(_filename);
 	if (!loadMapFromImage(buf, _center))
 		return false;
-	_current = _rooms[0].get();
+	_current = _rooms[0];
 	_items->setCurrentRoom(_current->name());
 	sf::Vector2u size = buf.getSize();
 	_textureSize = { (int)size.x, (int)size.y };
@@ -208,12 +208,12 @@ bool Map::generate()
 	return true;
 }
 
-Room* Map::currentRoom() const
+std::shared_ptr<Room> Map::currentRoom() const
 {
 	return _current;
 }
 
-Room* Map::atPixel(const sf::Vector2i& px)
+std::shared_ptr<Room> Map::atPixel(const sf::Vector2i& px)
 {
 	return _pixelRoomMap[px];
 }
@@ -223,12 +223,12 @@ std::vector<sf::Vector2i> Map::pixelRooms() const
 	return _pixelRoom;
 }
 
-void Map::setItems(Items* items)
+void Map::setItems(const std::shared_ptr<Items>& items)
 {
 	_items = items;
 }
 
-Items* Map::items()
+std::shared_ptr<Items> Map::items()
 {
 	if (_items == nullptr) return nullptr;
 	return _items;
@@ -253,7 +253,7 @@ bool Map::changedRoom() const
 	return _changedRoom;
 }
 
-sf::Shader* Map::getTexShaderPtr()
+std::shared_ptr<sf::Shader> Map::getTexShaderPtr()
 {
 	return _shaderTex;
 }

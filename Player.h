@@ -27,7 +27,7 @@ private:
 
 	// Data
 	Map* _map;
-	Room* _room;
+	std::shared_ptr<Room> _room;
 
 	sf::Vector2f _position, _direction, _size, _lookDirection;
 	int _boosts;
