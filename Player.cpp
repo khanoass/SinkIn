@@ -4,8 +4,8 @@
 void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	target.draw(_sprite, states);
-	if (_hasWeapon)
-		target.draw(*_activeWeapon, states);
+	if (_weapon != nullptr)
+		target.draw(*_weapon, states);
 #ifdef DEBUG
 	if (_moving) target.draw(_line, states);
 	target.draw(_reachShape, states);
@@ -35,18 +35,16 @@ void Player::shoot(const sf::Event& event)
 {
 	sf::Vector2f point = { (float)event.mouseButton.x, (float)event.mouseButton.y };
 	sf::Vector2f final = finalCursorPosition(point);
-	_activeWeapon->shoot(final);
+	_weapon->shoot(final);
 }
 
 Player::Player(ResManager* res)
-	: _map(nullptr), _room(nullptr), _activeWeapon(nullptr)
+	: _map(nullptr), _room(nullptr), _weapon(nullptr)
 {
 	_position = { 0, 0 };
 	_boosts = 0;
 
 	_size = { 60, 60 };
-
-	_hasWeapon = false;
 
 	_sprite.setOrigin({ _size.x / 2, _size.y / 2 });
 	_sprite.setPosition(_position);
@@ -96,11 +94,10 @@ void Player::boost()
 
 bool Player::pickupWeapon(const std::shared_ptr<Weapon>& weapon)
 {
-	if (_hasWeapon)
-		return false;
-	_activeWeapon = weapon;
-	_hasWeapon = true;
-	_activeWeapon->setBounds(
+	if (_weapon != nullptr) return false;
+	_weapon = weapon;
+	// Set weapon room bounds to allow for collision
+	_weapon->setBounds(
 		{ _room->center().x - _room->size().x / 2, _room->center().x + _room->size().x / 2 },
 		{ _room->center().y - _room->size().y / 2, _room->center().y + _room->size().y / 2 }
 	);
@@ -109,14 +106,10 @@ bool Player::pickupWeapon(const std::shared_ptr<Weapon>& weapon)
 
 void Player::dropWeapon(const sf::Vector2f& mousePos)
 {
-	if (!_hasWeapon) return;
-	_activeWeapon->drop(mousePos);
-}
-
-void Player::setActiveWeaponNone()
-{
-	_hasWeapon = false;
-	_activeWeapon = nullptr;
+	if (_weapon == nullptr) return;
+	_weapon->drop(mousePos);
+	_justDropped = true;
+	_weapon = nullptr;
 }
 
 void Player::setKnockback(float knockback, const sf::Vector2f& direction)
@@ -128,7 +121,7 @@ void Player::setKnockback(float knockback, const sf::Vector2f& direction)
 
 std::shared_ptr<Weapon> Player::activeWeapon()
 {
-	return _activeWeapon;
+	return _weapon;
 }
 
 sf::Vector2f Player::direction() const
@@ -148,8 +141,8 @@ float Player::reach() const
 
 int Player::ammo() const
 {
-	if (!_hasWeapon) return 0;
-	return _activeWeapon->ammo();
+	if (_weapon == nullptr) return 0;
+	return _weapon->ammo();
 }
 
 bool Player::pointInPlayer(const sf::Vector2f& point) const
@@ -171,6 +164,13 @@ sf::Vector2f Player::finalCursorPosition(const sf::Vector2f& mousePos) const
 
 void Player::updateEvent(const sf::Event& event)
 {
+	// Reset drop flag (useful otherwise when dropping on top of another weapon it drops it aswell isntead of picking it up)
+	if (_justDropped)
+	{
+		if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::LShift)
+			_justDropped = false;
+	}
+
 	// Start moving with click
 	if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left)
 	{
@@ -186,24 +186,24 @@ void Player::updateEvent(const sf::Event& event)
 	}
 
 	// Weapon
-	if (_hasWeapon)
+	if (_weapon != nullptr)
 	{
 		// Shoot
-		Weapon::Mode mode = _activeWeapon->mode();
+		Weapon::Mode mode = _weapon->mode();
 
 		switch (mode)
 		{
-		case Weapon::Auto: 
+		case Weapon::Auto:
 		case Weapon::Burst3:
-			if (!_activeWeapon->shooting())
+			if (!_weapon->shooting())
 			{
 				if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Right)
-					_activeWeapon->setShooting(true);
+					_weapon->setShooting(true);
 			}
 			else
 			{
 				if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Right)
-					_activeWeapon->setShooting(false);
+					_weapon->setShooting(false);
 			}
 			break;
 		case Weapon::SemiAuto:
@@ -222,7 +222,7 @@ void Player::update(float dt, const sf::Vector2f& mousePos)
 	_sprite.setRotation(angle);
 
 	// Drop weapon
-	if (_hasWeapon && !_activeWeapon->dropping() && !pointInPlayer(mousePos) && sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
+	if (_weapon != nullptr && !_weapon->dropping() && !_justDropped && !pointInPlayer(mousePos) && sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
 		dropWeapon(mousePos);
 
 	// Movement update
@@ -280,8 +280,8 @@ void Player::update(float dt, const sf::Vector2f& mousePos)
 		item->pick(shared_from_this());
 
 	// Weapon
-	if(_hasWeapon)
-		_activeWeapon->update(dt, mousePos);
+	if(_weapon != nullptr)
+		_weapon->update(dt, mousePos);
 
 	// Room exit
 	Direction dir = None;

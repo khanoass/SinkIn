@@ -101,7 +101,7 @@ public:
 		return _alive;
 	}
 
-	void pick(const std::shared_ptr<Player>& player)
+	virtual void pick(const std::shared_ptr<Player>& player)
 	{
 		picked(player);
 		_alive = false;

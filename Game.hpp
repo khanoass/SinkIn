@@ -76,6 +76,7 @@ public:
 		_cursor.update(dt, mousePos);
 		_player->update(dt, _cursor.finalPosition());
 		_map.update(dt, _cursor.finalPosition());
+		_items->update(dt, mousePos);
 
 		_map.getTexShaderPtr()->setUniform("screenSize", sf::Glsl::Vec2({ _center.x*2, _center.y*2 }));
 		_map.getTexShaderPtr()->setUniform("radius", 0.5f);

@@ -7,7 +7,7 @@
 class Boost;
 class Glock;
 
-class Items : public Entity
+class Items : public LiveEntity
 {
 private:
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const
@@ -23,6 +23,9 @@ private:
 	std::map<std::string, std::vector<std::shared_ptr<Item>>> _itemsRoom;
 	std::vector<std::shared_ptr<Item>>* _currentItems;
 
+	std::map<std::string, std::vector<std::shared_ptr<Weapon>>> _weaponsRoom; // Items already contains all the weapons, this is to update them separately
+	std::vector<std::shared_ptr<Weapon>>* _currentWeapons;
+
 public:
 	Items()
 	{
@@ -33,14 +36,18 @@ public:
 		_itemsRoom[name] = std::vector<std::shared_ptr<Item>>();
 	}
 
-	void add(const std::shared_ptr<Item>& item, const std::string& room)
+	// Add 2 times if it's a weapon!
+	void add(const std::shared_ptr<Item>& item, const std::string& room, const std::shared_ptr<Weapon>& weapon = nullptr)
 	{
 		_itemsRoom[room].push_back(item);
+		if(weapon != nullptr)
+			_weaponsRoom[room].push_back(weapon);
 	}
 
 	void setCurrentRoom(const std::string& name)
 	{
 		_currentItems = &_itemsRoom[name];
+		_currentWeapons = &_weaponsRoom[name];
 	}
 
 	void changeItemRoom(const std::shared_ptr<Item>& item, const std::string& oldRoom, const std::string& newRoom)
@@ -65,5 +72,19 @@ public:
 			}
 		}
 		return nullptr;
+	}
+
+	virtual void updateEvent(const sf::Event& event) override
+	{
+	}
+
+	virtual void update(float dt, const sf::Vector2f& mousePos) override
+	{
+		if (_currentWeapons == nullptr) return;
+		for (auto& i : *_currentWeapons)
+		{
+			if (i != nullptr)
+				i->updateDrop(dt, mousePos);
+		}
 	}
 };

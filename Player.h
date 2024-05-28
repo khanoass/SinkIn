@@ -50,8 +50,8 @@ private:
 	float _range;
 
 	// Weapons
-	bool _hasWeapon;
-	std::shared_ptr<Weapon> _activeWeapon;
+	std::shared_ptr<Weapon> _weapon;
+	bool _justDropped = false;
 
 #ifdef DEBUG
 	sf::CircleShape _hitbox;

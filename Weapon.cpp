@@ -42,14 +42,18 @@ void Weapon::draw(sf::RenderTarget& target, sf::RenderStates states) const
 
 void Weapon::picked(const std::shared_ptr<Player>& player)
 {
-	if (_alive && !_dropping)
+	if (_alive)
 	{
-		_player = player;
-		if (_player->pickupWeapon(shared_from_this()))
+		if (player->pickupWeapon(shared_from_this()))
 		{
+			_player = player;
 			Logger::log({ "Weapon picked" });
 			_active = true;
 			_alive = false;
+		}
+		else
+		{
+			Logger::log({ "Weapon can't be picked" });
 		}
 	}
 }
@@ -122,6 +126,11 @@ Weapon::Weapon(const sf::Vector2f& position, const sf::Vector2f& size, const sf:
 #endif
 }
 
+void Weapon::pick(const std::shared_ptr<Player>& player)
+{
+	picked(player);
+}
+
 void Weapon::shoot(const sf::Vector2f& mousePos)
 {
 	if (_player->pointInPlayer(mousePos))
@@ -157,10 +166,6 @@ void Weapon::setBounds(const sf::Vector2f& boundsX, const sf::Vector2f& boundsY)
 {
 	_bounds.push_back(boundsX);
 	_bounds.push_back(boundsY);
-}
-
-void Weapon::reload()
-{
 }
 
 Weapon::Mode Weapon::mode() const
@@ -213,35 +218,6 @@ bool Weapon::dropping() const
 
 void Weapon::update(float dt, const sf::Vector2f& mousePos)
 {
-	// Drop
-	if (_dropping && vm::norm(_direction) > 0 && _speed > 0)
-	{
-		if (_speed < 1)
-		{
-			_direction = { 0, 0 };
-			_speed = 0;
-			_player->setActiveWeaponNone();
-			_dropping = false;
-		}
-		else
-		{
-			_position.x += _direction.x * _speed * dt;
-			_position.y += _direction.y * _speed * dt;
-			_angle += _rotSpeed * dt;
-			_speed *= _friction;
-			_rotSpeed *= _rotFriction;
-
-			// Collisions with walls
-			if (_position.x < _bounds[0].x || _position.x > _bounds[0].y)	_direction.x *= -1.f;
-			if (_position.y < _bounds[1].x || _position.y > _bounds[1].y)	_direction.y *= -1.f;
-
-			// TODO: Collision with player
-			// TODO: Collision with enemies
-		}
-
-		setGroundSettings(_position, _angle);
-	}
-
 	// Cooldown update
 	if (_cooldown > 0)
 		_cooldown -= dt;
@@ -310,4 +286,31 @@ void Weapon::update(float dt, const sf::Vector2f& mousePos)
 	_gunExit.setPosition(tubeExit(mousePos));
 #endif
 
+}
+
+void Weapon::updateDrop(float dt, const sf::Vector2f& mousePos)
+{
+	if (_dropping && vm::norm(_direction) > 0 && _speed > 0)
+	{
+		if (_speed < 1)
+		{
+			_direction = { 0, 0 };
+			_speed = 0;
+			_dropping = false;
+		}
+		else
+		{
+			_position.x += _direction.x * _speed * dt;
+			_position.y += _direction.y * _speed * dt;
+			_angle += _rotSpeed * dt;
+			_speed *= _friction;
+			_rotSpeed *= _rotFriction;
+
+			// Collisions with walls
+			if (_position.x < _bounds[0].x || _position.x > _bounds[0].y)	_direction.x *= -1.f;
+			if (_position.y < _bounds[1].x || _position.y > _bounds[1].y)	_direction.y *= -1.f;
+		}
+
+		setGroundSettings(_position, _angle);
+	}
 }

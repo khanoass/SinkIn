@@ -86,23 +86,20 @@ public:
 
 	Weapon(const sf::Vector2f& position, const sf::Vector2f& size, const sf::Vector2f& origin, const sf::Vector2f& holdOffset, const sf::Vector2f& tubeExit, sf::Texture* textureGround, sf::Texture* textureHold, sf::Texture* textureMuzzle, int startAmmo);
 
+	// Interaction
+	virtual void pick(const std::shared_ptr<Player>& player) override;
 	void shoot(const sf::Vector2f& dir);
-
-	void setBounds(const sf::Vector2f& boundsX, const sf::Vector2f& boundsY);
-
-	void reload();
-
-	Mode mode() const;
-
-	int ammo() const;
-
-	bool shooting() const;
 	void setShooting(bool shooting);
+	void drop(const sf::Vector2f& mousePos);
 
 	void setActive(bool active);
+	void setBounds(const sf::Vector2f& boundsX, const sf::Vector2f& boundsY);
 
-	void drop(const sf::Vector2f& mousePos);
+	Mode mode() const;
+	int ammo() const;
+	bool shooting() const;
 	bool dropping() const;
 
 	void update(float dt, const sf::Vector2f& mousePos);
+	void updateDrop(float dt, const sf::Vector2f& mousePos);
 };

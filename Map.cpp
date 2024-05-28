@@ -133,10 +133,14 @@ bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& center)
 		// 1st room
 		if (i == 0)
 		{
+			auto pistol = std::make_shared<Pistol>(Pistol({ center.x, center.y + 100 }, _res));
+			auto shotgun = std::make_shared<Shotgun>(Shotgun({ center.x - 100, center.y }, _res));
+			auto smg = std::make_shared<SMG>(SMG({ center.x + 100, center.y }, _res));
+
 			_items->add(std::make_shared<Boost>(Boost({ center.x, center.y - 100 }, _res)), room->name());
-			_items->add(std::make_shared<Pistol>(Pistol({ center.x, center.y + 100 }, _res)), room->name());
-			_items->add(std::make_shared<Shotgun>(Shotgun({ center.x - 100, center.y }, _res)), room->name());
-			_items->add(std::make_shared<SMG>(SMG({ center.x + 100, center.y }, _res)), room->name());
+			_items->add(pistol, room->name(), pistol);
+			_items->add(shotgun, room->name(), shotgun);
+			_items->add(smg, room->name(), smg);
 		}
 
 		// Rest
@@ -167,13 +171,9 @@ bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& center)
 				do
 					pos = { (float)Random::iRand(150, 1050), (float)Random::iRand(150, 650) };
 				while (vm::dist(pos, center) < 200.f);
-				_items->add(std::make_shared<Pistol>(Pistol(pos, _res)), room->name());
-			}
 
-			// SMG
-			for (int i = 0; i < nbSMG; i++)
-			{
-				// TODO
+				auto pistol = std::make_shared<Pistol>(Pistol(pos, _res));
+				_items->add(pistol, room->name(), pistol);
 			}
 		}
 		_rooms[i]->setItems(_items);
