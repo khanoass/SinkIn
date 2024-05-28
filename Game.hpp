@@ -49,6 +49,11 @@ public:
 		return _player->ammo();
 	}
 
+	bool playerHasWeapon() const
+	{
+		return _player->activeWeapon() != nullptr;
+	}
+
 	Map* getMapPtr()
 	{
 		return &_map;

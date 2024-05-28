@@ -34,7 +34,7 @@ private:
 	// Data
 	std::vector<Bullet> _bullets;
 	bool _active;
-	sf::Vector2f _direction;
+	sf::Vector2f _direction, _holdOffset, _tubeExit;
 	float _speed, _friction, _angle, _rotSpeed, _rotFriction;
 	int _shot;
 	bool _shooting;
@@ -63,16 +63,18 @@ protected:
 	std::shared_ptr<Player> _player;
 	int _ammo;
 
-	// Must be defined!
-	sf::Vector2f _holdOffset, _tubeExit, _bulletSize, _origin;
-	int _magSize;
-	float _recoil, _fireRate, _bulletLifespan, _bulletSpeed, _spread, _reloadTime, _bulletDamage,
-		_dropSpeed, _dropRotationSpeed;
+	// Must be defined by subclass!
+	sf::Vector2f	_bulletSize, _origin;
+	int				_bulletAmount;
+	float			_recoil, _fireRate, _bulletLifespan, _bulletSpeed, _spread, _bulletDamage,
+					_dropSpeed, _dropRotationSpeed;
 	Mode _mode;
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
 
 	virtual void picked(const std::shared_ptr<Player>& player);
+
+	void createBullet(const sf::Vector2f& mousePos);
 
 public:
 	enum Mode
@@ -82,7 +84,7 @@ public:
 
 	Weapon();
 
-	Weapon(const sf::Vector2f& position, const sf::Vector2f& size, const sf::Vector2f& origin, sf::Texture* textureGround, sf::Texture* textureHold, sf::Texture* textureMuzzle, int startAmmo);
+	Weapon(const sf::Vector2f& position, const sf::Vector2f& size, const sf::Vector2f& origin, const sf::Vector2f& holdOffset, const sf::Vector2f& tubeExit, sf::Texture* textureGround, sf::Texture* textureHold, sf::Texture* textureMuzzle, int startAmmo);
 
 	void shoot(const sf::Vector2f& dir);
 

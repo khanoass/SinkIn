@@ -15,9 +15,12 @@ public:
 			boost,
 			muzzle,
 			eph,
-			glock_ground,
-			glock_hold,
-			bullets;
+			bullets,
+			
+			// Weapons
+			glock_ground, glock_hold,
+			shotgun_ground, shotgun_hold,
+			smg_ground, smg_hold;
 	};
 
 	struct Fonts
@@ -40,6 +43,10 @@ public:
 	{
 		textures.glock_ground.loadFromFile("assets/textures/glock_ground_2.png");
 		textures.glock_hold.loadFromFile("assets/textures/glock_hold_2.png");
+		textures.shotgun_ground.loadFromFile("assets/textures/shotgun_ground.png");
+		textures.shotgun_hold.loadFromFile("assets/textures/shotgun_hold.png");
+		textures.smg_ground.loadFromFile("assets/textures/smg_ground.png");
+		textures.smg_hold.loadFromFile("assets/textures/smg_hold.png");
 		textures.player.loadFromFile("assets/textures/placeholder_player.png");
 		textures.muzzle.loadFromFile("assets/textures/attack.png");
 		textures.cursor_no.loadFromFile("assets/textures/f2.png");

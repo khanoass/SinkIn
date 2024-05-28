@@ -45,7 +45,10 @@ int main()
 		camera.updatePlayerSmooth(dt, game.getPlayerPosition(), game.getMapPtr()->changedRoom());
 		game.update(dt, posf);
 
-		gui.setAmmo(game.getPlayerAmmo());
+		if (game.playerHasWeapon())
+			gui.setAmmo(game.getPlayerAmmo());
+		else
+			gui.setAmmo(-1);
 		gui.update(dt, posf);
 
 		sf::Vector2f viPos = camera.playerSmoothCenter(dt, game.getPlayerPosition(), game.getMapPtr()->changedRoom());

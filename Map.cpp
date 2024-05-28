@@ -2,6 +2,8 @@
 #include "Map.h"
 #include "Boost.h"
 #include "Pistol.hpp"
+#include "Shotgun.hpp"
+#include "SMG.hpp"
 
 void Map::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
@@ -128,14 +130,13 @@ bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& center)
 
 		// Items
 
-		// 1st level
+		// 1st room
 		if (i == 0)
 		{
-			// Boost
 			_items->add(std::make_shared<Boost>(Boost({ center.x, center.y - 100 }, _res)), room->name());
-
-			// Pistol
 			_items->add(std::make_shared<Pistol>(Pistol({ center.x, center.y + 100 }, _res)), room->name());
+			_items->add(std::make_shared<Shotgun>(Shotgun({ center.x - 100, center.y }, _res)), room->name());
+			_items->add(std::make_shared<SMG>(SMG({ center.x + 100, center.y }, _res)), room->name());
 		}
 
 		// Rest

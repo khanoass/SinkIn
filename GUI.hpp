@@ -19,8 +19,11 @@ private:
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const
 	{
-		for(const auto& w : _widgets)
-			target.draw(*w);
+		for (const auto& w : _widgets)
+		{
+			if(w->visible())
+				target.draw(*w);
+		}
 	}
 
 public:
@@ -38,8 +41,9 @@ public:
 
 		// Ammo
 		_ammo.setFont(&res->fonts.font);
-		//_ammo.setTexture(&res->textures.bullets);
+		_ammo.setTexture(&res->textures.bullets);
 		_widgets.push_back(&_ammo);
+		_ammo.setVisibility(false);
 	}
 
 	void setFPS(int fps)
@@ -47,9 +51,10 @@ public:
 		_fps.setFPS(fps);
 	}
 
-	void setAmmo(int ammo) 
+	void setAmmo(int ammo)
 	{
 		_ammo.setAmmo(ammo);
+		_ammo.setVisibility(ammo >= 0);
 	}
 
 	virtual void updateEvent(const sf::Event& event)

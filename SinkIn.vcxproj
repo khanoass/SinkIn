@@ -138,6 +138,7 @@
     <ClCompile Include="Weapon.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="AmmoCounter.hpp" />
     <ClInclude Include="Animation.hpp" />
     <ClInclude Include="Boost.h" />
     <ClInclude Include="Camera.hpp" />
@@ -158,6 +159,8 @@
     <ClInclude Include="Player.h" />
     <ClInclude Include="Random.hpp" />
     <ClInclude Include="ResManager.hpp" />
+    <ClInclude Include="Shotgun.hpp" />
+    <ClInclude Include="SMG.hpp" />
     <ClInclude Include="Tree.hpp" />
     <ClInclude Include="LiveEntity.hpp" />
     <ClInclude Include="VeMa.hpp" />

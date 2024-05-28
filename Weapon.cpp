@@ -54,15 +54,46 @@ void Weapon::picked(const std::shared_ptr<Player>& player)
 	}
 }
 
+void Weapon::createBullet(const sf::Vector2f& mousePos)
+{
+	Bullet bullet;
+	bullet.position = tubeExit(mousePos);
+	bullet.size = _bulletSize;
+	bullet.timeleft = _bulletLifespan;
+	bullet.speed = _bulletSpeed;
+	bullet.damage = _bulletDamage;
+
+	sf::Vector2f direction = vm::normalise(tubeExit(mousePos) - gunCenter());
+	float angle = Random::fRand(-_spread / 2, _spread / 2);
+	direction = vm::rotateVector(direction, angle);
+
+	bullet.direction = direction;
+
+	_bulletArray.insert(_bulletArray.end(), {
+		sf::Vertex(bullet.position, sf::Color::Transparent),
+		sf::Vertex({ bullet.position.x + bullet.size.x, bullet.position.y }, sf::Color::Yellow),
+		sf::Vertex({ bullet.position.x + bullet.size.x, bullet.position.y + bullet.size.y }, sf::Color::Transparent),
+		sf::Vertex({ bullet.position.x, bullet.position.y + bullet.size.y }, sf::Color::Yellow)
+		});
+
+	_bullets.push_back(bullet);
+
+	// Muzzle flash
+	sf::Vector2f pos = tubeExit(mousePos);
+	_eph.spawn(pos, { 64, 64 }, _ephSheet, { 5, 2 }, (float)0.05, angle);
+}
+
 Weapon::Weapon() : Item({0, 0}, {0, 0}, nullptr)
 {
 }
 
-Weapon::Weapon(const sf::Vector2f& position, const sf::Vector2f& size, const sf::Vector2f& origin, sf::Texture* textureGround, sf::Texture* textureHold, sf::Texture* textureMuzzle, int startAmmo)
+Weapon::Weapon(const sf::Vector2f& position, const sf::Vector2f& size, const sf::Vector2f& origin, const sf::Vector2f& holdOffset, const sf::Vector2f& tubeExit, sf::Texture* textureGround, sf::Texture* textureHold, sf::Texture* textureMuzzle, int startAmmo)
 	: Item(position, size, textureGround)
 {
 	_active = false;
 	_origin = origin;
+	_holdOffset = holdOffset;
+	_tubeExit = tubeExit;
 
 	_ephSheet = textureMuzzle;
 
@@ -115,32 +146,8 @@ void Weapon::shoot(const sf::Vector2f& mousePos)
 	_ammo--;
 	_shot++;
 
-	// Bullet
-	Bullet bullet;
-	bullet.position = tubeExit(mousePos);
-	bullet.size = _bulletSize;
-	bullet.timeleft = _bulletLifespan;
-	bullet.speed = _bulletSpeed;
-	bullet.damage = _bulletDamage;
-
-	sf::Vector2f direction = vm::normalise(tubeExit(mousePos) - gunCenter());
-	float angle = Random::fRand(-_spread / 2, _spread / 2);
-	direction = vm::rotateVector(direction, angle);
-
-	bullet.direction = direction;
-
-	_bulletArray.insert(_bulletArray.end(), {
-		sf::Vertex(bullet.position, sf::Color::Transparent),
-		sf::Vertex({ bullet.position.x + bullet.size.x, bullet.position.y }, sf::Color::Yellow),
-		sf::Vertex({ bullet.position.x + bullet.size.x, bullet.position.y + bullet.size.y }, sf::Color::Transparent),
-		sf::Vertex({ bullet.position.x, bullet.position.y + bullet.size.y }, sf::Color::Yellow)
-	});
-
-	_bullets.push_back(bullet);
-
-	// Muzzle flash
-	sf::Vector2f pos = tubeExit(mousePos);
-	_eph.spawn(pos, { 64, 64 }, _ephSheet, { 5, 2 }, (float)0.05, angle);
+	for(int i = 0; i < _bulletAmount; i++)
+		createBullet(mousePos);
 
 	// Knockback
 	_player->setKnockback(_recoil, gunDir(mousePos));

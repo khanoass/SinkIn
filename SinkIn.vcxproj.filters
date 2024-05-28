@@ -80,9 +80,6 @@
     <ClInclude Include="Weapon.h">
       <Filter>Entities\Items</Filter>
     </ClInclude>
-    <ClInclude Include="Pistol.hpp">
-      <Filter>Entities\Items</Filter>
-    </ClInclude>
     <ClInclude Include="Random.hpp">
       <Filter>Util</Filter>
     </ClInclude>
@@ -91,6 +88,18 @@
     </ClInclude>
     <ClInclude Include="Items.hpp">
       <Filter>Entities\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="AmmoCounter.hpp">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Pistol.hpp">
+      <Filter>Entities\Items\Weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="Shotgun.hpp">
+      <Filter>Entities\Items\Weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="SMG.hpp">
+      <Filter>Entities\Items\Weapons</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -117,6 +126,9 @@
     </Filter>
     <Filter Include="Entities\Others">
       <UniqueIdentifier>{ab2a8e7a-7e83-4154-92f5-e2683a906578}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Entities\Items\Weapons">
+      <UniqueIdentifier>{9e45e908-461f-48ae-9151-ddbeccbe5a3b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
