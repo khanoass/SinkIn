@@ -227,6 +227,9 @@ void Weapon::update(float dt, const sf::Vector2f& mousePos)
 			// Collisions with walls
 			if (_position.x < _bounds[0].x || _position.x > _bounds[0].y)	_direction.x *= -1.f;
 			if (_position.y < _bounds[1].x || _position.y > _bounds[1].y)	_direction.y *= -1.f;
+
+			// TODO: Collision with player
+			// TODO: Collision with enemies
 		}
 
 		setGroundSettings(_position, _angle);

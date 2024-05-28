@@ -58,7 +58,7 @@ public:
 		if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left)
 		{
 			sf::Vector2f point = { (float)event.mouseButton.x, (float)event.mouseButton.y };
-			sf::Vector2f final = _player->finalPosition(point);
+			sf::Vector2f final = _player->finalCursorPosition(point);
 			auto r = _map->currentRoom();
 			Direction d = None;
 			if(r->pointInRoom(final) || r->pointInDoor(final, d))
@@ -68,7 +68,7 @@ public:
 
 	virtual void update(float dt, const sf::Vector2f& mousePos)
 	{
-		auto final = _player->finalPosition(mousePos);
+		auto final = _player->finalCursorPosition(mousePos);
 		_sprite.setPosition(final);
 
 		Room* r = _map->currentRoom();

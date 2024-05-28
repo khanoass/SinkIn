@@ -14,7 +14,10 @@ private:
 	{
 		if (_currentItems == nullptr) return;
 		for (auto& i : *_currentItems)
-			target.draw(*i, states);
+		{
+			if(i != nullptr)
+				target.draw(*i, states);
+		}
 	}
 
 	std::map<std::string, std::vector<std::shared_ptr<Item>>> _itemsRoom;
@@ -44,7 +47,8 @@ public:
 	{
 		std::vector<std::shared_ptr<Item>>& ri = _itemsRoom[oldRoom];
 		auto it = std::find(ri.begin(), ri.end(), item);
-		ri.erase(it);
+		if(it != ri.end())
+			ri.erase(it);
 		std::vector<std::shared_ptr<Item>>& rn = _itemsRoom[newRoom];
 		rn.push_back(item);
 	}
@@ -53,9 +57,12 @@ public:
 	{
 		for (const auto& i : *_currentItems)
 		{
-			if (!i->alive()) continue;
-			if (vm::dist(i->position(), position) < i->range() + range)
-				return i;
+			if (i != nullptr)
+			{
+				if (!i->alive()) continue;
+				if (vm::dist(i->position(), position) < i->range() + range)
+					return i;
+			}
 		}
 		return nullptr;
 	}

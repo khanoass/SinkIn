@@ -79,15 +79,15 @@ public:
 
 	std::shared_ptr<Weapon> activeWeapon();
 
+	// Get
 	sf::Vector2f direction() const;
-
 	sf::Vector2f position() const;
 	float reach() const;
 	int ammo() const;
 
+	// Util
 	bool pointInPlayer(const sf::Vector2f& point) const;
-
-	sf::Vector2f finalPosition(const sf::Vector2f& mousePos) const;
+	sf::Vector2f finalCursorPosition(const sf::Vector2f& mousePos) const;
 
 	void updateEvent(const sf::Event& event);
 	void update(float dt, const sf::Vector2f& mousePos);

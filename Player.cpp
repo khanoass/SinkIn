@@ -34,7 +34,7 @@ bool Player::reachedTarget()
 void Player::shoot(const sf::Event& event)
 {
 	sf::Vector2f point = { (float)event.mouseButton.x, (float)event.mouseButton.y };
-	sf::Vector2f final = finalPosition(point);
+	sf::Vector2f final = finalCursorPosition(point);
 	_activeWeapon->shoot(final);
 }
 
@@ -116,6 +116,7 @@ void Player::dropWeapon(const sf::Vector2f& mousePos)
 void Player::setActiveWeaponNone()
 {
 	_hasWeapon = false;
+	_activeWeapon = nullptr;
 }
 
 void Player::setKnockback(float knockback, const sf::Vector2f& direction)
@@ -156,7 +157,7 @@ bool Player::pointInPlayer(const sf::Vector2f& point) const
 	return _sprite.getGlobalBounds().contains(point);
 }
 
-sf::Vector2f Player::finalPosition(const sf::Vector2f& mousePos) const
+sf::Vector2f Player::finalCursorPosition(const sf::Vector2f& mousePos) const
 {
 	// Check for reach
 	sf::Vector2f player = _position;
@@ -174,7 +175,7 @@ void Player::updateEvent(const sf::Event& event)
 	if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left)
 	{
 		sf::Vector2f point = { (float)event.mouseButton.x, (float)event.mouseButton.y };
-		sf::Vector2f final = finalPosition(point);
+		sf::Vector2f final = finalCursorPosition(point);
 
 		if (_room->pointInRoom(final) && !pointInPlayer(final)) startMoving(final);
 
