@@ -58,7 +58,7 @@ Weapon::Weapon() : Item({0, 0}, {0, 0}, nullptr)
 {
 }
 
-Weapon::Weapon(const sf::Vector2f& position, const sf::Vector2f& size, const sf::Vector2f& origin, sf::Texture* textureGround, sf::Texture* textureHold, sf::Texture* textureMuzzle)
+Weapon::Weapon(const sf::Vector2f& position, const sf::Vector2f& size, const sf::Vector2f& origin, sf::Texture* textureGround, sf::Texture* textureHold, sf::Texture* textureMuzzle, int startAmmo)
 	: Item(position, size, textureGround)
 {
 	_active = false;
@@ -70,7 +70,8 @@ Weapon::Weapon(const sf::Vector2f& position, const sf::Vector2f& size, const sf:
 	_pickedUp.setPosition(_position);
 	_pickedUp.setScale({ 2.f, 2.f });
 	_pickedUp.setTexture(*textureHold);
-	_ammo = 20;
+
+	_ammo = startAmmo;
 
 	_shot = 0;
 	_shooting = false;
@@ -129,9 +130,9 @@ void Weapon::shoot(const sf::Vector2f& mousePos)
 	bullet.direction = direction;
 
 	_bulletArray.insert(_bulletArray.end(), {
-		sf::Vertex(bullet.position, sf::Color::Yellow),
+		sf::Vertex(bullet.position, sf::Color::Transparent),
 		sf::Vertex({ bullet.position.x + bullet.size.x, bullet.position.y }, sf::Color::Yellow),
-		sf::Vertex({ bullet.position.x + bullet.size.x, bullet.position.y + bullet.size.y }, sf::Color::Yellow),
+		sf::Vertex({ bullet.position.x + bullet.size.x, bullet.position.y + bullet.size.y }, sf::Color::Transparent),
 		sf::Vertex({ bullet.position.x, bullet.position.y + bullet.size.y }, sf::Color::Yellow)
 	});
 
@@ -173,16 +174,8 @@ bool Weapon::shooting() const
 void Weapon::setShooting(bool shooting)
 {
 	_shooting = shooting;
-}
-
-int Weapon::shot() const
-{
-	return _shot;
-}
-
-void Weapon::resetShot()
-{
-	_shot = 0;
+	if (shooting)
+		_shot = 0;
 }
 
 void Weapon::setActive(bool active)
@@ -242,6 +235,26 @@ void Weapon::update(float dt, const sf::Vector2f& mousePos)
 	// Cooldown update
 	if (_cooldown > 0)
 		_cooldown -= dt;
+
+	// Auto shooting update
+	if (_shooting)
+	{
+		// Auto
+		if (_mode == Mode::Auto)
+			shoot(mousePos);
+
+		// Burst3
+		if (_mode == Mode::Burst3)
+		{
+			if (_shot >= 3)
+			{
+				_shot = 0;
+				_shooting = false;
+			}
+			else
+				shoot(mousePos);
+		}
+	}
 
 	// Remove timedout bullets
 	for (int i = 0; i < _bullets.size(); i++)

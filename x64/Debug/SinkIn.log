@@ -1,10 +1,17 @@
 ﻿  Boost.cpp
+C:\Users\Rafael Félix\Documents\HSLU\Sem3\GAMEDES\Projekt\SinkIn\Player.h(26): warning C4305: 'initialisation' : troncation de 'double' à 'const float'
   Map.cpp
+C:\Users\Rafael Félix\Documents\HSLU\Sem3\GAMEDES\Projekt\SinkIn\Player.h(26): warning C4305: 'initialisation' : troncation de 'double' à 'const float'
+C:\Users\Rafael Félix\Documents\HSLU\Sem3\GAMEDES\Projekt\SinkIn\Pistol.hpp(15,1): warning C4305: '=' : troncation de 'double' à 'float'
+C:\Users\Rafael Félix\Documents\HSLU\Sem3\GAMEDES\Projekt\SinkIn\Pistol.hpp(17,1): warning C4305: '=' : troncation de 'double' à 'float'
   Player.cpp
+C:\Users\Rafael Félix\Documents\HSLU\Sem3\GAMEDES\Projekt\SinkIn\Player.h(26): warning C4305: 'initialisation' : troncation de 'double' à 'const float'
   Room.hpp
   main.cpp
+C:\Users\Rafael Félix\Documents\HSLU\Sem3\GAMEDES\Projekt\SinkIn\Player.h(26): warning C4305: 'initialisation' : troncation de 'double' à 'const float'
   Weapon.cpp
-C:\Users\Rafael Félix\Documents\HSLU\Sem3\GAMEDES\Projekt\SinkIn\Weapon.cpp(190,18): warning C4305: '=' : troncation de 'double' à 'float'
-C:\Users\Rafael Félix\Documents\HSLU\Sem3\GAMEDES\Projekt\SinkIn\Weapon.cpp(232,14): warning C4552: '-' : résultat de l'expression non utilisé
+C:\Users\Rafael Félix\Documents\HSLU\Sem3\GAMEDES\Projekt\SinkIn\Player.h(26): warning C4305: 'initialisation' : troncation de 'double' à 'const float'
+C:\Users\Rafael Félix\Documents\HSLU\Sem3\GAMEDES\Projekt\SinkIn\Weapon.cpp(193,18): warning C4305: '=' : troncation de 'double' à 'float'
+C:\Users\Rafael Félix\Documents\HSLU\Sem3\GAMEDES\Projekt\SinkIn\Weapon.cpp(194,21): warning C4305: '=' : troncation de 'double' à 'float'
   Génération de code en cours...
   SinkIn.vcxproj -> C:\Users\Rafael Félix\Documents\HSLU\Sem3\GAMEDES\Projekt\SinkIn\x64\Debug\SinkIn.exe

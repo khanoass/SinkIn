@@ -82,7 +82,7 @@ public:
 
 	Weapon();
 
-	Weapon(const sf::Vector2f& position, const sf::Vector2f& size, const sf::Vector2f& origin, sf::Texture* textureGround, sf::Texture* textureHold, sf::Texture* textureMuzzle);
+	Weapon(const sf::Vector2f& position, const sf::Vector2f& size, const sf::Vector2f& origin, sf::Texture* textureGround, sf::Texture* textureHold, sf::Texture* textureMuzzle, int startAmmo);
 
 	void shoot(const sf::Vector2f& dir);
 
@@ -96,8 +96,6 @@ public:
 
 	bool shooting() const;
 	void setShooting(bool shooting);
-	int shot() const;
-	void resetShot();
 
 	void setActive(bool active);
 

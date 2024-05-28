@@ -190,32 +190,23 @@ void Player::updateEvent(const sf::Event& event)
 
 		switch (mode)
 		{
-		case Weapon::Auto:
-			if (!_activeWeapon->shooting())
-			{
-				if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Right)
-					_activeWeapon->setShooting(true);
-			}
-			else shoot(event);
-			break;
-		case Weapon::SemiAuto:
-			if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Right)
-				shoot(event);
-			break;
+		case Weapon::Auto: 
 		case Weapon::Burst3:
 			if (!_activeWeapon->shooting())
 			{
 				if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Right)
 					_activeWeapon->setShooting(true);
 			}
-			else if (_activeWeapon->shot() < 3)
-				shoot(event);
-			else if (_activeWeapon->shot() >= 3)
+			else
 			{
-				_activeWeapon->setShooting(false);
-				_activeWeapon->resetShot();
+				if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Right)
+					_activeWeapon->setShooting(false);
 			}
 			break;
+		case Weapon::SemiAuto:
+			if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Right)
+				shoot(event);
+			break;	
 		}
 	}
 }
