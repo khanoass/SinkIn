@@ -49,6 +49,7 @@ Player::Player(ResManager* res)
 	_sprite.setOrigin({ _size.x / 2, _size.y / 2 });
 	_sprite.setPosition(_position);
 	_sprite.setTexture(res->textures.player);
+	_sprite.setScale({ 1.35f, 1.35f });
 
 	_range = 35.f;
 	_sprite.setPosition(_position);
@@ -90,6 +91,19 @@ void Player::boost()
 	_boosts++;
 	float s = _baseSpeed + ((_boostsFactor * std::log10f(float(1 + _boosts))) * _baseSpeed);
 	Logger::log({ "Player boosted to ", std::to_string(_boosts), ", speed: ", std::to_string(s) });
+
+	// Darken in steps
+	sf::Color newCol;
+	if(_boosts > 0 && _boosts < 20)
+		newCol = sf::Color(200, 200, 200);
+	else if(_boosts < 30)
+		newCol = sf::Color(150, 150, 150);
+	else if (_boosts < 50)
+		newCol = sf::Color(100, 100, 100);
+	else if (_boosts < 75)
+		newCol = sf::Color(100, 30, 30);
+
+	_sprite.setColor(newCol);
 }
 
 bool Player::pickupWeapon(const std::shared_ptr<Weapon>& weapon)

@@ -155,7 +155,7 @@ void Weapon::shoot(const sf::Vector2f& mousePos)
 	_ammo--;
 	_shot++;
 
-	for(int i = 0; i < _bulletAmount; i++)
+	for (int i = 0; i < _bulletAmount; i++)
 		createBullet(mousePos);
 
 	// Knockback
