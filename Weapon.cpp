@@ -51,10 +51,6 @@ void Weapon::picked(const std::shared_ptr<Player>& player)
 			_active = true;
 			_alive = false;
 		}
-		else
-		{
-			Logger::log({ "Weapon can't be picked" });
-		}
 	}
 }
 
@@ -166,6 +162,12 @@ void Weapon::setBounds(const sf::Vector2f& boundsX, const sf::Vector2f& boundsY)
 {
 	_bounds.push_back(boundsX);
 	_bounds.push_back(boundsY);
+}
+
+void Weapon::clearBullets()
+{
+	_bullets.clear();
+	_bulletArray.clear();
 }
 
 Weapon::Mode Weapon::mode() const
@@ -285,7 +287,6 @@ void Weapon::update(float dt, const sf::Vector2f& mousePos)
 	_gunorigin.setPosition(pos);
 	_gunExit.setPosition(tubeExit(mousePos));
 #endif
-
 }
 
 void Weapon::updateDrop(float dt, const sf::Vector2f& mousePos)

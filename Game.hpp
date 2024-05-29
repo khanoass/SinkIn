@@ -64,14 +64,13 @@ public:
 		_map.getTexShaderPtr()->setUniform("playerPos", sf::Glsl::Vec2(pos));
 	}
 
-	virtual void updateEvent(const sf::Event& event)
+	void updateEvent(const sf::Event& event, float dt, const sf::Vector2f& mousePos)
 	{
-		_player->updateEvent(event);
+		_player->updateEvent(event, dt, mousePos);
 		_cursor.updateEvent(event);
-		_map.updateEvent(event);
 	}
 
-	virtual void update(float dt, const sf::Vector2f& mousePos)
+	virtual void update(float dt, const sf::Vector2f& mousePos) override
 	{
 		_cursor.update(dt, mousePos);
 		_player->update(dt, _cursor.finalPosition());

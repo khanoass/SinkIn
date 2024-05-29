@@ -47,6 +47,16 @@ public:
 		_weaponsRoom[room].push_back(weapon);
 	}
 
+	void clearAllBullets()
+	{
+		if (_currentWeapons == nullptr) return;
+		for (auto& i : *_currentWeapons)
+		{
+			if (i != nullptr)
+				i->clearBullets();
+		}
+	}
+
 	void setCurrentRoom(const std::string& name)
 	{
 		_currentItems = &_itemsRoom[name];
@@ -82,10 +92,6 @@ public:
 			}
 		}
 		return nullptr;
-	}
-
-	virtual void updateEvent(const sf::Event& event) override
-	{
 	}
 
 	virtual void update(float dt, const sf::Vector2f& mousePos) override

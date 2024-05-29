@@ -14,8 +14,11 @@
     <ClCompile Include="Map.cpp">
       <Filter>Entities\Map</Filter>
     </ClCompile>
+    <ClCompile Include="Enemy.cpp">
+      <Filter>Entities\Enemies</Filter>
+    </ClCompile>
     <ClCompile Include="Weapon.cpp">
-      <Filter>Entities\Items</Filter>
+      <Filter>Entities\Items\Weapons</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -77,9 +80,6 @@
     <ClInclude Include="Direction.hpp">
       <Filter>Util</Filter>
     </ClInclude>
-    <ClInclude Include="Weapon.h">
-      <Filter>Entities\Items</Filter>
-    </ClInclude>
     <ClInclude Include="Random.hpp">
       <Filter>Util</Filter>
     </ClInclude>
@@ -99,6 +99,12 @@
       <Filter>Entities\Items\Weapons</Filter>
     </ClInclude>
     <ClInclude Include="SMG.hpp">
+      <Filter>Entities\Items\Weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemy.h">
+      <Filter>Entities\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="Weapon.h">
       <Filter>Entities\Items\Weapons</Filter>
     </ClInclude>
   </ItemGroup>
@@ -129,6 +135,9 @@
     </Filter>
     <Filter Include="Entities\Items\Weapons">
       <UniqueIdentifier>{9e45e908-461f-48ae-9151-ddbeccbe5a3b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Entities\Enemies">
+      <UniqueIdentifier>{18f4d19b-b8f0-43b5-aa50-89c373dc661e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

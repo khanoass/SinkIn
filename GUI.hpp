@@ -57,12 +57,6 @@ public:
 		_ammo.setVisibility(ammo >= 0);
 	}
 
-	virtual void updateEvent(const sf::Event& event)
-	{
-		for (const auto& w : _widgets)
-			w->updateEvent(event);
-	}
-
 	virtual void update(float dt, const sf::Vector2f& mousePos)
 	{
 		for (const auto& w : _widgets)

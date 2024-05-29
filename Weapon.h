@@ -94,6 +94,7 @@ public:
 
 	void setActive(bool active);
 	void setBounds(const sf::Vector2f& boundsX, const sf::Vector2f& boundsY);
+	void clearBullets();
 
 	Mode mode() const;
 	int ammo() const;

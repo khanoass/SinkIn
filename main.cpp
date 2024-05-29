@@ -24,17 +24,17 @@ int main()
 
 	while (window.isOpen())
 	{
-		while (window.pollEvent(event))
-		{
-			if (event.type == sf::Event::Closed)
-				window.close();
-			game.updateEvent(event);
-		}
-
 		// Update
 		sf::Vector2i pos = sf::Mouse::getPosition(window);
 		sf::Vector2f posf = { (float)pos.x, (float)pos.y };
 		float dt = clock.restart().asSeconds();
+
+		while (window.pollEvent(event))
+		{
+			if (event.type == sf::Event::Closed)
+				window.close();
+			game.updateEvent(event, dt, posf);
+		}
 
 		// FPS
 		currentTime = fpsClock.getElapsedTime();

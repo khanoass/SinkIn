@@ -11,11 +11,8 @@ class Widget : public LiveEntity
 	}
 
 public:
-	virtual void updateEvent(const sf::Event& event)
-	{
-	}
 
-	virtual void update(float dt, const sf::Vector2f& mousePos)
+	virtual void update(float dt, const sf::Vector2f& mousePos) override
 	{
 	}
 

@@ -51,7 +51,6 @@ private:
 
 	// Weapons
 	std::shared_ptr<Weapon> _weapon;
-	bool _justDropped = false;
 
 #ifdef DEBUG
 	sf::CircleShape _hitbox;
@@ -74,7 +73,6 @@ public:
 	void boost();
 	bool pickupWeapon(const std::shared_ptr<Weapon>& weapon);
 	void dropWeapon(const sf::Vector2f& mousePos);
-	void setActiveWeaponNone();
 	void setKnockback(float knockback, const sf::Vector2f& direction);
 
 	std::shared_ptr<Weapon> activeWeapon();
@@ -89,6 +87,6 @@ public:
 	bool pointInPlayer(const sf::Vector2f& point) const;
 	sf::Vector2f finalCursorPosition(const sf::Vector2f& mousePos) const;
 
-	void updateEvent(const sf::Event& event);
-	void update(float dt, const sf::Vector2f& mousePos);
+	void updateEvent(const sf::Event& event, float dt, const sf::Vector2f& mousePos);
+	void update(float dt, const sf::Vector2f& mousePos) override;
 };

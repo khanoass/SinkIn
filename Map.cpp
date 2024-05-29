@@ -236,6 +236,7 @@ void Map::exitRoom(Direction door)
 	_changedRoom = true;
 	_items->setCurrentRoom(_current->name());
 	_items->changeWeaponRoom(_player->activeWeapon(), old->name(), _current->name());
+	_items->clearAllBullets();
 }
 
 sf::Vector2f Map::getPlayerPosition() const
@@ -256,12 +257,6 @@ std::shared_ptr<sf::Shader> Map::getTexShaderPtr()
 void Map::resetChangedRoom()
 {
 	_changedRoom = false;
-}
-
-void Map::updateEvent(const sf::Event& event)
-{
-	for (const auto& r : _rooms)
-		r->updateEvent(event);
 }
 
 void Map::update(float dt, const sf::Vector2f& mousePos)

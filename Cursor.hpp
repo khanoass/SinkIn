@@ -53,7 +53,7 @@ public:
 		return _sprite.getPosition();
 	}
 
-	virtual void updateEvent(const sf::Event& event)
+	void updateEvent(const sf::Event& event)
 	{
 		if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left)
 		{
@@ -66,7 +66,7 @@ public:
 		}
 	}
 
-	virtual void update(float dt, const sf::Vector2f& mousePos)
+	virtual void update(float dt, const sf::Vector2f& mousePos) override
 	{
 		auto final = _player->finalCursorPosition(mousePos);
 		_sprite.setPosition(final);
@@ -74,10 +74,9 @@ public:
 		std::shared_ptr<Room> r = _map->currentRoom();
 		Direction dir = None;
 
-		if (r->pointInRoom(final) &&
-			!_player->pointInPlayer(final))		_sprite.setTexture(*_y);
+		if (_player->pointInPlayer(final))		_sprite.setTexture(*_n);
 		else if (r->pointInDoor(final, dir))	_sprite.setTexture(*_d);
-		else									_sprite.setTexture(*_n);
+		else									_sprite.setTexture(*_y);
 
 		_eph.update(dt, mousePos);
 	}

@@ -4,11 +4,11 @@
 
 #include <SFML/Graphics/Sprite.hpp>
 
-#include "Entity.hpp"
+#include "LiveEntity.hpp"
 #include "Animation.hpp"
 #include "Logger.hpp"
 
-class Ephemereal : public Entity
+class Ephemereal : public LiveEntity
 {
 private:
 	// Data
@@ -51,12 +51,7 @@ public:
 		Logger::log({ "Spawned eph at ", std::to_string(position.x), std::to_string(position.y) });
 	}
 
-	virtual void updateEvent(const sf::Event& event)
-	{
-
-	}
-
-	virtual void update(float dt, const sf::Vector2f& mousePos)
+	virtual void update(float dt, const sf::Vector2f& mousePos) override
 	{
 		if (_alive)
 		{

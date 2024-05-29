@@ -122,7 +122,6 @@ void Player::dropWeapon(const sf::Vector2f& mousePos)
 {
 	if (_weapon == nullptr) return;
 	_weapon->drop(mousePos);
-	_justDropped = true;
 	_weapon = nullptr;
 }
 
@@ -176,14 +175,15 @@ sf::Vector2f Player::finalCursorPosition(const sf::Vector2f& mousePos) const
 	return finalPos;
 }
 
-void Player::updateEvent(const sf::Event& event)
+void Player::updateEvent(const sf::Event& event, float dt, const sf::Vector2f& mousePos)
 {
-	// Reset drop flag (useful otherwise when dropping on top of another weapon it drops it aswell isntead of picking it up)
-	if (_justDropped)
+	
+	if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::LShift)
 	{
-		if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::LShift)
-			_justDropped = false;
+		if (_weapon != nullptr && !_weapon->dropping() && !pointInPlayer(mousePos))
+			dropWeapon(mousePos);
 	}
+		
 
 	// Start moving with click
 	if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left)
@@ -234,10 +234,6 @@ void Player::update(float dt, const sf::Vector2f& mousePos)
 	_lookDirection = vm::normalise((mousePos - _position));
 	float angle = vm::angle(_lookDirection);
 	_sprite.setRotation(angle);
-
-	// Drop weapon
-	if (_weapon != nullptr && !_weapon->dropping() && !_justDropped && !pointInPlayer(mousePos) && sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
-		dropWeapon(mousePos);
 
 	// Movement update
 	if (_moving || _knockedback)
@@ -306,6 +302,7 @@ void Player::update(float dt, const sf::Vector2f& mousePos)
 		_moving = false;
 		_position = _room->spawn(dir);
 		_sprite.setPosition(_position);
+		
 
 #ifdef DEBUG
 		_reachShape.setPosition(_position);
