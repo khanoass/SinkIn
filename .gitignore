@@ -13,3 +13,4 @@ x64/Debug/main.obj
 x64/Debug/Boost.obj
 *.obj
 *.obj
+SinkIn.vcxproj

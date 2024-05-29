@@ -36,12 +36,15 @@ public:
 		_itemsRoom[name] = std::vector<std::shared_ptr<Item>>();
 	}
 
-	// Add 2 times if it's a weapon!
-	void add(const std::shared_ptr<Item>& item, const std::string& room, const std::shared_ptr<Weapon>& weapon = nullptr)
+	void add(const std::shared_ptr<Item>& item, const std::string& room)
 	{
 		_itemsRoom[room].push_back(item);
-		if(weapon != nullptr)
-			_weaponsRoom[room].push_back(weapon);
+	}
+
+	void addWeapon(const std::shared_ptr<Weapon>& weapon, const std::string& room)
+	{
+		_itemsRoom[room].push_back(weapon);
+		_weaponsRoom[room].push_back(weapon);
 	}
 
 	void setCurrentRoom(const std::string& name)
@@ -50,14 +53,21 @@ public:
 		_currentWeapons = &_weaponsRoom[name];
 	}
 
-	void changeItemRoom(const std::shared_ptr<Item>& item, const std::string& oldRoom, const std::string& newRoom)
+	void changeWeaponRoom(const std::shared_ptr<Weapon>& weapon, const std::string& oldRoom, const std::string& newRoom)
 	{
-		std::vector<std::shared_ptr<Item>>& ri = _itemsRoom[oldRoom];
-		auto it = std::find(ri.begin(), ri.end(), item);
-		if(it != ri.end())
-			ri.erase(it);
-		std::vector<std::shared_ptr<Item>>& rn = _itemsRoom[newRoom];
-		rn.push_back(item);
+		std::vector<std::shared_ptr<Item>>& rio = _itemsRoom[oldRoom];
+		std::vector<std::shared_ptr<Weapon>>& rwo = _weaponsRoom[oldRoom];
+
+		auto iti = std::find(rio.begin(), rio.end(), weapon);
+		auto itw = std::find(rwo.begin(), rwo.end(), weapon);
+
+		if(iti != rio.end())
+			rio.erase(iti);
+		if (itw != rwo.end())
+			rwo.erase(itw);
+
+		_itemsRoom[newRoom].push_back(weapon);
+		_weaponsRoom[newRoom].push_back(weapon);
 	}
 
 	std::shared_ptr<Item> closestReachableItem(const sf::Vector2f& position, float range)
