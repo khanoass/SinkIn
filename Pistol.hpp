@@ -20,5 +20,6 @@ public:
 
 		_dropSpeed = 2000;
 		_dropRotationSpeed = 2000;
+		_dropDamage = 10;
 	}
 };

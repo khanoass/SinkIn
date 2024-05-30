@@ -20,24 +20,25 @@ class Room;
 class Player : public LiveEntity, public std::enable_shared_from_this<Player>
 {
 private:
+	const sf::Vector2f _size = { 60, 60 };
+	const sf::Vector2f _scale = { 1.35f, 1.35f };
 	const float _boostsFactor = 1.5f;
 	const float _baseSpeed = 200.f;
 	const float _reach = 300.f;
-	const float _friction = 0.95;
-	const sf::Vector2f _scale = { 1.35f, 1.35f };
+	const float _range = 35.f;
+	const float _friction = 0.95f;
 	const float _knockbackDamageFactor = 100.f;
 	const float _hitCooldown = 3.f;
 	const float _hitVisSpeed = 0.1f;
-	const float _initialHp = 1000;
+	const float _initialHp = 1000.f;
 
 	// Data
 	Map* _map;
 	std::shared_ptr<Room> _room;
 
-	sf::Vector2f _position, _direction, _size, _lookDirection;
+	sf::Vector2f _position, _direction, _lookDirection;
 	int _boosts;
 	float _hp;
-	float _range;
 	bool _hit = false;
 	bool _hitVis = false;
 	sf::Clock _hitClock, _hitVisClock;

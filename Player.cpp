@@ -52,14 +52,11 @@ Player::Player(ResManager* res)
 	_position = { 0, 0 };
 	_boosts = 0;
 
-	_size = { 60, 60 };
-
 	_sprite.setOrigin({ _size.x / 2, _size.y / 2 });
 	_sprite.setPosition(_position);
 	_sprite.setTexture(res->textures.player);
 	_sprite.setScale(_scale);
 
-	_range = 35.f;
 	_sprite.setPosition(_position);
 
 #ifdef DEBUG
