@@ -6,24 +6,7 @@
 #include "Random.hpp"
 #include "ResManager.hpp"
 #include "Ephemereal.hpp"
-
-struct Bullet
-{
-	sf::Vector2f position, size, direction, origin;
-	float timeleft, speed, damage;
-
-	bool operator== (const Bullet& other)
-	{
-		return
-			position == other.position &&
-			size == other.size &&
-			direction == other.direction &&
-			timeleft == other.timeleft &&
-			speed == other.speed &&
-			origin == other.origin &&
-			damage == other.damage;
-	}
-};
+#include "Bullets.hpp"
 
 class Weapon : public Item, public std::enable_shared_from_this<Weapon>
 {
@@ -32,17 +15,15 @@ public:
 
 private:
 	// Data
-	std::vector<Bullet> _bullets;
 	bool _active;
 	sf::Vector2f _direction, _holdOffset, _tubeExit;
 	float _speed, _friction, _angle, _rotSpeed, _rotFriction;
 	int _shot;
 	bool _shooting;
-	std::vector<sf::Vector2f> _bounds;
+	std::shared_ptr<Bullets> _bullets;
 
 	// Cosmetic
 	sf::Sprite _pickedUp;
-	std::vector<sf::Vertex> _bulletArray;
 
 #ifdef DEBUG
 	sf::CircleShape _gunorigin, _gunExit;
@@ -89,9 +70,8 @@ public:
 	void setShooting(bool shooting);
 	void drop(const sf::Vector2f& mousePos);
 
+	void setBullets(const std::shared_ptr<Bullets>& bullets);
 	void setActive(bool active);
-	void setBounds(const sf::Vector2f& boundsX, const sf::Vector2f& boundsY);
-	void clearBullets();
 
 	Mode mode() const;
 	int ammo() const;

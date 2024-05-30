@@ -13,6 +13,7 @@
 #include "Direction.hpp"
 #include "LiveEntity.hpp"
 #include "Items.hpp"
+#include "Enemies.hpp"
 
 class Room : public LiveEntity
 {
@@ -35,6 +36,12 @@ private:
 
 	// Items
 	std::shared_ptr<Items> _items;
+
+	// Enemies
+	std::shared_ptr<Enemies> _enemies;
+
+	// Bullets
+	std::shared_ptr<Bullets> _bullets;
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const
 	{
@@ -82,9 +89,11 @@ public:
 		_canvas.append(sf::Vertex({ 0, _center.y * 2 },				{ 0, _center.y * 2 }));
 	}
 
-	void setItems(std::shared_ptr<Items> items)
+	void setContents(const std::shared_ptr<Items>& items, const std::shared_ptr<Enemies>& enemies, const std::shared_ptr<Bullets>& bullets)
 	{
 		_items = items;
+		_enemies = enemies;
+		_bullets = bullets;
 	}
 
 	sf::Vector2i pixel() const
@@ -108,6 +117,8 @@ public:
 		for (const auto& ds : _doorsShape)
 			_buffer->draw(ds, bufferstates);
 		_buffer->draw(*_items, bufferstates);
+		_buffer->draw(*_bullets, bufferstates);
+		_buffer->draw(*_enemies, bufferstates);
 
 		_buffer->display();
 	}

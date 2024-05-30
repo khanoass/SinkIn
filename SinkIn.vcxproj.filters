@@ -14,9 +14,6 @@
     <ClCompile Include="Map.cpp">
       <Filter>Entities\Map</Filter>
     </ClCompile>
-    <ClCompile Include="Enemy.cpp">
-      <Filter>Entities\Enemies</Filter>
-    </ClCompile>
     <ClCompile Include="Weapon.cpp">
       <Filter>Entities\Items\Weapons</Filter>
     </ClCompile>
@@ -101,10 +98,19 @@
     <ClInclude Include="SMG.hpp">
       <Filter>Entities\Items\Weapons</Filter>
     </ClInclude>
-    <ClInclude Include="Enemy.h">
+    <ClInclude Include="Enemy.hpp">
       <Filter>Entities\Enemies</Filter>
     </ClInclude>
     <ClInclude Include="Weapon.h">
+      <Filter>Entities\Items\Weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="Enemies.hpp">
+      <Filter>Entities\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="Shadow.hpp">
+      <Filter>Entities\Enemies</Filter>
+    </ClInclude>
+    <ClInclude Include="Bullets.hpp">
       <Filter>Entities\Items\Weapons</Filter>
     </ClInclude>
   </ItemGroup>

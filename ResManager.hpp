@@ -16,6 +16,7 @@ public:
 			muzzle,
 			eph,
 			bullets,
+			shadow,
 			
 			// Weapons
 			glock_ground, glock_hold,
@@ -57,6 +58,7 @@ public:
 		textures.eph.loadFromFile("assets/textures/eph.png");
 		textures.boost.loadFromFile("assets/textures/item.png");
 		textures.bullets.loadFromFile("assets/textures/bullets.png");
+		textures.shadow.loadFromFile("assets/textures/placeholder_enemy.png");
 
 		fonts.font.loadFromFile("assets/fonts/Sunny Spells Basic.ttf");
 

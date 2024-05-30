@@ -10,6 +10,7 @@
 #include "Logger.hpp"
 #include "ResManager.hpp"
 #include "Items.hpp"
+#include "Bullets.hpp"
 
 class Player;
 
@@ -20,7 +21,10 @@ private:
 	std::string _filename;
 	sf::Vector2f _center;
 	ResManager* _res;
+
 	std::shared_ptr<Items> _items;
+	std::shared_ptr<Enemies> _enemies;
+	std::shared_ptr<Bullets> _bullets;
 
 	std::shared_ptr<Room> _current;
 	std::vector<std::shared_ptr<Room>> _rooms;
@@ -40,6 +44,8 @@ private:
 
 	bool loadMapFromImage(const sf::Image& image, const sf::Vector2f& center);
 
+	void updateBulletBounds();
+
 public:
 	Map(const std::string& filename, const sf::Vector2f& center, ResManager* res);
 
@@ -49,8 +55,10 @@ public:
 
 	std::shared_ptr<Room> currentRoom() const;
 
-	void setItems(const std::shared_ptr<Items>& items);
+	void setContents(const std::shared_ptr<Items>& items, const std::shared_ptr<Enemies>& enemies, const std::shared_ptr<Bullets>& bullets);
 	std::shared_ptr<Items> items();
+	std::shared_ptr<Enemies> enemies();
+	std::shared_ptr<Bullets> bullets();
 
 	sf::Vector2f getPlayerPosition() const;
 

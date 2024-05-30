@@ -17,6 +17,8 @@ private:
 	std::shared_ptr<Player> _player;
 	Cursor _cursor;
 	std::shared_ptr<Items> _items;
+	std::shared_ptr<Enemies> _enemies;
+	std::shared_ptr<Bullets> _bullets;
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const
 	{
@@ -33,8 +35,11 @@ public:
 		_cursor(&_map, _player, res)
 	{
 		_items = std::make_shared<Items>();
+		_bullets = std::make_shared<Bullets>();
+		_enemies = std::make_shared<Enemies>(_player, _bullets);
+
 		_map.setPlayer(_player);
-		_map.setItems(_items);
+		_map.setContents(_items, _enemies, _bullets);
 		_map.generate();
 		_player->setMap(&_map);
 	}
@@ -76,6 +81,8 @@ public:
 		_player->update(dt, _cursor.finalPosition());
 		_map.update(dt, _cursor.finalPosition());
 		_items->update(dt, mousePos);
+		_enemies->update(dt, mousePos);
+		_bullets->update(dt, mousePos);
 
 		_map.getTexShaderPtr()->setUniform("screenSize", sf::Glsl::Vec2({ _center.x*2, _center.y*2 }));
 		_map.getTexShaderPtr()->setUniform("radius", 0.5f);

@@ -33,8 +33,10 @@ bool Player::reachedTarget()
 
 void Player::shoot(const sf::Event& event)
 {
+	if (_weapon == nullptr) return;
 	sf::Vector2f point = { (float)event.mouseButton.x, (float)event.mouseButton.y };
 	sf::Vector2f final = finalCursorPosition(point);
+	_moving = false;
 	_weapon->shoot(final);
 }
 
@@ -49,7 +51,7 @@ Player::Player(ResManager* res)
 	_sprite.setOrigin({ _size.x / 2, _size.y / 2 });
 	_sprite.setPosition(_position);
 	_sprite.setTexture(res->textures.player);
-	_sprite.setScale({ 1.35f, 1.35f });
+	_sprite.setScale(_scale);
 
 	_range = 35.f;
 	_sprite.setPosition(_position);
@@ -110,11 +112,6 @@ bool Player::pickupWeapon(const std::shared_ptr<Weapon>& weapon)
 {
 	if (_weapon != nullptr) return false;
 	_weapon = weapon;
-	// Set weapon room bounds to allow for collision
-	_weapon->setBounds(
-		{ _room->center().x - _room->size().x / 2, _room->center().x + _room->size().x / 2 },
-		{ _room->center().y - _room->size().y / 2, _room->center().y + _room->size().y / 2 }
-	);
 	return true;
 }
 
@@ -248,8 +245,6 @@ void Player::update(float dt, const sf::Vector2f& mousePos)
 
 		if (_knockedback)
 		{
-			_moving = false;
-
 			_position.x += _knockbackDirection.x * _knockback * dt;
 			_position.y += _knockbackDirection.y * _knockback * dt;
 			_knockback *= _friction;

@@ -4,6 +4,7 @@
 #include "Pistol.hpp"
 #include "Shotgun.hpp"
 #include "SMG.hpp"
+#include "Shadow.hpp"
 
 void Map::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
@@ -90,6 +91,7 @@ bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& center)
 		name << counter << Logger::afterNumber(counter) << " Room";
 		_rooms.push_back(std::make_shared<Room>(Room(_shaderTex, { 1000, 600 }, center, startPx, name.str())));
 		_items->addRoom(name.str());
+		_enemies->addRoom(name.str());
 
 		Logger::log({ "+ Added pixelDoor at ", std::to_string(startPx.x), ",", std::to_string(startPx.y), " and added ", name.str() });
 
@@ -134,9 +136,19 @@ bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& center)
 		if (i == 0)
 		{
 			_items->add(std::make_shared<Boost>(Boost({ center.x, center.y - 100 }, _res)), room->name());
-			_items->addWeapon(std::make_shared<Pistol>(Pistol({ center.x, center.y + 100 }, _res)), room->name());
-			_items->addWeapon(std::make_shared<Shotgun>(Shotgun({ center.x - 100, center.y }, _res)), room->name());
-			_items->addWeapon(std::make_shared<SMG>(SMG({ center.x + 100, center.y }, _res)), room->name());
+
+			auto pistol = std::make_shared<Pistol>(Pistol({ center.x, center.y + 100 }, _res));
+			auto shotgun = std::make_shared<Shotgun>(Shotgun({ center.x - 100, center.y }, _res));
+			auto smg = std::make_shared<SMG>(SMG({ center.x + 100, center.y }, _res));
+			pistol->setBullets(_bullets);
+			shotgun->setBullets(_bullets);
+			smg->setBullets(_bullets);
+
+			_items->addWeapon(pistol, room->name());
+			_items->addWeapon(shotgun, room->name());
+			_items->addWeapon(smg, room->name());
+
+			_enemies->add(std::make_shared<Shadow>(Shadow({ center.x - 300, center.y - 100 }, _res)), room->name());
 		}
 
 		// Rest
@@ -170,11 +182,19 @@ bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& center)
 				_items->addWeapon(std::make_shared<Pistol>(Pistol(pos, _res)), room->name());
 			}
 		}
-		_rooms[i]->setItems(_items);
+		_rooms[i]->setContents(_items, _enemies, _bullets);
 	}
 
 	Logger::log({ "Finished loading map, found ", std::to_string(_rooms.size()), " rooms." });
 	return true;
+}
+
+void Map::updateBulletBounds()
+{
+	_bullets->setBounds(
+		{ _current->center().x - _current->size().x / 2, _current->center().x + _current->size().x / 2 },
+		{ _current->center().y - _current->size().y / 2, _current->center().y + _current->size().y / 2 }
+	);
 }
 
 Map::Map(const std::string& filename, const sf::Vector2f& center, ResManager* res)
@@ -197,6 +217,8 @@ bool Map::generate()
 		return false;
 	_current = _rooms[0];
 	_items->setCurrentRoom(_current->name());
+	_enemies->setCurrentRoom(_current->name());
+	updateBulletBounds();
 	sf::Vector2u size = buf.getSize();
 	_textureSize = { (int)size.x, (int)size.y };
 	Logger::log({ "Spawned in ", _current->name() });
@@ -218,25 +240,38 @@ std::vector<sf::Vector2i> Map::pixelRooms() const
 	return _pixelRoom;
 }
 
-void Map::setItems(const std::shared_ptr<Items>& items)
+void Map::setContents(const std::shared_ptr<Items>& items, const std::shared_ptr<Enemies>& enemies, const std::shared_ptr<Bullets>& bullets)
 {
 	_items = items;
+	_enemies = enemies;
+	_bullets = bullets;
 }
 
 std::shared_ptr<Items> Map::items()
 {
-	if (_items == nullptr) return nullptr;
 	return _items;
+}
+
+std::shared_ptr<Enemies> Map::enemies()
+{
+	return _enemies;
+}
+
+std::shared_ptr<Bullets> Map::bullets()
+{
+	return _bullets;
 }
 
 void Map::exitRoom(Direction door)
 {
-	auto old = _current;
+	std::shared_ptr<Room>& old = _current;
 	_current = _current->nextRoom(door);
 	_changedRoom = true;
 	_items->setCurrentRoom(_current->name());
+	_enemies->setCurrentRoom(_current->name());
 	_items->changeWeaponRoom(_player->activeWeapon(), old->name(), _current->name());
-	_items->clearAllBullets();
+	_bullets->clearBullets();
+	updateBulletBounds();
 }
 
 sf::Vector2f Map::getPlayerPosition() const

@@ -24,6 +24,7 @@ private:
 	const float _baseSpeed = 200.f;
 	const float _reach = 300.f;
 	const float _friction = 0.95;
+	const sf::Vector2f _scale = { 1.35f, 1.35f };
 
 	// Data
 	Map* _map;

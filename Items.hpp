@@ -1,11 +1,6 @@
 #pragma once
 
 #include "Weapon.h"
-#include "Boost.h"
-#include "LiveEntity.hpp"
-
-class Boost;
-class Glock;
 
 class Items : public LiveEntity
 {
@@ -15,16 +10,16 @@ private:
 		if (_currentItems == nullptr) return;
 		for (auto& i : *_currentItems)
 		{
-			if(i != nullptr)
+			if (i != nullptr)
 				target.draw(*i, states);
 		}
 	}
 
 	std::map<std::string, std::vector<std::shared_ptr<Item>>> _itemsRoom;
-	std::vector<std::shared_ptr<Item>>* _currentItems;
+	std::vector<std::shared_ptr<Item>>* _currentItems = nullptr;
 
 	std::map<std::string, std::vector<std::shared_ptr<Weapon>>> _weaponsRoom; // Items already contains all the weapons, this is to update them separately
-	std::vector<std::shared_ptr<Weapon>>* _currentWeapons;
+	std::vector<std::shared_ptr<Weapon>>* _currentWeapons = nullptr;
 
 public:
 	Items()
@@ -45,16 +40,6 @@ public:
 	{
 		_itemsRoom[room].push_back(weapon);
 		_weaponsRoom[room].push_back(weapon);
-	}
-
-	void clearAllBullets()
-	{
-		if (_currentWeapons == nullptr) return;
-		for (auto& i : *_currentWeapons)
-		{
-			if (i != nullptr)
-				i->clearBullets();
-		}
 	}
 
 	void setCurrentRoom(const std::string& name)
