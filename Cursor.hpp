@@ -17,6 +17,8 @@ private:
 	sf::Texture* _y;
 	sf::Texture* _n;
 	sf::Texture* _d;
+	sf::Texture* _ws;
+	sf::Texture* _wn;
 	sf::Texture* _ephSheet;
 	bool _canMove;
 
@@ -42,6 +44,9 @@ public:
 		_y = &res->textures.cursor_yes;
 		_n = &res->textures.cursor_no;
 		_d = &res->textures.cursor_door;
+		_wn = &res->textures.cursor_weapon;
+		_ws = &res->textures.cursor_ontarget;
+
 		_ephSheet = &res->textures.eph;
 
 		_sprite.setTexture(*_y);
@@ -75,6 +80,11 @@ public:
 		Direction dir = None;
 
 		if (_player->pointInPlayer(final))		_sprite.setTexture(*_n);
+		else if (_player->activeWeapon() != nullptr)
+		{
+			//if()					_sprite.setTexture(*_ws); // Todo become red when on enemy
+			/*else*/							_sprite.setTexture(*_wn);
+		}
 		else if (r->pointInDoor(final, dir))	_sprite.setTexture(*_d);
 		else									_sprite.setTexture(*_y);
 

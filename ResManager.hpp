@@ -10,7 +10,7 @@ public:
 	struct Textures
 	{
 		sf::Texture
-			cursor_yes, cursor_no, cursor_door,
+			cursor_yes, cursor_no, cursor_door, cursor_weapon, cursor_ontarget,
 			player,
 			boost,
 			muzzle,
@@ -52,6 +52,8 @@ public:
 		textures.cursor_no.loadFromFile("assets/textures/f2.png");
 		textures.cursor_yes.loadFromFile("assets/textures/f1.png");
 		textures.cursor_door.loadFromFile("assets/textures/f3.png");
+		textures.cursor_weapon.loadFromFile("assets/textures/f4.png");
+		textures.cursor_ontarget.loadFromFile("assets/textures/f5.png");
 		textures.eph.loadFromFile("assets/textures/eph.png");
 		textures.boost.loadFromFile("assets/textures/item.png");
 		textures.bullets.loadFromFile("assets/textures/bullets.png");

@@ -77,10 +77,7 @@ protected:
 	void createBullet(const sf::Vector2f& mousePos);
 
 public:
-	enum Mode
-	{
-		Auto, SemiAuto, Burst3
-	};
+	enum Mode { Auto, SemiAuto, Burst3 };
 
 	Weapon();
 

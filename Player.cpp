@@ -248,6 +248,8 @@ void Player::update(float dt, const sf::Vector2f& mousePos)
 
 		if (_knockedback)
 		{
+			_moving = false;
+
 			_position.x += _knockbackDirection.x * _knockback * dt;
 			_position.y += _knockbackDirection.y * _knockback * dt;
 			_knockback *= _friction;
