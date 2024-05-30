@@ -3,7 +3,8 @@
 
 void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
-	target.draw(_sprite, states);
+	if(!_hitVis)
+		target.draw(_sprite, states);
 	if (_weapon != nullptr)
 		target.draw(*_weapon, states);
 #ifdef DEBUG
@@ -38,6 +39,11 @@ void Player::shoot(const sf::Event& event)
 	sf::Vector2f final = finalCursorPosition(point);
 	_moving = false;
 	_weapon->shoot(final);
+}
+
+void Player::die()
+{
+	Logger::log({ "GAME OVER" });
 }
 
 Player::Player(ResManager* res)
@@ -129,6 +135,22 @@ void Player::setKnockback(float knockback, const sf::Vector2f& direction)
 	_knockedback = true;
 }
 
+void Player::hit(float damage, const sf::Vector2f& direction)
+{
+	// Cooldown
+	if (!_hit)
+	{
+		_hit = true;
+		_hitVis = true;
+		_hitClock.restart();
+		_hitVisClock.restart();
+		setKnockback(damage * _knockbackDamageFactor, direction);
+		_hp -= damage;
+		if (_hp <= 0)
+			die();
+	}
+}
+
 std::shared_ptr<Weapon> Player::activeWeapon()
 {
 	return _weapon;
@@ -147,6 +169,11 @@ sf::Vector2f Player::position() const
 float Player::reach() const
 {
 	return _reach;
+}
+
+float Player::range() const
+{
+	return _range;
 }
 
 int Player::ammo() const
@@ -174,13 +201,11 @@ sf::Vector2f Player::finalCursorPosition(const sf::Vector2f& mousePos) const
 
 void Player::updateEvent(const sf::Event& event, float dt, const sf::Vector2f& mousePos)
 {
-	
 	if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::LShift)
 	{
 		if (_weapon != nullptr && !_weapon->dropping() && !pointInPlayer(mousePos))
 			dropWeapon(mousePos);
 	}
-		
 
 	// Start moving with click
 	if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left)
@@ -231,6 +256,22 @@ void Player::update(float dt, const sf::Vector2f& mousePos)
 	_lookDirection = vm::normalise((mousePos - _position));
 	float angle = vm::angle(_lookDirection);
 	_sprite.setRotation(angle);
+
+	// Hit
+	if (_hit)
+	{
+		if (_hitClock.getElapsedTime().asSeconds() > _hitCooldown)
+		{
+			_hit = false;
+			_hitVis = false;
+		}
+		// Blinking effect when hit
+		else if (_hitVisClock.getElapsedTime().asSeconds() > _hitVisSpeed)
+		{
+			_hitVisClock.restart();
+			_hitVis = !_hitVis;
+		}
+	}
 
 	// Movement update
 	if (_moving || _knockedback)

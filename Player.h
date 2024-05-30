@@ -25,6 +25,10 @@ private:
 	const float _reach = 300.f;
 	const float _friction = 0.95;
 	const sf::Vector2f _scale = { 1.35f, 1.35f };
+	const float _knockbackDamageFactor = 100.f;
+	const float _hitCooldown = 3.f;
+	const float _hitVisSpeed = 0.1f;
+	const float _initialHp = 1000;
 
 	// Data
 	Map* _map;
@@ -32,6 +36,11 @@ private:
 
 	sf::Vector2f _position, _direction, _size, _lookDirection;
 	int _boosts;
+	float _hp;
+	float _range;
+	bool _hit = false;
+	bool _hitVis = false;
+	sf::Clock _hitClock, _hitVisClock;
 
 	// Cosmetic
 	sf::Texture _tex;
@@ -46,9 +55,6 @@ private:
 	bool _knockedback = false;
 	sf::Vector2f _knockbackDirection;
 	float _knockback;
-
-	// Items
-	float _range;
 
 	// Weapons
 	std::shared_ptr<Weapon> _weapon;
@@ -65,6 +71,8 @@ private:
 
 	void shoot(const sf::Event& event);
 
+	void die();
+
 public:
 	Player(ResManager* res);
 
@@ -75,6 +83,7 @@ public:
 	bool pickupWeapon(const std::shared_ptr<Weapon>& weapon);
 	void dropWeapon(const sf::Vector2f& mousePos);
 	void setKnockback(float knockback, const sf::Vector2f& direction);
+	void hit(float damage, const sf::Vector2f& direction);
 
 	std::shared_ptr<Weapon> activeWeapon();
 
@@ -82,6 +91,7 @@ public:
 	sf::Vector2f direction() const;
 	sf::Vector2f position() const;
 	float reach() const;
+	float range() const;
 	int ammo() const;
 
 	// Util

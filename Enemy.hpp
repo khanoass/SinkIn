@@ -20,7 +20,7 @@ class Enemy : public Entity
 {
 private:
 	const sf::Vector2f _scale = { 1.35f, 1.35f };
-	const float _knockbackFactor = 500.f;
+	const float _knockbackFactor = 100.f;
 
 	// Data
 	sf::Vector2f _position, _direction, _size;
@@ -39,9 +39,13 @@ private:
 	sf::Vector2f _knockbackDirection;
 	float _knockback;
 
+	// Death animation
+	Ephemereal _eph;
+	sf::Texture* _ephSheet;
+
 protected:
 	// Must be defined by subclass!
-	float _range, _hp, _speed, _friction;
+	float _range, _hp, _speed, _friction, _damage;
 
 	virtual void updateAI(const std::shared_ptr<Player>& player)
 	{
@@ -54,6 +58,8 @@ private:
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const
 	{
+		target.draw(_eph, states);
+
 		if (_alive)
 		{
 			target.draw(_sprite, states);
@@ -61,6 +67,12 @@ private:
 			target.draw(_hitbox, states);
 #endif
 		}
+	}
+
+	void die()
+	{
+		_eph.spawn(_position, { 64, 64 }, _ephSheet, { 5, 2 }, (float)0.05, 0);
+		_alive = false;
 	}
 
 	void hit(float damage, const sf::Vector2f& direction)
@@ -71,7 +83,7 @@ private:
 		_knockedback = true;
 
 		if (_hp <= 0)
-			_alive = false;
+			die();
 	}
 
 protected:
@@ -90,12 +102,18 @@ protected:
 		return vm::dist(_position, _movTarget) < 10.f;
 	}
 
+	bool hitPlayer(const std::shared_ptr<Player>& player)
+	{
+		return vm::dist(_position, player->position()) < _range + player->range();
+	}
+
 public:
-	Enemy(const sf::Vector2f& position, const sf::Vector2f& size, sf::Texture* texture)
+	Enemy(const sf::Vector2f& position, const sf::Vector2f& size, sf::Texture* texture, sf::Texture* deathSheet)
 	{
 		_position = position;
 		_size = size;
 		_tex = texture;
+		_ephSheet = deathSheet;
 
 		_sprite.setOrigin({ size.x / 2, size.y / 2 });
 		_sprite.setPosition(_position);
@@ -114,6 +132,10 @@ public:
 
 	virtual void update(float dt, const sf::Vector2f& mousePos, const std::shared_ptr<Player>& player, std::vector<Bullet>& bullets)
 	{
+		_eph.update(dt, mousePos);
+
+		if (!_alive) return;
+
 		updateAI(player);
 
 		// Hit
@@ -125,6 +147,10 @@ public:
 				b.dead = true;
 			}
 		}
+
+		// Hit player
+		if (hitPlayer(player))
+			player->hit(_damage, _direction);
 
 		// Movement update
 		if (_moving || _knockedback)
