@@ -41,7 +41,6 @@ private:
 public:
 	Bullets()
 	{
-		
 	}
 
 	void setBounds(const sf::Vector2f& boundsX, const sf::Vector2f& boundsY)
@@ -80,11 +79,11 @@ public:
 
 	virtual void update(float dt, const sf::Vector2f& mousePos) override
 	{
-		// Remove timedout bullets
+		// Remove timedout & dead bullets
 		for (int i = 0; i < _bullets.size(); i++)
 		{
 			_bullets[i].timeleft -= dt;
-			if (_bullets[i].timeleft <= 0)
+			if (_bullets[i].timeleft <= 0 || _bullets[i].dead)
 			{
 				_bullets.erase(_bullets.begin() + i);
 				int vi = i * 4;

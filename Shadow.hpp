@@ -13,8 +13,8 @@ public:
 		_speed = 100;
 	}
 
-	virtual void updateAI()
+	virtual void updateAI(const std::shared_ptr<Player>& player) override
 	{
-
+		startMoving(player->position());
 	}
 };

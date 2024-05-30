@@ -14,12 +14,13 @@
 #include "Weapon.h"
 #include "ResManager.hpp"
 #include "Bullets.hpp"
+#include "Player.h"
 
 class Enemy : public Entity
 {
 private:
 	const sf::Vector2f _scale = { 1.35f, 1.35f };
-	const float _knockbackFactor = 20.f;
+	const float _knockbackFactor = 500.f;
 
 	// Data
 	sf::Vector2f _position, _direction, _size;
@@ -68,7 +69,13 @@ private:
 		_knockbackDirection = direction;
 		_hp -= damage;
 		_knockedback = true;
+
+		if (_hp <= 0)
+			_alive = false;
 	}
+
+protected:
+	// Functions to be used by AI of subclass
 
 	void startMoving(const sf::Vector2f& target)
 	{
@@ -130,8 +137,6 @@ public:
 
 			if (_knockedback)
 			{
-				_moving = false;
-
 				_position.x += _knockbackDirection.x * _knockback * dt;
 				_position.y += _knockbackDirection.y * _knockback * dt;
 				_knockback *= _friction;
