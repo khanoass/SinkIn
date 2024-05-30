@@ -39,6 +39,7 @@ private:
 
 	float _cooldown = 0;
 	bool _dropping = false;
+	sf::Vector2f _dropDirection;
 
 protected:
 	std::shared_ptr<Player> _player;
@@ -48,7 +49,7 @@ protected:
 	sf::Vector2f	_bulletSize, _origin;
 	int				_bulletAmount;
 	float			_recoil, _fireRate, _bulletLifespan, _bulletSpeed, _spread, _bulletDamage,
-					_dropSpeed, _dropRotationSpeed;
+					_dropSpeed, _dropRotationSpeed, _dropDamage;
 	Mode _mode;
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
@@ -69,6 +70,7 @@ public:
 	void shoot(const sf::Vector2f& dir);
 	void setShooting(bool shooting);
 	void drop(const sf::Vector2f& mousePos);
+	void bounce();
 
 	void setBullets(const std::shared_ptr<Bullets>& bullets);
 	void setActive(bool active);
@@ -77,6 +79,8 @@ public:
 	int ammo() const;
 	bool shooting() const;
 	bool dropping() const;
+	float dropDamage() const;
+	sf::Vector2f dropDirection() const;
 
 	void update(float dt, const sf::Vector2f& mousePos);
 	void updateDrop(float dt, const sf::Vector2f& mousePos);

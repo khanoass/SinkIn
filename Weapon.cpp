@@ -196,9 +196,30 @@ void Weapon::drop(const sf::Vector2f& mousePos)
 	Logger::log({ "Weapon dropped" });
 }
 
+void Weapon::bounce()
+{
+	if (_dropping)
+	{
+		_direction.x *= -1;
+		_direction.y *= -1;
+	}
+}
+
 bool Weapon::dropping() const
 {
 	return _dropping;
+}
+
+float Weapon::dropDamage() const
+{
+	if (!_dropping) return 0.f;
+	return _dropDamage;
+}
+
+sf::Vector2f Weapon::dropDirection() const
+{
+	if (!_dropping) return sf::Vector2f();
+	return _dropDirection;
 }
 
 void Weapon::update(float dt, const sf::Vector2f& mousePos)

@@ -2,6 +2,7 @@
 
 #include "Shadow.hpp"
 #include "Bullets.hpp"
+#include "Items.hpp"
 
 class Enemies : public LiveEntity
 {
@@ -21,12 +22,14 @@ private:
 
 	std::shared_ptr<Player> _player;
 	std::shared_ptr<Bullets> _bullets;
+	std::shared_ptr<Items> _items;
 
 public:
-	Enemies(const std::shared_ptr<Player>& player, const std::shared_ptr<Bullets>& bullets)
+	Enemies(const std::shared_ptr<Player>& player, const std::shared_ptr<Bullets>& bullets, const std::shared_ptr<Items>& items)
 	{
 		_player = player;
 		_bullets = bullets;
+		_items = items;
 	}
 
 	void addRoom(const std::string& name)
@@ -50,7 +53,7 @@ public:
 		for (auto& i : *_currentEnemies)
 		{
 			if (i != nullptr)
-				i->update(dt, mousePos, _player, _bullets->getBullets());
+				i->update(dt, mousePos, _player, _bullets->getBullets(), _items->currentWeapons());
 		}
 	}
 };

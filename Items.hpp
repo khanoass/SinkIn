@@ -65,6 +65,11 @@ public:
 		_weaponsRoom[newRoom].push_back(weapon);
 	}
 
+	std::vector<std::shared_ptr<Weapon>>* currentWeapons()
+	{
+		return _currentWeapons;
+	}
+
 	std::shared_ptr<Item> closestReachableItem(const sf::Vector2f& position, float range)
 	{
 		for (const auto& i : *_currentItems)

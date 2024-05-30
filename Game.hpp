@@ -36,7 +36,7 @@ public:
 	{
 		_items = std::make_shared<Items>();
 		_bullets = std::make_shared<Bullets>();
-		_enemies = std::make_shared<Enemies>(_player, _bullets);
+		_enemies = std::make_shared<Enemies>(_player, _bullets, _items);
 
 		_map.setPlayer(_player);
 		_map.setContents(_items, _enemies, _bullets);

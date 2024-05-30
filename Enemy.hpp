@@ -130,7 +130,7 @@ public:
 #endif
 	}
 
-	virtual void update(float dt, const sf::Vector2f& mousePos, const std::shared_ptr<Player>& player, std::vector<Bullet>& bullets)
+	virtual void update(float dt, const sf::Vector2f& mousePos, const std::shared_ptr<Player>& player, std::vector<Bullet>& bullets, const std::vector<std::shared_ptr<Weapon>>* weapons)
 	{
 		_eph.update(dt, mousePos);
 
@@ -145,6 +145,19 @@ public:
 			{
 				hit(b.damage, b.direction);
 				b.dead = true;
+			}
+		}
+
+		// Hit from dropped weapon
+		if (weapons != nullptr)
+		{
+			for (const auto& w : *weapons)
+			{
+				if (w->dropping() && vm::dist(w->position(), _position) < _range + w->range())
+				{
+					hit(w->dropDamage(), w->dropDirection());
+					w->bounce();
+				}
 			}
 		}
 
