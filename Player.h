@@ -24,7 +24,6 @@ private:
 	const sf::Vector2f _scale = { 1.35f, 1.35f };
 	const float _boostsFactor = 1.5f;
 	const float _baseSpeed = 200.f;
-	const float _reach = 300.f;
 	const float _range = 35.f;
 	const float _friction = 0.95f;
 	const float _knockbackDamageFactor = 100.f;
@@ -49,8 +48,6 @@ private:
 
 	// Movement
 	bool _moving = false;
-	sf::Vector2f _movTarget;
-	sf::VertexArray _line;
 
 	// Knockback
 	bool _knockedback = false;
@@ -67,8 +64,7 @@ private:
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
-	void startMoving(const sf::Vector2f& target);
-	bool reachedTarget();
+	sf::Vector2f getMovingVector();
 
 	void shoot(const sf::Event& event);
 
@@ -91,13 +87,12 @@ public:
 	// Get
 	sf::Vector2f direction() const;
 	sf::Vector2f position() const;
-	float reach() const;
+	//float reach() const;
 	float range() const;
 	int ammo() const;
 
 	// Util
 	bool pointInPlayer(const sf::Vector2f& point) const;
-	sf::Vector2f finalCursorPosition(const sf::Vector2f& mousePos) const;
 
 	void updateEvent(const sf::Event& event, float dt, const sf::Vector2f& mousePos);
 	void update(float dt, const sf::Vector2f& mousePos) override;

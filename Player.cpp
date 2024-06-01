@@ -8,37 +8,52 @@ void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	if (_weapon != nullptr)
 		target.draw(*_weapon, states);
 #ifdef DEBUG
-	if (_moving) target.draw(_line, states);
-	target.draw(_reachShape, states);
 	target.draw(_hitbox, states);
 #endif
 }
 
-void Player::startMoving(const sf::Vector2f& target)
+/*void Player::startMoving(const sf::Vector2f& target)
 {
 	_moving = true;
 	_movTarget = target;
 
-#ifdef DEBUG
-	_line[0].position = _position;
-	_line[1].position = _movTarget;
-#endif
-
 	_direction = vm::normalise((_movTarget - _position));
-}
+}*/
 
-bool Player::reachedTarget()
+/*bool Player::reachedTarget()
 {
 	return vm::dist(_position, _movTarget) < 10.f;
+}*/
+
+sf::Vector2f Player::getMovingVector()
+{
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
+	{
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) return sf::Vector2f(0, 0);
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) return sf::Vector2f(-1, -1);
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) return sf::Vector2f(1, -1);
+		else return sf::Vector2f(0, -1);
+	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A))
+	{
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) return sf::Vector2f(0, 0);
+		else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) return sf::Vector2f(-1, 1);
+		else return sf::Vector2f(-1, 0);
+	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+	{
+		if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) return sf::Vector2f(1, 1);
+		else return sf::Vector2f(0, 1);
+	}
+	else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) return sf::Vector2f(1, 0);
+	return sf::Vector2f(0, 0);
 }
 
 void Player::shoot(const sf::Event& event)
 {
 	if (_weapon == nullptr) return;
 	sf::Vector2f point = { (float)event.mouseButton.x, (float)event.mouseButton.y };
-	sf::Vector2f final = finalCursorPosition(point);
-	_moving = false;
-	_weapon->shoot(final);
+	_weapon->shoot(point);
 }
 
 void Player::die()
@@ -65,17 +80,6 @@ Player::Player(ResManager* res)
 	_hitbox.setRadius(_range);
 	_hitbox.setOrigin(_range, _range);
 	_hitbox.setOutlineThickness(2.f);
-
-	_reachShape.setRadius(300.f);
-	_reachShape.setFillColor(sf::Color::Transparent);
-	_reachShape.setOutlineColor(sf::Color(0, 0, 255, 255));
-	_reachShape.setOutlineThickness(1.f);
-	_reachShape.setPointCount(1000);
-	_reachShape.setOrigin(300.f, 300.f);
-
-	_line.setPrimitiveType(sf::Lines);
-	_line.append(sf::Vertex(_position, sf::Color::Red));
-	_line.append(sf::Vertex(_position, sf::Color::Red));
 #endif
 }
 
@@ -85,10 +89,6 @@ void Player::setMap(Map* map)
 	_room = map->currentRoom();
 	_position = _room->center();
 	_sprite.setPosition(_position);
-	
-#ifdef DEBUG
-	_reachShape.setPosition(_position);
-#endif
 }
 
 void Player::boost()
@@ -163,11 +163,6 @@ sf::Vector2f Player::position() const
 	return _position;
 }
 
-float Player::reach() const
-{
-	return _reach;
-}
-
 float Player::range() const
 {
 	return _range;
@@ -184,38 +179,12 @@ bool Player::pointInPlayer(const sf::Vector2f& point) const
 	return _sprite.getGlobalBounds().contains(point);
 }
 
-sf::Vector2f Player::finalCursorPosition(const sf::Vector2f& mousePos) const
-{
-	// Check for reach
-	sf::Vector2f player = _position;
-	sf::Vector2f diff = mousePos - player;
-	float dist = vm::norm(diff);
-	sf::Vector2f finalPos = mousePos;
-	if (dist > _reach)
-		finalPos = (player + vm::normalise(diff) * _reach);
-	return finalPos;
-}
-
 void Player::updateEvent(const sf::Event& event, float dt, const sf::Vector2f& mousePos)
 {
 	if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::LShift)
 	{
 		if (_weapon != nullptr && !_weapon->dropping() && !pointInPlayer(mousePos))
 			dropWeapon(mousePos);
-	}
-
-	// Start moving with click
-	if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left)
-	{
-		sf::Vector2f point = { (float)event.mouseButton.x, (float)event.mouseButton.y };
-		sf::Vector2f final = finalCursorPosition(point);
-
-		if (_room->pointInRoom(final) && !pointInPlayer(final))
-			startMoving(final);
-
-		Direction dir = None;
-		if (_room->pointInDoor(final, dir))
-			startMoving(final);
 	}
 
 	// Weapon
@@ -230,17 +199,17 @@ void Player::updateEvent(const sf::Event& event, float dt, const sf::Vector2f& m
 		case Weapon::Burst3:
 			if (!_weapon->shooting())
 			{
-				if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Right)
+				if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
 					_weapon->setShooting(true);
 			}
 			else
 			{
-				if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Right)
+				if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left)
 					_weapon->setShooting(false);
 			}
 			break;
 		case Weapon::SemiAuto:
-			if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Right)
+			if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
 				shoot(event);
 			break;	
 		}
@@ -253,6 +222,11 @@ void Player::update(float dt, const sf::Vector2f& mousePos)
 	_lookDirection = vm::normalise((mousePos - _position));
 	float angle = vm::angle(_lookDirection);
 	_sprite.setRotation(angle);
+
+	// Movement with keyboard
+	_direction = vm::normalise(getMovingVector());
+	if (_direction != sf::Vector2f(0, 0))
+		_moving = true;
 
 	// Hit
 	if (_hit)
@@ -316,7 +290,7 @@ void Player::update(float dt, const sf::Vector2f& mousePos)
 
 		_sprite.setPosition(_position);
 
-		if (reachedTarget()) _moving = false;
+		//if (reachedTarget()) _moving = false;
 	}
 
 	// Items
@@ -337,11 +311,6 @@ void Player::update(float dt, const sf::Vector2f& mousePos)
 		_moving = false;
 		_position = _room->spawn(dir);
 		_sprite.setPosition(_position);
-		
-
-#ifdef DEBUG
-		_reachShape.setPosition(_position);
-#endif
 
 		Logger::log({ "Player entered: ", _room->name() });
 	}

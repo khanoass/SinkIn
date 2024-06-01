@@ -72,7 +72,6 @@ public:
 	void updateEvent(const sf::Event& event, float dt, const sf::Vector2f& mousePos)
 	{
 		_player->updateEvent(event, dt, mousePos);
-		_cursor.updateEvent(event);
 	}
 
 	virtual void update(float dt, const sf::Vector2f& mousePos) override

@@ -71,7 +71,7 @@ private:
 
 	void die()
 	{
-		_eph.spawn(_position, { 64, 64 }, _ephSheet, { 5, 2 }, (float)0.05, 0);
+		_eph.spawn(_position, { 64, 64 }, _ephSheet, { 5, 1 }, (float)0.05, 0);
 		_alive = false;
 	}
 

@@ -10,7 +10,6 @@ private:
 	sf::Vector2f _size;
 	Map* _map;
 	std::shared_ptr<Player> _player;
-	Ephemereal _eph;
 
 	// Cosmetic
 	sf::Sprite _sprite;
@@ -19,12 +18,10 @@ private:
 	sf::Texture* _d;
 	sf::Texture* _ws;
 	sf::Texture* _wn;
-	sf::Texture* _ephSheet;
 	bool _canMove;
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const
 	{
-		target.draw(_eph, states);
 		target.draw(_sprite, states);
 	}
 
@@ -47,8 +44,6 @@ public:
 		_wn = &res->textures.cursor_weapon;
 		_ws = &res->textures.cursor_ontarget;
 
-		_ephSheet = &res->textures.eph;
-
 		_sprite.setTexture(*_y);
 		_canMove = true;
 	}
@@ -58,36 +53,20 @@ public:
 		return _sprite.getPosition();
 	}
 
-	void updateEvent(const sf::Event& event)
-	{
-		if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left)
-		{
-			sf::Vector2f point = { (float)event.mouseButton.x, (float)event.mouseButton.y };
-			sf::Vector2f final = _player->finalCursorPosition(point);
-			auto r = _map->currentRoom();
-			Direction d = None;
-			if(r->pointInRoom(final) || r->pointInDoor(final, d))
-				_eph.spawn(final, { 64, 64 }, _ephSheet, { 5, 2 }, 0.05f);
-		}
-	}
-
 	virtual void update(float dt, const sf::Vector2f& mousePos) override
 	{
-		auto final = _player->finalCursorPosition(mousePos);
-		_sprite.setPosition(final);
+		_sprite.setPosition(mousePos);
 
 		std::shared_ptr<Room> r = _map->currentRoom();
 		Direction dir = None;
 
-		if (_player->pointInPlayer(final))		_sprite.setTexture(*_n);
+		if (_player->pointInPlayer(mousePos))		_sprite.setTexture(*_n);
+		else if (r->pointInDoor(mousePos, dir))	_sprite.setTexture(*_d);
 		else if (_player->activeWeapon() != nullptr)
 		{
 			//if()					_sprite.setTexture(*_ws); // Todo become red when on enemy
 			/*else*/							_sprite.setTexture(*_wn);
 		}
-		else if (r->pointInDoor(final, dir))	_sprite.setTexture(*_d);
 		else									_sprite.setTexture(*_y);
-
-		_eph.update(dt, mousePos);
 	}
 };
