@@ -19,7 +19,7 @@ sf::Vector2i Map::getNextRoomOrigin(const sf::Vector2i& pixel, Direction directi
 	return next;
 }
 
-bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& center)
+bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& roomCenter, const sf::Vector2f& roomSize)
 {
 	// Data
 	std::stack<sf::Vector2i> stack;
@@ -38,8 +38,6 @@ bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& center)
 	_pixelRoom.push_back(origin);
 
 	pixelDoor[origin] = std::vector<Direction>();
-
-	Logger::log({ "First pass" });
 	int counter = 0;
 
 	// First pass, door recon
@@ -89,7 +87,8 @@ bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& center)
 			Logger::log({ "- Didn't find pixelDoor at ", std::to_string(startPx.x), ",", std::to_string(startPx.y) });
 
 		name << counter << Logger::afterNumber(counter) << " Room";
-		_rooms.push_back(std::make_shared<Room>(Room(_shaderTex, { 1000, 600 }, center, startPx, name.str())));
+		_rooms.push_back(std::make_shared<Room>(Room(_shaderTex, roomSize, roomCenter, startPx, name.str())));
+
 		_items->addRoom(name.str());
 		_enemies->addRoom(name.str());
 
@@ -106,8 +105,6 @@ bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& center)
 		sf::Vector2i px = pixels[i];
 		_pixelRoomMap[px] = _rooms[i];
 	}
-
-	Logger::log({ "Second pass" });
 
 	// Second pass, next rooms
 	for (int i = 0; i < _rooms.size(); i++)
@@ -135,11 +132,11 @@ bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& center)
 		// 1st room
 		if (i == 0)
 		{
-			_items->add(std::make_shared<Boost>(Boost({ center.x, center.y - 100 }, _res)), room->name());
+			_items->add(std::make_shared<Boost>(Boost({ roomCenter.x, roomCenter.y - 100 }, _res)), room->name());
 
-			auto pistol = std::make_shared<Pistol>(Pistol({ center.x, center.y + 100 }, _res));
-			auto shotgun = std::make_shared<Shotgun>(Shotgun({ center.x - 100, center.y }, _res));
-			auto smg = std::make_shared<SMG>(SMG({ center.x + 100, center.y }, _res));
+			auto pistol = std::make_shared<Pistol>(Pistol({ roomCenter.x, roomCenter.y + 100 }, _res));
+			auto shotgun = std::make_shared<Shotgun>(Shotgun({ roomCenter.x - 100, roomCenter.y }, _res));
+			auto smg = std::make_shared<SMG>(SMG({ roomCenter.x + 100, roomCenter.y }, _res));
 			pistol->setBullets(_bullets);
 			shotgun->setBullets(_bullets);
 			smg->setBullets(_bullets);
@@ -148,7 +145,7 @@ bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& center)
 			_items->addWeapon(shotgun, room->name());
 			_items->addWeapon(smg, room->name());
 
-			_enemies->add(std::make_shared<Shadow>(Shadow({ center.x - 300, center.y - 100 }, _res)), room->name());
+			_enemies->add(std::make_shared<Shadow>(Shadow({ roomCenter.x - 300, roomCenter.y - 100 }, _res)), room->name());
 		}
 
 		// Rest
@@ -159,34 +156,37 @@ bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& center)
 			if (nbBoosts > 5) nbBoosts = 1;
 			int r1 = Random::iRand(0, 100);
 			int r2 = Random::iRand(0, 100);
-			int nbPistols = (r1 < 85) ? 0 : 1;
-			int nbSMG = (r2 < 95) ? 0 : 1;
+			int r3 = Random::iRand(0, 100);
+			int nbPistols = (r1 < 75) ? 0 : 1;
+			int nbSMG =		(r2 < 80) ? 0 : 1;
+			int nbShotgun = (r3 < 90) ? 0 : 1;
 
-			// Boosts
-			for (int i = 0; i < nbBoosts; i++)
-			{
-				sf::Vector2f pos = { 0, 0 };
-				do
-					pos = { (float)Random::iRand(150, 1050), (float)Random::iRand(150, 650) };
-				while (vm::dist(pos, center) < 200.f);
-				_items->add(std::make_shared<Boost>(Boost(pos, _res)), room->name());
-			}
-			
-			// Pistols
-			for (int i = 0; i < nbPistols; i++)
-			{
-				sf::Vector2f pos = { 0, 0 };
-				do
-					pos = { (float)Random::iRand(150, 1050), (float)Random::iRand(150, 650) };
-				while (vm::dist(pos, center) < 200.f);
-				_items->addWeapon(std::make_shared<Pistol>(Pistol(pos, _res)), room->name());
-			}
+			// Items & weapons generation
+			sf::Vector2f pos = { 0, 0 };
+
+			for (int i = 0; i < nbBoosts; i++)	_items->add(std::make_shared<Boost>(getRandomPositionInRoom(pos, roomCenter, roomSize), _res), room->name());
+			for (int i = 0; i < nbPistols; i++) _items->addWeapon(std::make_shared<Pistol>(getRandomPositionInRoom(pos, roomCenter, roomSize), _res), room->name());
+			for (int i = 0; i < nbSMG; i++)		_items->addWeapon(std::make_shared<SMG>(getRandomPositionInRoom(pos, roomCenter, roomSize), _res), room->name());
+			for (int i = 0; i < nbShotgun; i++)	_items->addWeapon(std::make_shared<Shotgun>(getRandomPositionInRoom(pos, roomCenter, roomSize), _res), room->name());
 		}
 		_rooms[i]->setContents(_items, _enemies, _bullets);
 	}
 
 	Logger::log({ "Finished loading map, found ", std::to_string(_rooms.size()), " rooms." });
 	return true;
+}
+
+sf::Vector2f Map::getRandomPositionInRoom(const sf::Vector2f& pos, const sf::Vector2f& roomCenter, const sf::Vector2f& roomSize)
+{
+	sf::Vector2f out = pos;
+	do
+	{
+		out = {
+			(float)Random::iRand(roomCenter.x - roomSize.x / 2, roomCenter.x + roomSize.x / 2),
+			(float)Random::iRand(roomCenter.x - roomSize.x / 2, roomCenter.x + roomSize.x / 2)
+		};
+	} while (vm::dist(pos, roomCenter) < 200.f);
+	return out;
 }
 
 void Map::updateBulletBounds()
@@ -213,7 +213,7 @@ bool Map::generate()
 {
 	sf::Image buf;
 	buf.loadFromFile(_filename);
-	if (!loadMapFromImage(buf, _center))
+	if (!loadMapFromImage(buf, _center, { 1200, 800 }))
 		return false;
 	_current = _rooms[0];
 	_items->setCurrentRoom(_current->name());
@@ -264,12 +264,12 @@ std::shared_ptr<Bullets> Map::bullets()
 
 void Map::exitRoom(Direction door)
 {
-	std::shared_ptr<Room>& old = _current;
+	std::string oldname = _current->name();
 	_current = _current->nextRoom(door);
 	_changedRoom = true;
 	_items->setCurrentRoom(_current->name());
 	_enemies->setCurrentRoom(_current->name());
-	_items->changeWeaponRoom(_player->activeWeapon(), old->name(), _current->name());
+	_items->changeWeaponRoom(_player->activeWeapon(), oldname, _current->name());
 	_bullets->clearBullets();
 	updateBulletBounds();
 }

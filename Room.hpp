@@ -18,6 +18,8 @@
 class Room : public LiveEntity
 {
 private:
+	const sf::Vector2f _doorSize = { 100, 100 };
+
 	// Data
 	std::vector<Direction> _doors;
 	std::map<Direction, std::shared_ptr<Room>> _nextRooms;
@@ -54,19 +56,17 @@ private:
 		target.draw(_canvas, finalState);
 	}
 
-	void initDoorFromDirection(sf::RectangleShape& shape, Direction dir, const sf::Vector2f& center)
+	void initDoorFromDirection(sf::RectangleShape& shape, Direction dir)
 	{
 		shape.setFillColor(_bg);
 
-		const sf::Vector2f shapeSize = { 100, 100 };
-
-		shape.setSize(shapeSize);
-		shape.setOrigin({ shapeSize.x / 2, shapeSize.y / 2 });
-		shape.setPosition(center);
+		shape.setSize(_doorSize);
+		shape.setOrigin({ _doorSize.x / 2, _doorSize.y / 2 });
+		shape.setPosition(_center);
 
 		int h = 0, v = 0;
 		Directions::getHV(h, v, dir);
-		shape.move({ h * (_size.x / 2 + shapeSize.x / 2), v * (_size.y / 2 + (shapeSize.y / 2)) });
+		shape.move({ h * (_size.x / 2 + _doorSize.x / 2), v * (_size.y / 2 + _doorSize.y / 2) });
 	}
 
 public:
@@ -78,15 +78,17 @@ public:
 		_shape.setSize(_size);
 		_shape.setOrigin({ _size.x / 2, _size.y / 2 });
 		_shape.setPosition(_center);
+		_shape.setOutlineColor(sf::Color::White);
+		_shape.setOutlineThickness(4);
 
 		_buffer = std::make_shared<sf::RenderTexture>();
-		_buffer->create((unsigned int)_center.x * 2, (unsigned int)_center.y * 2);
+		_buffer->create((unsigned int)_center.x + _size.x / 2 + _doorSize.x * 2, (unsigned int)_center.y + _size.y / 2 + _doorSize.y * 2);
 
 		_canvas.setPrimitiveType(sf::Quads);
-		_canvas.append(sf::Vertex({ 0, 0 },							{ 0, 0 }));
-		_canvas.append(sf::Vertex({ _center.x * 2, 0 },				{ _center.x * 2, 0 }));
-		_canvas.append(sf::Vertex({ _center.x * 2, _center.y * 2 }, { _center.x * 2, _center.y * 2 }));
-		_canvas.append(sf::Vertex({ 0, _center.y * 2 },				{ 0, _center.y * 2 }));
+		_canvas.append(sf::Vertex({ _center.x - _size.x / 2 - _doorSize.x * 2, _center.y - _size.y / 2 - _doorSize.y * 2 }, { _center.x - _size.x / 2 - _doorSize.x * 2, _center.y - _size.y / 2 - _doorSize.y * 2 }));
+		_canvas.append(sf::Vertex({ _center.x + _size.x / 2 + _doorSize.x * 2, _center.y - _size.y / 2 - _doorSize.y * 2 }, { _center.x + _size.x / 2 + _doorSize.x * 2, _center.y - _size.y / 2 - _doorSize.y * 2 }));
+		_canvas.append(sf::Vertex({ _center.x + _size.x / 2 + _doorSize.x * 2, _center.y + _size.y / 2 + _doorSize.y * 2 }, { _center.x + _size.x / 2 + _doorSize.x * 2, _center.y + _size.y / 2 + _doorSize.y * 2 }));
+		_canvas.append(sf::Vertex({ _center.x - _size.x / 2 - _doorSize.x * 2, _center.y + _size.y / 2 + _doorSize.y * 2 }, { _center.x - _size.x / 2 - _doorSize.x * 2, _center.y + _size.y / 2 + _doorSize.y * 2 }));
 	}
 
 	void setContents(const std::shared_ptr<Items>& items, const std::shared_ptr<Enemies>& enemies, const std::shared_ptr<Bullets>& bullets)
@@ -132,7 +134,7 @@ public:
 			if (d != None)
 			{
 				sf::RectangleShape shape;
-				initDoorFromDirection(shape, d, _center);
+				initDoorFromDirection(shape, d);
 				_doorsShape.push_back(shape);
 				_nextRooms[d] = next[i];
 			}

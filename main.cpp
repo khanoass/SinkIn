@@ -6,9 +6,13 @@
 
 int main()
 {
-	const sf::Vector2u size = { 1200, 800 };
+	//const sf::Vector2u size = { 1600, 800 };
+	//sf::Uint8 style = sf::Style::Titlebar | sf::Style::Close;
 
-	sf::RenderWindow window(sf::VideoMode(size.x, size.y), "Sink In", sf::Style::Titlebar | sf::Style::Close);
+	const sf::Vector2u size = { 1920, 1080 };
+	sf::Uint8 style = sf::Style::Fullscreen | sf::Style::Close;
+
+	sf::RenderWindow window(sf::VideoMode(size.x, size.y), "Sink In", style);
 	window.setMouseCursorVisible(false);
 
 	ResManager res;

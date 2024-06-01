@@ -153,6 +153,7 @@ public:
 		{
 			for (const auto& w : *weapons)
 			{
+				if (w == nullptr) continue;
 				if (w->dropping() && vm::dist(w->position(), _position) < _range + w->range())
 				{
 					hit(w->dropDamage(), w->dropDirection());

@@ -42,7 +42,9 @@ private:
 
 	sf::Vector2i getNextRoomOrigin(const sf::Vector2i& pixel, Direction direction) const;
 
-	bool loadMapFromImage(const sf::Image& image, const sf::Vector2f& center);
+	bool loadMapFromImage(const sf::Image& image, const sf::Vector2f& roomCenter, const sf::Vector2f& roomSize);
+
+	sf::Vector2f getRandomPositionInRoom(const sf::Vector2f& pos, const sf::Vector2f& roomCenter, const sf::Vector2f& roomSize);
 
 	void updateBulletBounds();
 
