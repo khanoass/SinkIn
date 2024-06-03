@@ -4,6 +4,7 @@
 #include "FpsCounter.hpp"
 #include "AmmoCounter.hpp"
 #include "BoostCounter.hpp"
+#include "HPcounter.hpp"
 #include "ResManager.hpp"
 
 class GUI : public LiveEntity
@@ -18,6 +19,7 @@ private:
 	FpsCounter _fps;
 	AmmoCounter _ammo;
 	BoostCounter _boost;
+	HPCounter _hp;
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const
 	{
@@ -49,6 +51,9 @@ public:
 
 		// Boost
 		_widgets.push_back(&_boost);
+
+		// HP
+		_widgets.push_back(&_hp);
 	}
 
 	void setFPS(int fps)
@@ -65,6 +70,11 @@ public:
 	void setBoostTime(float seconds, float max)
 	{
 		_boost.setTime(seconds, max);
+	}
+
+	void setHP(float hp, float max)
+	{
+		_hp.setHP(hp, max);
 	}
 
 	virtual void update(float dt, const sf::Vector2f& mousePos)

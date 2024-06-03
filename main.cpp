@@ -43,21 +43,17 @@ int main()
 		// FPS
 		currentTime = fpsClock.getElapsedTime();
 		float fps = 1.f / (currentTime.asSeconds() - lastTime.asSeconds());
-		gui.setFPS((int)fps);
 		lastTime = currentTime;
 
 		camera.updatePlayerSmooth(dt, game.getPlayerPosition(), game.getMapPtr()->changedRoom());
 		game.update(dt, posf);
 
-		// Ammo
-		if (game.playerHasWeapon())
-			gui.setAmmo(game.getPlayerAmmo());
-		else
-			gui.setAmmo(-1);
-
-		// Boost
+		// GUI
+		gui.setFPS((int)fps);
+		if (game.playerHasWeapon())	gui.setAmmo(game.getPlayerAmmo());
+		else						gui.setAmmo(-1);
 		gui.setBoostTime(game.getPlayerBoostTime(), game.getPlayerMaxBoostTime());
-
+		gui.setHP(game.getPlayerHP(), game.getPlayerMaxHP());
 		gui.update(dt, posf);
 
 		sf::Vector2f viPos = camera.playerSmoothCenter(dt, game.getPlayerPosition(), game.getMapPtr()->changedRoom());

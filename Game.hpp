@@ -71,6 +71,16 @@ public:
 		return _player->maxBoostTime();
 	}
 
+	int getPlayerHP() const
+	{
+		return _player->hp();
+	}
+
+	int getPlayerMaxHP() const
+	{
+		return _player->maxHp();
+	}
+
 	Map* getMapPtr()
 	{
 		return &_map;

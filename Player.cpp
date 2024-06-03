@@ -45,7 +45,6 @@ void Player::shoot(const sf::Event& event)
 
 void Player::die()
 {
-	Logger::log({ "GAME OVER" });
 }
 
 Player::Player(ResManager* res)
@@ -53,6 +52,7 @@ Player::Player(ResManager* res)
 {
 	_position = { 0, 0 };
 	_boosts = 0;
+	_hp = _initialHp;
 
 	_sprite.setOrigin({ _size.x / 2, _size.y / 2 });
 	_sprite.setPosition(_position);
@@ -131,7 +131,10 @@ void Player::hit(float damage, const sf::Vector2f& direction)
 		setKnockback(damage * _knockbackDamageFactor, direction);
 		_hp -= damage;
 		if (_hp <= 0)
+		{
+			_hp = 0;
 			die();
+		}
 	}
 }
 
@@ -170,6 +173,16 @@ float Player::boostTime() const
 float Player::maxBoostTime() const
 {
 	return _boostsTime;
+}
+
+float Player::hp() const
+{
+	return _hp;
+}
+
+float Player::maxHp() const
+{
+	return _initialHp;
 }
 
 bool Player::pointInPlayer(const sf::Vector2f& point) const

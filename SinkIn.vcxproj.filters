@@ -124,6 +124,9 @@
     <ClInclude Include="BoostCounter.hpp">
       <Filter>GUI</Filter>
     </ClInclude>
+    <ClInclude Include="HPcounter.hpp">
+      <Filter>GUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Util">

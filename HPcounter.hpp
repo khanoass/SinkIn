@@ -5,19 +5,18 @@
 
 #include "Widget.hpp"
 
-class BoostCounter : public Widget
+class HPCounter : public Widget
 {
 private:
 	// Const
-	const sf::Vector2f _position = { 10, 380 };
+	const sf::Vector2f _position = { 10, 300 };
 	const sf::Vector2f _size = { 254, 60 };
 	const sf::Vector2f _padding = { 5, 5 };
 
 	// Cosmetic
 	sf::VertexArray _panel;
 	const sf::Color _bg = { 80, 80, 80, 100 };
-	const sf::Color _fg = { 50, 50, 200, 100 };
-	bool _boosted = false;
+	const sf::Color _fg = { 200, 50, 50, 100 };
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override
 	{
@@ -25,7 +24,7 @@ private:
 	}
 
 public:
-	BoostCounter()
+	HPCounter()
 	{
 		_panel.setPrimitiveType(sf::Quads);
 		_panel.append(sf::Vertex(_position, _bg));
@@ -38,11 +37,18 @@ public:
 		_panel.append(sf::Vertex({ _position.x + _padding.x, _position.y + _size.y - _padding.y }, _fg));
 	}
 
-	void setTime(float seconds, float max)
+	void setHP(float hp, float max)
 	{
-		_boosted = seconds > 0.f;
-		_panel[5].position.x = _position.x + _padding.x + _boosted * (_size.x - (seconds / max)*_size.x);
-		_panel[6].position.x = _position.x + _padding.x + _boosted * (_size.x - (seconds / max)*_size.x);
+		if (hp <= 0)
+		{
+			_panel[5].position.x = _position.x + _padding.x;
+			_panel[6].position.x = _position.x + _padding.x;
+		}
+		else
+		{
+			_panel[5].position.x = _position.x + _padding.x + (hp / max) * _size.x - _padding.x * 2;
+			_panel[6].position.x = _position.x + _padding.x + (hp / max) * _size.x - _padding.x * 2;
+		}
 	}
 
 	virtual void update(float dt, const sf::Vector2f& mousePos) override

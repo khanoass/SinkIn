@@ -27,10 +27,10 @@ private:
 	const float _baseSpeed = 200.f;
 	const float _range = 35.f;
 	const float _friction = 5.f;
-	const float _knockbackDamageFactor = 100.f;
+	const float _knockbackDamageFactor = 50.f;
 	const float _hitCooldown = 3.f;
 	const float _hitVisSpeed = 0.1f;
-	const float _initialHp = 1000.f;
+	const float _initialHp = 100.f;
 
 	// Data
 	Map* _map;
@@ -89,11 +89,12 @@ public:
 	// Get
 	sf::Vector2f direction() const;
 	sf::Vector2f position() const;
-	//float reach() const;
 	float range() const;
 	int ammo() const;
 	float boostTime() const;
 	float maxBoostTime() const;
+	float hp() const;
+	float maxHp() const;
 
 	// Util
 	bool pointInPlayer(const sf::Vector2f& point) const;
