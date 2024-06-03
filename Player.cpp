@@ -12,19 +12,6 @@ void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const
 #endif
 }
 
-/*void Player::startMoving(const sf::Vector2f& target)
-{
-	_moving = true;
-	_movTarget = target;
-
-	_direction = vm::normalise((_movTarget - _position));
-}*/
-
-/*bool Player::reachedTarget()
-{
-	return vm::dist(_position, _movTarget) < 10.f;
-}*/
-
 sf::Vector2f Player::getMovingVector()
 {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::W))
@@ -94,8 +81,8 @@ void Player::setMap(Map* map)
 void Player::boost()
 {
 	_boosts++;
-	float s = _baseSpeed + ((_boostsFactor * std::log10f(float(1 + _boosts))) * _baseSpeed);
-	Logger::log({ "Player boosted to ", std::to_string(_boosts), ", speed: ", std::to_string(s) });
+	_boostClock.restart();
+	_boosting = true;
 
 	// Darken in steps
 	sf::Color newCol;
@@ -174,6 +161,17 @@ int Player::ammo() const
 	return _weapon->ammo();
 }
 
+float Player::boostTime() const
+{
+	if (!_boosting) return 0.f;
+	return _boostClock.getElapsedTime().asSeconds();
+}
+
+float Player::maxBoostTime() const
+{
+	return _boostsTime;
+}
+
 bool Player::pointInPlayer(const sf::Vector2f& point) const
 {
 	return _sprite.getGlobalBounds().contains(point);
@@ -249,8 +247,16 @@ void Player::update(float dt, const sf::Vector2f& mousePos)
 	{
 		if (_moving)
 		{
-			// a log(1 + x) function to calculate speed
-			float s = _baseSpeed + ((_boostsFactor * std::log10f(float(1 + _boosts))) * _baseSpeed);
+			// Const speed when not boosted, + malus
+			float s = _baseSpeed - (_boostsFactor * _boosts);
+			if (_boosting)
+			{
+				if (_boostClock.getElapsedTime().asSeconds() > _boostsTime)
+					_boosting = false;
+				// a log(1 + x) function to calculate speed when boosted
+				s = _baseSpeed + ((_boostsFactor * std::log10f(float(1 + _boosts))) * _baseSpeed);
+			}
+
 			_position.x += _direction.x * s * dt;
 			_position.y += _direction.y * s * dt;
 		}

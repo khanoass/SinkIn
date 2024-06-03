@@ -121,6 +121,9 @@
     <ClInclude Include="Camera.hpp">
       <Filter>Util</Filter>
     </ClInclude>
+    <ClInclude Include="BoostCounter.hpp">
+      <Filter>GUI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Util">

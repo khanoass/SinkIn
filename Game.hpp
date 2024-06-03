@@ -61,6 +61,16 @@ public:
 		return _player->activeWeapon() != nullptr;
 	}
 
+	float getPlayerBoostTime() const
+	{
+		return _player->boostTime();
+	}
+
+	float getPlayerMaxBoostTime() const
+	{
+		return _player->maxBoostTime();
+	}
+
 	Map* getMapPtr()
 	{
 		return &_map;

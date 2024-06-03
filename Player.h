@@ -23,6 +23,7 @@ private:
 	const sf::Vector2f _size = { 60, 60 };
 	const sf::Vector2f _scale = { 1.35f, 1.35f };
 	const float _boostsFactor = 1.5f;
+	const float _boostsTime = 20.f;
 	const float _baseSpeed = 200.f;
 	const float _range = 35.f;
 	const float _friction = 5.f;
@@ -40,7 +41,8 @@ private:
 	float _hp;
 	bool _hit = false;
 	bool _hitVis = false;
-	sf::Clock _hitClock, _hitVisClock;
+	bool _boosting = false;
+	sf::Clock _hitClock, _hitVisClock, _boostClock;
 
 	// Cosmetic
 	sf::Texture _tex;
@@ -90,6 +92,8 @@ public:
 	//float reach() const;
 	float range() const;
 	int ammo() const;
+	float boostTime() const;
+	float maxBoostTime() const;
 
 	// Util
 	bool pointInPlayer(const sf::Vector2f& point) const;
