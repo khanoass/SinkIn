@@ -134,9 +134,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Boost.cpp" />
+    <ClCompile Include="Enemies.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="Player.cpp" />
-    <ClCompile Include="Room.hpp" />
+    <ClCompile Include="Room.cpp" />
+    <ClCompile Include="Room.h" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Weapon.cpp" />
   </ItemGroup>
@@ -149,7 +151,7 @@
     <ClInclude Include="Cursor.hpp" />
     <ClInclude Include="Debug.h" />
     <ClInclude Include="Direction.hpp" />
-    <ClInclude Include="Enemies.hpp" />
+    <ClInclude Include="Enemies.h" />
     <ClInclude Include="Enemy.hpp" />
     <ClInclude Include="Entity.hpp" />
     <ClInclude Include="Ephemereal.hpp" />

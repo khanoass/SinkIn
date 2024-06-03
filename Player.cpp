@@ -181,7 +181,7 @@ bool Player::pointInPlayer(const sf::Vector2f& point) const
 
 void Player::updateEvent(const sf::Event& event, float dt, const sf::Vector2f& mousePos)
 {
-	if (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::LShift)
+	if (event.type == sf::Event::MouseButtonPressed && event.key.code == sf::Mouse::Right)
 	{
 		if (_weapon != nullptr && !_weapon->dropping() && !pointInPlayer(mousePos))
 			dropWeapon(mousePos);
@@ -259,7 +259,9 @@ void Player::update(float dt, const sf::Vector2f& mousePos)
 		{
 			_position.x += _knockbackDirection.x * _knockback * dt;
 			_position.y += _knockbackDirection.y * _knockback * dt;
-			_knockback *= _friction;
+
+			// Friction
+			_knockback *= 1 / (1 + (dt * _friction));
 
 			if (_knockback < 1)
 				_knockedback = false;

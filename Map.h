@@ -6,13 +6,19 @@
 #include <sstream>
 
 #include "VeMa.hpp"
-#include "Room.hpp"
+#include "Room.h"
 #include "Logger.hpp"
 #include "ResManager.hpp"
 #include "Items.hpp"
 #include "Bullets.hpp"
+#include "Boost.h"
+#include "Pistol.hpp"
+#include "Shotgun.hpp"
+#include "SMG.hpp"
+#include "Shadow.hpp"
 
 class Player;
+class Enemy;
 
 class Map : public LiveEntity
 {
@@ -56,6 +62,7 @@ public:
 	bool generate();
 
 	std::shared_ptr<Room> currentRoom() const;
+	std::shared_ptr<Room> getRoomFromName(const std::string& name) const;
 
 	void setContents(const std::shared_ptr<Items>& items, const std::shared_ptr<Enemies>& enemies, const std::shared_ptr<Bullets>& bullets);
 	std::shared_ptr<Items> items();

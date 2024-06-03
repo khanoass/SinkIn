@@ -25,7 +25,7 @@ private:
 	const float _boostsFactor = 1.5f;
 	const float _baseSpeed = 200.f;
 	const float _range = 35.f;
-	const float _friction = 0.95f;
+	const float _friction = 5.f;
 	const float _knockbackDamageFactor = 100.f;
 	const float _hitCooldown = 3.f;
 	const float _hitVisSpeed = 0.1f;

@@ -8,7 +8,7 @@
     <ClCompile Include="Player.cpp">
       <Filter>Entities\Player</Filter>
     </ClCompile>
-    <ClCompile Include="Room.hpp">
+    <ClCompile Include="Room.h">
       <Filter>Entities\Map</Filter>
     </ClCompile>
     <ClCompile Include="Map.cpp">
@@ -16,6 +16,12 @@
     </ClCompile>
     <ClCompile Include="Weapon.cpp">
       <Filter>Entities\Items\Weapons</Filter>
+    </ClCompile>
+    <ClCompile Include="Enemies.cpp">
+      <Filter>Entities\Enemies</Filter>
+    </ClCompile>
+    <ClCompile Include="Room.cpp">
+      <Filter>Entities\Map</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -55,7 +61,6 @@
     <ClInclude Include="Widget.hpp">
       <Filter>GUI</Filter>
     </ClInclude>
-    <ClInclude Include="Camera.hpp" />
     <ClInclude Include="FpsCounter.hpp">
       <Filter>GUI</Filter>
     </ClInclude>
@@ -104,7 +109,7 @@
     <ClInclude Include="Weapon.h">
       <Filter>Entities\Items\Weapons</Filter>
     </ClInclude>
-    <ClInclude Include="Enemies.hpp">
+    <ClInclude Include="Enemies.h">
       <Filter>Entities\Enemies</Filter>
     </ClInclude>
     <ClInclude Include="Shadow.hpp">
@@ -112,6 +117,9 @@
     </ClInclude>
     <ClInclude Include="Bullets.hpp">
       <Filter>Entities\Items\Weapons</Filter>
+    </ClInclude>
+    <ClInclude Include="Camera.hpp">
+      <Filter>Util</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

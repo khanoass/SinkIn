@@ -36,8 +36,9 @@ public:
 		_itemsRoom[room].push_back(item);
 	}
 
-	void addWeapon(const std::shared_ptr<Weapon>& weapon, const std::string& room)
+	void addWeapon(const std::shared_ptr<Weapon>& weapon, const std::string& room, const std::shared_ptr<Bullets>& bullets)
 	{
+		weapon->setBullets(bullets);
 		_itemsRoom[room].push_back(weapon);
 		_weaponsRoom[room].push_back(weapon);
 	}

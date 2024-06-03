@@ -14,12 +14,9 @@ public:
 		_spread =			{ 20 };
 		_bulletDamage =		{ 3 };
 		_bulletAmount =		{ 1 };
-		_bulletLifespan = { 0.3 };
-		_bulletSpeed = { 1200 };
-		_bulletSize = { 5, 5 };
-
-		_dropSpeed = 2000;
-		_dropRotationSpeed = 2000;
+		_bulletLifespan =	{ 0.3 };
+		_bulletSpeed =		{ 1200 };
+		_bulletSize =		{ 5, 5 };
 		_dropDamage = 15;
 	}
 };

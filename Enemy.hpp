@@ -7,6 +7,7 @@
 #include <SFML/Graphics/VertexArray.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
 
+#include "Map.h"
 #include "Entity.hpp"
 #include "Debug.h"
 #include "VeMa.hpp"
@@ -25,6 +26,7 @@ private:
 	// Data
 	sf::Vector2f _position, _direction, _size;
 	bool _alive = true;
+	std::vector<sf::Vector2f> _border;
 
 	// Cosmetic
 	sf::Texture* _tex;
@@ -82,6 +84,8 @@ private:
 		_hp -= damage;
 		_knockedback = true;
 
+		Logger::log({ "-", std::to_string(damage), "hp, :", std::to_string(_hp) });
+
 		if (_hp <= 0)
 			die();
 	}
@@ -130,6 +134,14 @@ public:
 #endif
 	}
 
+	void setBorder(const sf::Vector2f& center, const sf::Vector2f& size)
+	{
+		_border = {
+			sf::Vector2f(center.x - size.x / 2, center.x + size.x / 2),
+			sf::Vector2f(center.y - size.y / 2, center.y + size.y / 2)
+		};
+	}
+
 	virtual void update(float dt, const sf::Vector2f& mousePos, const std::shared_ptr<Player>& player, std::vector<Bullet>& bullets, const std::vector<std::shared_ptr<Weapon>>* weapons)
 	{
 		_eph.update(dt, mousePos);
@@ -156,8 +168,8 @@ public:
 				if (w == nullptr) continue;
 				if (w->dropping() && vm::dist(w->position(), _position) < _range + w->range())
 				{
-					hit(w->dropDamage(), w->dropDirection());
 					w->bounce();
+					hit(w->dropDamage(), w->dropDirection());
 				}
 			}
 		}
@@ -179,7 +191,9 @@ public:
 			{
 				_position.x += _knockbackDirection.x * _knockback * dt;
 				_position.y += _knockbackDirection.y * _knockback * dt;
-				_knockback *= _friction;
+
+				// Friction
+				_knockback *= 1 / (1 + (dt * _friction));
 
 				if (_knockback < 1)
 					_knockedback = false;
@@ -188,6 +202,18 @@ public:
 #ifdef DEBUG
 			_hitbox.setPosition(_position);
 #endif
+
+			// Out-of-bounds checking
+			sf::Vector2f old(_position);
+			if (_position.x - _size.x / 2 < _border[0].x)
+				_position.x = _border[0].x + _size.x / 2;
+			if (_position.x + _size.x / 2 > _border[0].y)
+				_position.x = _border[0].y - _size.x / 2;
+			if (_position.y - _size.y / 2 < _border[1].x )
+				_position.y = _border[1].x + _size.y / 2;
+			if (_position.y + _size.y / 2 > _border[1].y)
+				_position.y = _border[1].y - _size.y / 2;
+			if (_position != old) _moving = false;
 
 			_sprite.setPosition(_position);
 			if (reachedTarget()) _moving = false;

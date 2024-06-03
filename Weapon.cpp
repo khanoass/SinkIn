@@ -48,6 +48,7 @@ void Weapon::picked(const std::shared_ptr<Player>& player)
 			Logger::log({ "Weapon picked" });
 			_active = true;
 			_alive = false;
+			_dropping = false;
 		}
 	}
 }
@@ -96,10 +97,7 @@ Weapon::Weapon(const sf::Vector2f& position, const sf::Vector2f& size, const sf:
 
 	_shot = 0;
 	_shooting = false;
-
-	_speed = 0;
 	_direction = { 0, 0 };
-	_friction = 0;
 
 #ifdef DEBUG
 	_gunorigin.setFillColor(sf::Color::Blue);
@@ -187,8 +185,6 @@ void Weapon::drop(const sf::Vector2f& mousePos)
 	_direction = -gunDir(mousePos);
 	_speed = _dropSpeed;
 	_rotSpeed = _dropRotationSpeed;
-	_friction = 0.95;
-	_rotFriction = 0.98;
 	_angle = 0;
 	_position = tubeExit(mousePos) - _direction * 10.f;
 	setGroundSettings(_position, _angle);
@@ -277,8 +273,10 @@ void Weapon::updateDrop(float dt, const sf::Vector2f& mousePos)
 			_position.x += _direction.x * _speed * dt;
 			_position.y += _direction.y * _speed * dt;
 			_angle += _rotSpeed * dt;
-			_speed *= _friction;
-			_rotSpeed *= _rotFriction;
+
+			// Friction
+			_speed *= 1 / (1 + (dt * _friction));
+			_rotSpeed *= 1 / (1 + (dt * _rotFriction));
 
 			auto& bounds = _bullets->getBounds();
 

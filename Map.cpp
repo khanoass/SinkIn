@@ -1,10 +1,8 @@
 #include "Player.h"
+#include "Enemies.h"
 #include "Map.h"
-#include "Boost.h"
-#include "Pistol.hpp"
-#include "Shotgun.hpp"
-#include "SMG.hpp"
-#include "Shadow.hpp"
+
+class Enemies;
 
 void Map::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
@@ -134,16 +132,9 @@ bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& roomCente
 		{
 			_items->add(std::make_shared<Boost>(Boost({ roomCenter.x, roomCenter.y - 100 }, _res)), room->name());
 
-			auto pistol = std::make_shared<Pistol>(Pistol({ roomCenter.x, roomCenter.y + 100 }, _res));
-			auto shotgun = std::make_shared<Shotgun>(Shotgun({ roomCenter.x - 100, roomCenter.y }, _res));
-			auto smg = std::make_shared<SMG>(SMG({ roomCenter.x + 100, roomCenter.y }, _res));
-			pistol->setBullets(_bullets);
-			shotgun->setBullets(_bullets);
-			smg->setBullets(_bullets);
-
-			_items->addWeapon(pistol, room->name());
-			_items->addWeapon(shotgun, room->name());
-			_items->addWeapon(smg, room->name());
+			_items->addWeapon(std::make_shared<Pistol>(Pistol({ roomCenter.x, roomCenter.y + 100 }, _res)), room->name(), _bullets);
+			_items->addWeapon(std::make_shared<Shotgun>(Shotgun({ roomCenter.x - 100, roomCenter.y }, _res)), room->name(), _bullets);
+			_items->addWeapon(std::make_shared<SMG>(SMG({ roomCenter.x + 100, roomCenter.y }, _res)), room->name(), _bullets);
 
 			_enemies->add(std::make_shared<Shadow>(Shadow({ roomCenter.x - 300, roomCenter.y - 100 }, _res)), room->name());
 		}
@@ -158,6 +149,7 @@ bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& roomCente
 			int r2 = Random::iRand(0, 100);
 			int r3 = Random::iRand(0, 100);
 			int nbPistols = (r1 < 75) ? 0 : 1;
+			if (nbPistols == 1 && r1 > 95) nbPistols = 2;
 			int nbSMG =		(r2 < 80) ? 0 : 1;
 			int nbShotgun = (r3 < 90) ? 0 : 1;
 
@@ -165,9 +157,9 @@ bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& roomCente
 			sf::Vector2f pos = { 0, 0 };
 
 			for (int i = 0; i < nbBoosts; i++)	_items->add(std::make_shared<Boost>(getRandomPositionInRoom(pos, roomCenter, roomSize), _res), room->name());
-			for (int i = 0; i < nbPistols; i++) _items->addWeapon(std::make_shared<Pistol>(getRandomPositionInRoom(pos, roomCenter, roomSize), _res), room->name());
-			for (int i = 0; i < nbSMG; i++)		_items->addWeapon(std::make_shared<SMG>(getRandomPositionInRoom(pos, roomCenter, roomSize), _res), room->name());
-			for (int i = 0; i < nbShotgun; i++)	_items->addWeapon(std::make_shared<Shotgun>(getRandomPositionInRoom(pos, roomCenter, roomSize), _res), room->name());
+			for (int i = 0; i < nbPistols; i++) _items->addWeapon(std::make_shared<Pistol>(getRandomPositionInRoom(pos, roomCenter, roomSize), _res), room->name(), _bullets);
+			for (int i = 0; i < nbSMG; i++)		_items->addWeapon(std::make_shared<SMG>(getRandomPositionInRoom(pos, roomCenter, roomSize), _res), room->name(), _bullets);
+			for (int i = 0; i < nbShotgun; i++)	_items->addWeapon(std::make_shared<Shotgun>(getRandomPositionInRoom(pos, roomCenter, roomSize), _res), room->name(), _bullets);
 		}
 		_rooms[i]->setContents(_items, _enemies, _bullets);
 	}
@@ -179,13 +171,10 @@ bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& roomCente
 sf::Vector2f Map::getRandomPositionInRoom(const sf::Vector2f& pos, const sf::Vector2f& roomCenter, const sf::Vector2f& roomSize)
 {
 	sf::Vector2f out = pos;
-	do
-	{
-		out = {
-			(float)Random::iRand(roomCenter.x - roomSize.x / 2, roomCenter.x + roomSize.x / 2),
-			(float)Random::iRand(roomCenter.x - roomSize.x / 2, roomCenter.x + roomSize.x / 2)
-		};
-	} while (vm::dist(pos, roomCenter) < 200.f);
+	out = {
+		Random::fRand(roomCenter.x - roomSize.x / 2, roomCenter.x + roomSize.x / 2),
+		Random::fRand(roomCenter.y - roomSize.y / 2, roomCenter.y + roomSize.y / 2)
+	};
 	return out;
 }
 
@@ -213,7 +202,7 @@ bool Map::generate()
 {
 	sf::Image buf;
 	buf.loadFromFile(_filename);
-	if (!loadMapFromImage(buf, _center, { 1200, 800 }))
+	if (!loadMapFromImage(buf, _center, { 800, 600 }))
 		return false;
 	_current = _rooms[0];
 	_items->setCurrentRoom(_current->name());
@@ -284,6 +273,13 @@ bool Map::changedRoom() const
 	return _changedRoom;
 }
 
+std::shared_ptr<Room> Map::getRoomFromName(const std::string& name) const
+{
+	auto it = std::find_if(_rooms.begin(), _rooms.end(), [name](const std::shared_ptr<Room>& m) -> bool { return m->name() == name; });
+	if (it == _rooms.end()) return nullptr;
+	return *it;
+}
+
 std::shared_ptr<sf::Shader> Map::getTexShaderPtr()
 {
 	return _shaderTex;
@@ -296,8 +292,7 @@ void Map::resetChangedRoom()
 
 void Map::update(float dt, const sf::Vector2f& mousePos)
 {
-	for (const auto& r : _rooms)
-		r->update(dt, mousePos);
+	_current->update(dt, mousePos);
 }
 
 sf::Vector2i Map::textureSize() const

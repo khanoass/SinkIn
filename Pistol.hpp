@@ -17,9 +17,6 @@ public:
 		_spread =			{ 10 };
 		_bulletDamage =		{ 10 };
 		_bulletAmount =		{ 1 };
-
-		_dropSpeed = 2000;
-		_dropRotationSpeed = 2000;
 		_dropDamage = 10;
 	}
 };

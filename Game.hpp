@@ -6,6 +6,7 @@
 #include "Player.h"
 #include "Cursor.hpp"
 #include "GUI.hpp"
+#include "Enemies.h"
 
 class Game : public LiveEntity
 {
@@ -37,6 +38,7 @@ public:
 		_items = std::make_shared<Items>();
 		_bullets = std::make_shared<Bullets>();
 		_enemies = std::make_shared<Enemies>(_player, _bullets, _items);
+		_enemies->setMap(&_map);
 
 		_map.setPlayer(_player);
 		_map.setContents(_items, _enemies, _bullets);

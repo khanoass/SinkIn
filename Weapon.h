@@ -14,10 +14,15 @@ public:
 	enum Mode;
 
 private:
+	const float _friction = 5.f;
+	const float _rotFriction = 5.f;
+	const float _dropSpeed = 2000;
+	const float _dropRotationSpeed = 5000;
+
 	// Data
 	bool _active;
 	sf::Vector2f _direction, _holdOffset, _tubeExit;
-	float _speed, _friction, _angle, _rotSpeed, _rotFriction;
+	float _speed, _angle, _rotSpeed;
 	int _shot;
 	bool _shooting;
 	std::shared_ptr<Bullets> _bullets;
@@ -49,7 +54,7 @@ protected:
 	sf::Vector2f	_bulletSize, _origin;
 	int				_bulletAmount;
 	float			_recoil, _fireRate, _bulletLifespan, _bulletSpeed, _spread, _bulletDamage,
-					_dropSpeed, _dropRotationSpeed, _dropDamage;
+					_dropDamage;
 	Mode _mode;
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override;
