@@ -63,7 +63,7 @@ void Weapon::createBullet(const sf::Vector2f& mousePos)
 	bullet.speed = _bulletSpeed;
 	bullet.damage = _bulletDamage;
 
-	sf::Vector2f direction = gunDir(mousePos);
+	sf::Vector2f direction = -gunDir(mousePos);
 	float angle = Random::fRand(-_spread / 2, _spread / 2);
 	direction = vm::rotateVector(direction, angle);
 	bullet.direction = direction;

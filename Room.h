@@ -72,6 +72,7 @@ public:
 	bool pointInDoor(const sf::Vector2f& point);
 
 	sf::Vector2f center() const;
+	sf::Vector2f screenCenter() const;
 
 	sf::Vector2f absoluteOffset() const;
 

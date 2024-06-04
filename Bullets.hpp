@@ -45,6 +45,7 @@ public:
 
 	void setBounds(const sf::Vector2f& boundsX, const sf::Vector2f& boundsY)
 	{
+		_bounds.clear();
 		_bounds.push_back(boundsX);
 		_bounds.push_back(boundsY);
 	}

@@ -131,6 +131,11 @@ sf::Vector2f Room::center() const
 	return _center;
 }
 
+sf::Vector2f Room::screenCenter() const
+{
+	return _screenCenter;
+}
+
 sf::Vector2f Room::absoluteOffset() const
 {
 	return _screenCenter - _center;

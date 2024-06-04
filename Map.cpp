@@ -147,8 +147,6 @@ bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& screenCen
 
 		_rooms[i]->setNextRooms(pixelDoor.at(ip), nextRooms);
 
-		//Logger::log({ "Added next room pointers at ", std::to_string(ip.x), ",", std::to_string(ip.y) });
-
 		// Items
 
 		// Not first room
@@ -178,6 +176,10 @@ bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& screenCen
 				_enemies->add(std::make_shared<Shadow>(Shadow(getRandomPositionInRoom(pos, room->center(), room->size()), _res)), room);
 		
 			Logger::log({ room->name(), " has size ", std::to_string(room->size().x), ",", std::to_string(room->size().y) });
+		}
+		else
+		{
+			_items->addWeapon(std::make_shared<Pistol>(room->center(), _res), room->name(), _bullets);
 		}
 
 		_rooms[i]->setContents(_player, _items, _enemies, _bullets);
