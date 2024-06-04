@@ -28,11 +28,10 @@ void Enemies::addRoom(const std::string& name)
 	_enemiesRoom[name] = std::vector<std::shared_ptr<Enemy>>();
 }
 
-void Enemies::add(const std::shared_ptr<Enemy>& enemy, const std::string& room)
+void Enemies::add(const std::shared_ptr<Enemy>& enemy, const std::shared_ptr<Room>& room)
 {
-	std::shared_ptr<Room> r = _map->getRoomFromName(room);
-	enemy->setBorder(r->center(), r->size());
-	_enemiesRoom[room].push_back(enemy);
+	enemy->setBorder(room->center(), room->size());
+	_enemiesRoom[room->name()].push_back(enemy);
 }
 
 void Enemies::setCurrentRoom(const std::string& name)

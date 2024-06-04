@@ -25,7 +25,7 @@ class Map : public LiveEntity
 private:
 	// Data
 	std::string _filename;
-	sf::Vector2f _center;
+	sf::Vector2f _screenCenter;
 	ResManager* _res;
 
 	std::shared_ptr<Items> _items;
@@ -48,7 +48,7 @@ private:
 
 	sf::Vector2i getNextRoomOrigin(const sf::Vector2i& pixel, Direction direction) const;
 
-	bool loadMapFromImage(const sf::Image& image, const sf::Vector2f& roomCenter, const sf::Vector2f& roomSize);
+	bool loadMapFromImage(const sf::Image& image, const sf::Vector2f& screenCenter);
 
 	sf::Vector2f getRandomPositionInRoom(const sf::Vector2f& pos, const sf::Vector2f& roomCenter, const sf::Vector2f& roomSize);
 
@@ -68,6 +68,8 @@ public:
 	std::shared_ptr<Items> items();
 	std::shared_ptr<Enemies> enemies();
 	std::shared_ptr<Bullets> bullets();
+
+	sf::Vector2f screenCenter() const;
 
 	sf::Vector2f getPlayerPosition() const;
 

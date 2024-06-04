@@ -8,6 +8,8 @@ class Level : public LiveEntity
 {
 private:
 	// Data
+	sf::Vector2f _screenCenter;
+
 	std::shared_ptr<Map> _map;
 	std::shared_ptr<Cursor> _cursor;
 	std::shared_ptr<Player> _player;
@@ -18,15 +20,16 @@ private:
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const
 	{
 		target.draw(*_map, states);
-		target.draw(*_player, states);
 		target.draw(*_cursor, states);
 	}
 
 public:
-	Level(const std::string& mapfilename, const sf::Vector2f& center, ResManager* res)
+	Level(const std::string& mapfilename, const sf::Vector2f& screenCenter, ResManager* res)
 	{
+		_screenCenter = screenCenter;
+
 		// Init all level's stuff
-		_map = std::make_shared<Map>(mapfilename, center, res);
+		_map = std::make_shared<Map>(mapfilename, _screenCenter, res);
 		_player = std::make_shared<Player>(res);
 		_cursor = std::make_shared<Cursor>(_player, res);
 		_items = std::make_shared<Items>();
@@ -36,8 +39,6 @@ public:
 
 	void start()
 	{
-		_enemies->setMap(_map);
-
 		// Init map
 		_map->setPlayer(_player);
 		_map->setContents(_items, _enemies, _bullets);
@@ -45,6 +46,7 @@ public:
 
 		// Pass map to stuff
 		_player->setMap(_map);
+		_enemies->setMap(_map);
 	}
 
 	std::shared_ptr<Player> player()

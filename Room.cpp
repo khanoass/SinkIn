@@ -25,19 +25,21 @@ void Room::initDoorFromDirection(sf::RectangleShape& shape, Direction dir)
 	shape.move({ h * (_size.x / 2 + _doorSize.x / 2), v * (_size.y / 2 + _doorSize.y / 2) });
 }
 
-Room::Room(std::shared_ptr<sf::Shader> texShader, const sf::Vector2f& size, const sf::Vector2f& center, const sf::Vector2i& pixel, const std::string& name)
-	: _shaderTexture(texShader), _size(size), _center(center), _name(name), _pixel(pixel)
+Room::Room(std::shared_ptr<sf::Shader> texShader, const sf::Vector2f& size, const sf::Vector2f& screenCenter, const sf::Vector2i& pixel, const std::string& name)
+	: _shaderTexture(texShader), _size(size), _name(name), _pixel(pixel)
 {
-	sf::Vector2f ss = { _center.x * 2, _center.y * 2 };
+	sf::Vector2f canvasSize = { _size.x + _doorSize.x * 2, _size.y + _doorSize.y * 2 };
+	_screenCenter = screenCenter;
+	_center = { canvasSize.x / 2, canvasSize.y / 2 };
 
 	_buffer = std::make_shared<sf::RenderTexture>();
-	_buffer->create((unsigned int)ss.x, (unsigned int)ss.y);
+	_buffer->create((unsigned int)canvasSize.x, (unsigned int)canvasSize.y);
 
 	_canvas.setPrimitiveType(sf::Quads);
-	_canvas.append(sf::Vertex({ 0, 0 }, { 0, 0 }));
-	_canvas.append(sf::Vertex({ ss.x, 0 }, { ss.x, 0 }));
-	_canvas.append(sf::Vertex({ ss.x, ss.y }, { ss.x, ss.y }));
-	_canvas.append(sf::Vertex({ 0, ss.y }, { 0, ss.y }));
+	_canvas.append(sf::Vertex({ _screenCenter.x - _center.x, _screenCenter.y - _center.y }, { 0, 0 }));
+	_canvas.append(sf::Vertex({ _screenCenter.x + _center.x, _screenCenter.y - _center.y }, { canvasSize.x, 0 }));
+	_canvas.append(sf::Vertex({ _screenCenter.x + _center.x, _screenCenter.y + _center.y }, { canvasSize.x, canvasSize.y }));
+	_canvas.append(sf::Vertex({ _screenCenter.x - _center.x, _screenCenter.y + _center.y }, { 0, canvasSize.y }));
 
 	_bg = { 50, 50, 50 };
 	_shape.setFillColor(_bg);
@@ -48,8 +50,9 @@ Room::Room(std::shared_ptr<sf::Shader> texShader, const sf::Vector2f& size, cons
 	_shape.setOutlineThickness(4);
 }
 
-void Room::setContents(const std::shared_ptr<Items>& items, const std::shared_ptr<Enemies>& enemies, const std::shared_ptr<Bullets>& bullets)
+void Room::setContents(const std::shared_ptr<Player>& player, const std::shared_ptr<Items>& items, const std::shared_ptr<Enemies>& enemies, const std::shared_ptr<Bullets>& bullets)
 {
+	_player = player;
 	_items = items;
 	_enemies = enemies;
 	_bullets = bullets;
@@ -78,6 +81,7 @@ void Room::update(float dt, const sf::Vector2f& mousePos)
 	_buffer->draw(*_items, bufferstates);
 	_buffer->draw(*_bullets, bufferstates);
 	_buffer->draw(*_enemies, bufferstates);
+	_buffer->draw(*_player, bufferstates);
 
 	_buffer->display();
 }
@@ -125,6 +129,11 @@ bool Room::pointInDoor(const sf::Vector2f& point)
 sf::Vector2f Room::center() const
 {
 	return _center;
+}
+
+sf::Vector2f Room::absoluteOffset() const
+{
+	return _screenCenter - _center;
 }
 
 sf::Vector2f Room::size() const

@@ -24,7 +24,7 @@ private:
 	// Data
 	std::vector<Direction> _doors;
 	std::map<Direction, std::shared_ptr<Room>> _nextRooms;
-	sf::Vector2f _center;
+	sf::Vector2f _center, _screenCenter;
 	sf::Vector2f _size;
 	std::string _name;
 	sf::Vector2i _pixel;
@@ -36,6 +36,8 @@ private:
 	sf::RectangleShape _shape;
 	std::vector<sf::RectangleShape> _doorsShape;
 	sf::VertexArray _canvas;
+
+	std::shared_ptr<Player> _player;
 
 	// Items
 	std::shared_ptr<Items> _items;
@@ -51,9 +53,9 @@ private:
 	void initDoorFromDirection(sf::RectangleShape& shape, Direction dir);
 
 public:
-	Room(std::shared_ptr<sf::Shader> texShader, const sf::Vector2f& size, const sf::Vector2f& center, const sf::Vector2i& pixel, const std::string& name = "");
+	Room(std::shared_ptr<sf::Shader> texShader, const sf::Vector2f& size, const sf::Vector2f& screenCenter, const sf::Vector2i& pixel, const std::string& name = "");
 
-	void setContents(const std::shared_ptr<Items>& items, const std::shared_ptr<Enemies>& enemies, const std::shared_ptr<Bullets>& bullets);
+	void setContents(const std::shared_ptr<Player>& player, const std::shared_ptr<Items>& items, const std::shared_ptr<Enemies>& enemies, const std::shared_ptr<Bullets>& bullets);
 
 	sf::Vector2i pixel() const;
 
@@ -70,6 +72,8 @@ public:
 	bool pointInDoor(const sf::Vector2f& point);
 
 	sf::Vector2f center() const;
+
+	sf::Vector2f absoluteOffset() const;
 
 	sf::Vector2f size() const;
 

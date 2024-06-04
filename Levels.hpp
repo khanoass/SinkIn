@@ -6,7 +6,7 @@ class Levels : public LiveEntity
 {
 private:
 	// Data
-	sf::Vector2f _center;
+	sf::Vector2f _screenCenter;
 	std::vector<Level> _levels;
 	int _i;
 
@@ -18,7 +18,7 @@ private:
 public:
 	Levels(const std::vector<std::string>& filnames, const sf::Vector2f& center, ResManager* res)
 	{
-		_center = center;
+		_screenCenter = center;
 
 		for (const auto& f : filnames)
 			_levels.emplace_back(f, center, res);
@@ -56,7 +56,7 @@ public:
 	{
 		_levels[_i].update(dt, mousePos);
 
-		map()->getTexShaderPtr()->setUniform("screenSize", sf::Glsl::Vec2({ _center.x * 2, _center.y * 2 }));
+		map()->getTexShaderPtr()->setUniform("screenSize", sf::Glsl::Vec2({ _screenCenter.x * 2, _screenCenter.y * 2 }));
 
 		if(player()->boosted())	map()->getTexShaderPtr()->setUniform("radius", 0.85f);
 		else					map()->getTexShaderPtr()->setUniform("radius", 0.5f);

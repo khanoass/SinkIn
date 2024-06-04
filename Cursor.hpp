@@ -17,7 +17,7 @@ private:
 	sf::Texture* _ws;
 	sf::Texture* _wn;
 	bool _canMove;
-	Map* _map;
+	std::shared_ptr<Map> _map;
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const
 	{
@@ -47,7 +47,7 @@ public:
 		_canMove = true;
 	}
 
-	void setMap(Map* map)
+	void setMap(const std::shared_ptr<Map>& map)
 	{
 		_map = map;
 	}

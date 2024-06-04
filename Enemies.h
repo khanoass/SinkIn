@@ -25,7 +25,7 @@ public:
 
 	void setMap(const std::shared_ptr<Map>& _map);
 	void addRoom(const std::string& name);
-	void add(const std::shared_ptr<Enemy>& enemy, const std::string& room);
+	void add(const std::shared_ptr<Enemy>& enemy, const std::shared_ptr<Room>& room);
 	void setCurrentRoom(const std::string& name);
 
 	virtual void update(float dt, const sf::Vector2f& mousePos) override;

@@ -14,7 +14,7 @@ public:
 
 private:
 	// Data
-	sf::Vector2f _center;
+	sf::Vector2f _screenCenter;
 
 	State _state;
 	Levels _levels;
@@ -42,8 +42,8 @@ private:
 public:
 	Game(const sf::Vector2f& center, ResManager* res) :
 		_state(Play),
-		_center(center),
-		_levels({ "assets/maps/map1_normal.png" }, center, res)
+		_screenCenter(center),
+		_levels({ "assets/maps/map1_additional_1.png" }, _screenCenter, res)
 	{
 	}
 
@@ -62,9 +62,9 @@ public:
 		return _levels.map();
 	}
 
-	sf::Vector2f getPlayerPosition()
+	sf::Vector2f getPlayerScreenPosition()
 	{
-		return _levels.player()->position();
+		return _levels.player()->absolutePosition();
 	}
 
 	int getPlayerAmmo()

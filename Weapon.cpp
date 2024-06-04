@@ -19,7 +19,8 @@ sf::Vector2f Weapon::gunCenter() const
 
 sf::Vector2f Weapon::gunDir(const sf::Vector2f& mousePos) const
 {
-	return vm::normalise(gunCenter() - mousePos);
+	auto absc = gunCenter() + _player->absolutePosition() - _player->position();
+	return vm::normalise(absc - mousePos);
 }
 
 void Weapon::draw(sf::RenderTarget& target, sf::RenderStates states) const
@@ -62,7 +63,7 @@ void Weapon::createBullet(const sf::Vector2f& mousePos)
 	bullet.speed = _bulletSpeed;
 	bullet.damage = _bulletDamage;
 
-	sf::Vector2f direction = vm::normalise(tubeExit(mousePos) - gunCenter());
+	sf::Vector2f direction = gunDir(mousePos);
 	float angle = Random::fRand(-_spread / 2, _spread / 2);
 	direction = vm::rotateVector(direction, angle);
 	bullet.direction = direction;

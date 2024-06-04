@@ -46,7 +46,7 @@ int main()
 		float fps = 1.f / (currentTime.asSeconds() - lastTime.asSeconds());
 		lastTime = currentTime;
 
-		camera.updatePlayerSmooth(dt, game.getPlayerPosition(), game.map()->changedRoom());
+		camera.updatePlayerSmooth(dt, game.getPlayerScreenPosition(), game.map()->changedRoom());
 		game.update(dt, posf);
 
 		// GUI
@@ -57,7 +57,7 @@ int main()
 		gui.setHP(game.getPlayerHP(), game.getPlayerMaxHP());
 		gui.update(dt, posf);
 
-		sf::Vector2f viPos = camera.playerSmoothCenter(dt, game.getPlayerPosition(), game.map()->changedRoom());
+		sf::Vector2f viPos = camera.playerSmoothCenter(dt, game.getPlayerScreenPosition(), game.map()->changedRoom());
 		sf::Vector2i screenPosition = window.mapCoordsToPixel(viPos, camera.view());
 		game.setVignettePosition({ (float)screenPosition.x, (float)screenPosition.y });
 

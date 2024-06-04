@@ -55,7 +55,6 @@ Player::Player(ResManager* res)
 	_hp = _initialHp;
 
 	_sprite.setOrigin({ _size.x / 2, _size.y / 2 });
-	_sprite.setPosition(_position);
 	_sprite.setTexture(res->textures.player);
 	_sprite.setScale(_scale);
 
@@ -153,6 +152,11 @@ sf::Vector2f Player::position() const
 	return _position;
 }
 
+sf::Vector2f Player::absolutePosition() const
+{
+	return _position + _room->absoluteOffset();
+}
+
 float Player::range() const
 {
 	return _range;
@@ -235,7 +239,7 @@ void Player::updateEvent(const sf::Event& event, float dt, const sf::Vector2f& m
 void Player::update(float dt, const sf::Vector2f& mousePos)
 {
 	// Rotation follow mouse
-	_lookDirection = vm::normalise((mousePos - _position));
+	_lookDirection = vm::normalise(mousePos - absolutePosition());
 	float angle = vm::angle(_lookDirection);
 	_sprite.setRotation(angle);
 
@@ -315,8 +319,6 @@ void Player::update(float dt, const sf::Vector2f& mousePos)
 		if (_position != old) _moving = false;
 
 		_sprite.setPosition(_position);
-
-		//if (reachedTarget()) _moving = false;
 	}
 
 	// Items

@@ -17,13 +17,15 @@ sf::Vector2i Map::getNextRoomOrigin(const sf::Vector2i& pixel, Direction directi
 	return next;
 }
 
-bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& roomCenter, const sf::Vector2f& roomSize)
+bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& screenCenter)
 {
 	// Data
 	std::stack<sf::Vector2i> stack;
 
 	const int doorsNb = 4;
 	const sf::Vector2i doorsOffset[doorsNb] = { { 1, 0 },{ 2, 1 },{ 1, 2 },{ 0, 1 } };
+	const sf::Vector2i sizeOffset = { 0, 0 };
+	const sf::Vector2i enemyOffset = { 1, 1 };
 
 	// Doors
 	std::vector<sf::Vector2i> pixels;
@@ -37,6 +39,9 @@ bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& roomCente
 
 	pixelDoor[origin] = std::vector<Direction>();
 	int counter = 0;
+
+	// Enemies
+	std::vector<int> roomEnemies;
 
 	// First pass, door recon
 	while (!stack.empty())
@@ -85,7 +90,26 @@ bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& roomCente
 			Logger::log({ "- Didn't find pixelDoor at ", std::to_string(startPx.x), ",", std::to_string(startPx.y) });
 
 		name << counter << Logger::afterNumber(counter) << " Room";
-		_rooms.push_back(std::make_shared<Room>(Room(_shaderTex, roomSize, roomCenter, startPx, name.str())));
+
+		// Room size from encoded image
+		sf::Color sizeenc = image.getPixel(startPx.x + sizeOffset.x, startPx.y + sizeOffset.y);
+		int x = 10 * sizeenc.r;
+		int y = 10 * sizeenc.g;
+		sf::Vector2f roomSize = { (float)x, (float)y };
+
+		// Enemies amount from encoded image
+		sf::Color enenc = image.getPixel(startPx.x + enemyOffset.x, startPx.y + enemyOffset.y);
+		if (enenc == sf::Color::White)
+		{
+			roomEnemies.push_back(0);
+		}
+		else
+		{
+			int nb = enenc.r;
+			roomEnemies.push_back(nb);
+		}
+
+		_rooms.push_back(std::make_shared<Room>(Room(_shaderTex, roomSize, screenCenter, startPx, name.str())));
 
 		_items->addRoom(name.str());
 		_enemies->addRoom(name.str());
@@ -123,45 +147,40 @@ bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& roomCente
 
 		_rooms[i]->setNextRooms(pixelDoor.at(ip), nextRooms);
 
-		Logger::log({ "Added next room pointers at ", std::to_string(ip.x), ",", std::to_string(ip.y) });
+		//Logger::log({ "Added next room pointers at ", std::to_string(ip.x), ",", std::to_string(ip.y) });
 
 		// Items
 
-		// 1st room
-		if (i == 0)
-		{
-			_items->add(std::make_shared<Boost>(Boost({ roomCenter.x, roomCenter.y - 100 }, _res)), room->name());
-
-			_items->addWeapon(std::make_shared<Pistol>(Pistol({ roomCenter.x, roomCenter.y + 100 }, _res)), room->name(), _bullets);
-			_items->addWeapon(std::make_shared<Shotgun>(Shotgun({ roomCenter.x - 100, roomCenter.y }, _res)), room->name(), _bullets);
-			_items->addWeapon(std::make_shared<SMG>(SMG({ roomCenter.x + 100, roomCenter.y }, _res)), room->name(), _bullets);
-
-			_enemies->add(std::make_shared<Shadow>(Shadow({ roomCenter.x - 300, roomCenter.y - 100 }, _res)), room->name());
-		}
-
-		// Rest
-		else
+		// Not first room
+		if (i != 0)
 		{
 			// RNG
-			int nbBoosts = (i != 0) ? Random::iRand(0, 8) : 1;
+			int nbBoosts = Random::iRand(0, 8);
 			if (nbBoosts > 5) nbBoosts = 1;
 			int r1 = Random::iRand(0, 100);
 			int r2 = Random::iRand(0, 100);
 			int r3 = Random::iRand(0, 100);
 			int nbPistols = (r1 < 75) ? 0 : 1;
 			if (nbPistols == 1 && r1 > 95) nbPistols = 2;
-			int nbSMG =		(r2 < 80) ? 0 : 1;
+			int nbSMG = (r2 < 80) ? 0 : 1;
 			int nbShotgun = (r3 < 90) ? 0 : 1;
 
 			// Items & weapons generation
 			sf::Vector2f pos = { 0, 0 };
 
-			for (int i = 0; i < nbBoosts; i++)	_items->add(std::make_shared<Boost>(getRandomPositionInRoom(pos, roomCenter, roomSize), _res), room->name());
-			for (int i = 0; i < nbPistols; i++) _items->addWeapon(std::make_shared<Pistol>(getRandomPositionInRoom(pos, roomCenter, roomSize), _res), room->name(), _bullets);
-			for (int i = 0; i < nbSMG; i++)		_items->addWeapon(std::make_shared<SMG>(getRandomPositionInRoom(pos, roomCenter, roomSize), _res), room->name(), _bullets);
-			for (int i = 0; i < nbShotgun; i++)	_items->addWeapon(std::make_shared<Shotgun>(getRandomPositionInRoom(pos, roomCenter, roomSize), _res), room->name(), _bullets);
+			for (int j = 0; j < nbBoosts; j++)	_items->add(std::make_shared<Boost>(getRandomPositionInRoom(pos, room->center(), room->size()), _res), room->name());
+			for (int j = 0; j < nbPistols; j++) _items->addWeapon(std::make_shared<Pistol>(getRandomPositionInRoom(pos, room->center(), room->size()), _res), room->name(), _bullets);
+			for (int j = 0; j < nbSMG; j++)		_items->addWeapon(std::make_shared<SMG>(getRandomPositionInRoom(pos, room->center(), room->size()), _res), room->name(), _bullets);
+			for (int j = 0; j < nbShotgun; j++)	_items->addWeapon(std::make_shared<Shotgun>(getRandomPositionInRoom(pos, room->center(), room->size()), _res), room->name(), _bullets);
+
+			// Enemies
+			for (int j = 0; j < roomEnemies[i]; j++)
+				_enemies->add(std::make_shared<Shadow>(Shadow(getRandomPositionInRoom(pos, room->center(), room->size()), _res)), room);
+		
+			Logger::log({ room->name(), " has size ", std::to_string(room->size().x), ",", std::to_string(room->size().y) });
 		}
-		_rooms[i]->setContents(_items, _enemies, _bullets);
+
+		_rooms[i]->setContents(_player, _items, _enemies, _bullets);
 	}
 
 	Logger::log({ "Finished loading map, found ", std::to_string(_rooms.size()), " rooms." });
@@ -190,7 +209,7 @@ Map::Map(const std::string& filename, const sf::Vector2f& center, ResManager* re
 	: _current(nullptr), _player(nullptr), _shaderTex(&res->shaders.map), _res(res), _items(nullptr)
 {
 	_filename = filename;
-	_center = center;
+	_screenCenter = center;
 }
 
 void Map::setPlayer(const std::shared_ptr<Player>& player)
@@ -202,7 +221,7 @@ bool Map::generate()
 {
 	sf::Image buf;
 	buf.loadFromFile(_filename);
-	if (!loadMapFromImage(buf, _center, { 800, 600 }))
+	if (!loadMapFromImage(buf, _screenCenter))
 		return false;
 	_current = _rooms[0];
 	_items->setCurrentRoom(_current->name());
@@ -251,6 +270,11 @@ std::shared_ptr<Bullets> Map::bullets()
 	return _bullets;
 }
 
+sf::Vector2f Map::screenCenter() const
+{
+	return _screenCenter;
+}
+
 void Map::exitRoom(Direction door)
 {
 	std::string oldname = _current->name();
@@ -271,13 +295,6 @@ sf::Vector2f Map::getPlayerPosition() const
 bool Map::changedRoom() const
 {
 	return _changedRoom;
-}
-
-std::shared_ptr<Room> Map::getRoomFromName(const std::string& name) const
-{
-	auto it = std::find_if(_rooms.begin(), _rooms.end(), [name](const std::shared_ptr<Room>& m) -> bool { return m->name() == name; });
-	if (it == _rooms.end()) return nullptr;
-	return *it;
 }
 
 std::shared_ptr<sf::Shader> Map::getTexShaderPtr()

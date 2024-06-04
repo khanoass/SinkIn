@@ -89,6 +89,7 @@ public:
 	// Get
 	sf::Vector2f direction() const;
 	sf::Vector2f position() const;
+	sf::Vector2f absolutePosition() const;
 	float range() const;
 	int ammo() const;
 	float boostTime() const;
