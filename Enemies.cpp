@@ -18,7 +18,7 @@ Enemies::Enemies(const std::shared_ptr<Player>& player, const std::shared_ptr<Bu
 	_items = items;
 }
 
-void Enemies::setMap(Map* map)
+void Enemies::setMap(const std::shared_ptr<Map>& map)
 {
 	_map = map;
 }

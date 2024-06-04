@@ -1,14 +1,12 @@
 #pragma once
 
-#include "LiveEntity.hpp"
-#include "Ephemereal.hpp"
+#include "Levels.hpp"
 
 class Cursor : public LiveEntity
 {
 private:
 	// Data
 	sf::Vector2f _size;
-	Map* _map;
 	std::shared_ptr<Player> _player;
 
 	// Cosmetic
@@ -19,6 +17,7 @@ private:
 	sf::Texture* _ws;
 	sf::Texture* _wn;
 	bool _canMove;
+	Map* _map;
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const
 	{
@@ -26,12 +25,12 @@ private:
 	}
 
 public:
-	Cursor(Map* map, const std::shared_ptr<Player>& player, ResManager* res)
+	Cursor(const std::shared_ptr<Player>& player, ResManager* res)
 	{
 		_size = { 32, 32 };
 
-		_map = map;
 		_player = player;
+		_map = nullptr;
 
 		_sprite.setOrigin({ _size.x / 2, _size.y / 2 });
 		sf::Vector2i pos = sf::Mouse::getPosition();
@@ -48,6 +47,11 @@ public:
 		_canMove = true;
 	}
 
+	void setMap(Map* map)
+	{
+		_map = map;
+	}
+
 	sf::Vector2f finalPosition() const
 	{
 		return _sprite.getPosition();
@@ -56,6 +60,8 @@ public:
 	virtual void update(float dt, const sf::Vector2f& mousePos) override
 	{
 		_sprite.setPosition(mousePos);
+
+		if (_map == nullptr) return;
 
 		std::shared_ptr<Room> r = _map->currentRoom();
 		Direction dir = None;

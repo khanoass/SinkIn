@@ -127,6 +127,12 @@
     <ClInclude Include="HPcounter.hpp">
       <Filter>GUI</Filter>
     </ClInclude>
+    <ClInclude Include="Level.hpp">
+      <Filter>Entities\Levels</Filter>
+    </ClInclude>
+    <ClInclude Include="Levels.hpp">
+      <Filter>Entities\Levels</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Util">
@@ -158,6 +164,9 @@
     </Filter>
     <Filter Include="Entities\Enemies">
       <UniqueIdentifier>{18f4d19b-b8f0-43b5-aa50-89c373dc661e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Entities\Levels">
+      <UniqueIdentifier>{3dee9c40-da8e-4dec-b3e9-6574d881b30f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

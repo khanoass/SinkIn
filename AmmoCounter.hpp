@@ -9,13 +9,14 @@ class AmmoCounter : public Widget
 {
 private:
 	// Const
-	const sf::Vector2f _position = { 10, 710 };
+	const sf::Vector2f _position = { 10, 462 };
 	const sf::Vector2f _size = { 150, 80 };
 	const sf::Vector2f _margin = { 80, 18 };
 	const sf::Vector2f _texOffset = { 10, 10 };
 	const sf::Vector2f _texSize = { 32, 32 };
 	const float _texScale = 2.f;
 	const int _charSize = 32;
+	const float _rightMargin = 10.f;
 
 	// Cosmetic
 	sf::VertexArray _panel;
@@ -67,8 +68,8 @@ public:
 	{
 		_text.setString(std::to_string(ammo));
 		auto gb = _text.getGlobalBounds();
-		_panel[1].position.x = gb.width + _margin.x + _texOffset.x * 2;
-		_panel[2].position.x = gb.width + _margin.x + _texOffset.x * 2;
+		_panel[1].position.x = gb.width + _margin.x + _texOffset.x * 2 + _rightMargin;
+		_panel[2].position.x = gb.width + _margin.x + _texOffset.x * 2 + _rightMargin;
 	}
 
 	virtual void update(float dt, const sf::Vector2f& mousePos) override

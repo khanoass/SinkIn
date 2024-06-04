@@ -12,7 +12,7 @@ public:
 		_range = 50;
 		_speed = 100;
 		_friction = 3.f;
-		_damage = 10.f;
+		_damage = 50.f;
 	}
 
 	virtual void updateAI(const std::shared_ptr<Player>& player) override

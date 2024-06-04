@@ -70,7 +70,7 @@ Player::Player(ResManager* res)
 #endif
 }
 
-void Player::setMap(Map* map)
+void Player::setMap(const std::shared_ptr<Map>& map)
 {
 	_map = map;
 	_room = map->currentRoom();
@@ -183,6 +183,11 @@ float Player::hp() const
 float Player::maxHp() const
 {
 	return _initialHp;
+}
+
+bool Player::boosted() const
+{
+	return _boosting;
 }
 
 bool Player::pointInPlayer(const sf::Vector2f& point) const

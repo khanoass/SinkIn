@@ -33,7 +33,7 @@ private:
 	const float _initialHp = 100.f;
 
 	// Data
-	Map* _map;
+	std::shared_ptr<Map> _map;
 	std::shared_ptr<Room> _room;
 
 	sf::Vector2f _position, _direction, _lookDirection;
@@ -75,7 +75,7 @@ private:
 public:
 	Player(ResManager* res);
 
-	void setMap(Map* map);
+	void setMap(const std::shared_ptr<Map>& map);
 	
 	// Item interaction
 	void boost();
@@ -95,6 +95,7 @@ public:
 	float maxBoostTime() const;
 	float hp() const;
 	float maxHp() const;
+	bool boosted() const;
 
 	// Util
 	bool pointInPlayer(const sf::Vector2f& point) const;

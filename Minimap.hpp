@@ -21,7 +21,7 @@ private:
 	// Data
 	std::vector<sf::Vector2i> _rooms;
 	sf::Vector2i _current;
-	Map* _map;
+	std::shared_ptr<Map> _map;
 
 	// Cosmetic
 	sf::VertexArray _minimap;
@@ -58,7 +58,7 @@ private:
 	}
 
 public:
-	Minimap(Map* map)
+	Minimap(const std::shared_ptr<Map>& map)
 	{
 		_map = map;
 

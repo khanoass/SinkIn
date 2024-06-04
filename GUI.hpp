@@ -12,7 +12,7 @@ class GUI : public LiveEntity
 private:
 	// Data
 	std::vector<Widget*> _widgets;
-	Map* _map;
+	std::shared_ptr<Map> _map;
 
 	// Widgets
 	Minimap _minimap;
@@ -31,7 +31,7 @@ private:
 	}
 
 public:
-	GUI(Map* map, ResManager* res) :
+	GUI(const std::shared_ptr<Map>& map, ResManager* res) :
 		_map(map), _minimap(_map)
 	{
 		// Minimap

@@ -2,110 +2,113 @@
 
 #include <SFML/Graphics/Shader.hpp>
 
-#include "Map.h"
-#include "Player.h"
-#include "Cursor.hpp"
-#include "GUI.hpp"
-#include "Enemies.h"
+#include "Levels.hpp"
 
 class Game : public LiveEntity
 {
+public:
+	enum State
+	{
+		Play, Story, GameOver, Loading
+	};
+
 private:
 	// Data
 	sf::Vector2f _center;
 
-	Map _map;
-	std::shared_ptr<Player> _player;
-	Cursor _cursor;
-	std::shared_ptr<Items> _items;
-	std::shared_ptr<Enemies> _enemies;
-	std::shared_ptr<Bullets> _bullets;
+	State _state;
+	Levels _levels;
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const
 	{
-		target.draw(_map, states);
-		target.draw(*_player, states);
-		target.draw(_cursor, states);
+		if (_state == Play)
+		{
+			target.draw(_levels, states);
+		}
+		else if (_state == Story)
+		{
+
+		}
+		else if (_state == GameOver)
+		{
+
+		}
+		else
+		{
+
+		}
 	}
 
 public:
 	Game(const sf::Vector2f& center, ResManager* res) :
+		_state(Play),
 		_center(center),
-		_map(Map("assets/maps/map1_normal.png", center, res)),
-		_player(std::make_shared<Player>(res)),
-		_cursor(&_map, _player, res)
+		_levels({ "assets/maps/map1_normal.png" }, center, res)
 	{
-		_items = std::make_shared<Items>();
-		_bullets = std::make_shared<Bullets>();
-		_enemies = std::make_shared<Enemies>(_player, _bullets, _items);
-		_enemies->setMap(&_map);
-
-		_map.setPlayer(_player);
-		_map.setContents(_items, _enemies, _bullets);
-		_map.generate();
-		_player->setMap(&_map);
 	}
 
-	sf::Vector2f getPlayerPosition() const
+	State state() const
 	{
-		return _player->position();
+		return _state;
 	}
 
-	int getPlayerAmmo() const
+	void setState(State state)
 	{
-		return _player->ammo();
+		_state = state;
 	}
 
-	bool playerHasWeapon() const
+	std::shared_ptr<Map> map()
 	{
-		return _player->activeWeapon() != nullptr;
+		return _levels.map();
 	}
 
-	float getPlayerBoostTime() const
+	sf::Vector2f getPlayerPosition()
 	{
-		return _player->boostTime();
+		return _levels.player()->position();
 	}
 
-	float getPlayerMaxBoostTime() const
+	int getPlayerAmmo()
 	{
-		return _player->maxBoostTime();
+		return _levels.player()->ammo();
 	}
 
-	int getPlayerHP() const
+	bool playerHasWeapon()
 	{
-		return _player->hp();
+		return _levels.player()->activeWeapon() != nullptr;
 	}
 
-	int getPlayerMaxHP() const
+	float getPlayerBoostTime()
 	{
-		return _player->maxHp();
+		return _levels.player()->boostTime();
 	}
 
-	Map* getMapPtr()
+	float getPlayerMaxBoostTime()
 	{
-		return &_map;
+		return _levels.player()->maxBoostTime();
+	}
+
+	int getPlayerHP()
+	{
+		return _levels.player()->hp();
+	}
+
+	int getPlayerMaxHP()
+	{
+		return _levels.player()->maxHp();
 	}
 
 	void setVignettePosition(const sf::Vector2f& pos)
 	{
-		_map.getTexShaderPtr()->setUniform("playerPos", sf::Glsl::Vec2(pos));
+		_levels.setVignettePosition(pos);
 	}
 
 	void updateEvent(const sf::Event& event, float dt, const sf::Vector2f& mousePos)
 	{
-		_player->updateEvent(event, dt, mousePos);
+		_levels.updateEvent(event, dt, mousePos);
 	}
 
 	virtual void update(float dt, const sf::Vector2f& mousePos) override
 	{
-		_cursor.update(dt, mousePos);
-		_player->update(dt, _cursor.finalPosition());
-		_map.update(dt, _cursor.finalPosition());
-		_items->update(dt, mousePos);
-		_enemies->update(dt, mousePos);
-		_bullets->update(dt, mousePos);
-
-		_map.getTexShaderPtr()->setUniform("screenSize", sf::Glsl::Vec2({ _center.x*2, _center.y*2 }));
-		_map.getTexShaderPtr()->setUniform("radius", 0.5f);
+		_levels.update(dt, mousePos);
 	}
 };

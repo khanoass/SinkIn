@@ -18,12 +18,12 @@ private:
 	std::shared_ptr<Player> _player;
 	std::shared_ptr<Bullets> _bullets;
 	std::shared_ptr<Items> _items;
-	Map* _map;
+	std::shared_ptr<Map> _map;
 
 public:
 	Enemies(const std::shared_ptr<Player>& player, const std::shared_ptr<Bullets>& bullets, const std::shared_ptr<Items>& items);
 
-	void setMap(Map* map);
+	void setMap(const std::shared_ptr<Map>& _map);
 	void addRoom(const std::string& name);
 	void add(const std::shared_ptr<Enemy>& enemy, const std::string& room);
 	void setCurrentRoom(const std::string& name);
