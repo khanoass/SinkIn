@@ -66,8 +66,10 @@ public:
 		std::shared_ptr<Room> r = _map->currentRoom();
 		Direction dir = None;
 
-		if (_player->pointInPlayer(mousePos))		_sprite.setTexture(*_n);
-		else if (r->pointInDoor(mousePos, dir))	_sprite.setTexture(*_d);
+		auto finalPos = mousePos - r->absoluteOffset();
+
+		if (_player->pointInPlayer(finalPos))		_sprite.setTexture(*_n);
+		else if (r->pointInDoor(finalPos, dir))		_sprite.setTexture(*_d);
 		else if (_player->activeWeapon() != nullptr)
 		{
 			//if()					_sprite.setTexture(*_ws); // Todo become red when on enemy

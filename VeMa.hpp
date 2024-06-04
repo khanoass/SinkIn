@@ -56,6 +56,15 @@ namespace vm
 		);
 	}
 
+	static bool contains(const sf::Vector2f& pos, const sf::Vector2f& size, const sf::Vector2f& point)
+	{
+		return
+			point.x > pos.x &&
+			point.x < pos.x + size.x &&
+			point.y > pos.y &&
+			point.y < pos.y + size.y;
+	}
+
 	struct Vector2iComparator {
 		bool operator() (const sf::Vector2i& lhs, const sf::Vector2i& rhs) const
 		{	

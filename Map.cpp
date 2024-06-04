@@ -26,6 +26,7 @@ bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& screenCen
 	const sf::Vector2i doorsOffset[doorsNb] = { { 1, 0 },{ 2, 1 },{ 1, 2 },{ 0, 1 } };
 	const sf::Vector2i sizeOffset = { 0, 0 };
 	const sf::Vector2i enemyOffset = { 1, 1 };
+	const sf::Vector2i pistolOffset = { 0, 2 };
 
 	// Doors
 	std::vector<sf::Vector2i> pixels;
@@ -100,9 +101,7 @@ bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& screenCen
 		// Enemies amount from encoded image
 		sf::Color enenc = image.getPixel(startPx.x + enemyOffset.x, startPx.y + enemyOffset.y);
 		if (enenc == sf::Color::White)
-		{
 			roomEnemies.push_back(0);
-		}
 		else
 		{
 			int nb = enenc.r;
@@ -147,7 +146,12 @@ bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& screenCen
 
 		_rooms[i]->setNextRooms(pixelDoor.at(ip), nextRooms);
 
-		// Items
+		// Encoded population
+		sf::Vector2f pos = { 0, 0 };
+
+		// Enemies
+		for (int j = 0; j < roomEnemies[i]; j++)
+			_enemies->add(std::make_shared<Shadow>(getRandomPositionInRoom(pos, room->center(), room->size()), _res), room);
 
 		// Not first room
 		if (i != 0)
@@ -164,22 +168,13 @@ bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& screenCen
 			int nbShotgun = (r3 < 90) ? 0 : 1;
 
 			// Items & weapons generation
-			sf::Vector2f pos = { 0, 0 };
 
 			for (int j = 0; j < nbBoosts; j++)	_items->add(std::make_shared<Boost>(getRandomPositionInRoom(pos, room->center(), room->size()), _res), room->name());
 			for (int j = 0; j < nbPistols; j++) _items->addWeapon(std::make_shared<Pistol>(getRandomPositionInRoom(pos, room->center(), room->size()), _res), room->name(), _bullets);
 			for (int j = 0; j < nbSMG; j++)		_items->addWeapon(std::make_shared<SMG>(getRandomPositionInRoom(pos, room->center(), room->size()), _res), room->name(), _bullets);
 			for (int j = 0; j < nbShotgun; j++)	_items->addWeapon(std::make_shared<Shotgun>(getRandomPositionInRoom(pos, room->center(), room->size()), _res), room->name(), _bullets);
-
-			// Enemies
-			for (int j = 0; j < roomEnemies[i]; j++)
-				_enemies->add(std::make_shared<Shadow>(Shadow(getRandomPositionInRoom(pos, room->center(), room->size()), _res)), room);
 		
 			Logger::log({ room->name(), " has size ", std::to_string(room->size().x), ",", std::to_string(room->size().y) });
-		}
-		else
-		{
-			_items->addWeapon(std::make_shared<Pistol>(room->center(), _res), room->name(), _bullets);
 		}
 
 		_rooms[i]->setContents(_player, _items, _enemies, _bullets);

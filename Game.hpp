@@ -43,7 +43,7 @@ public:
 	Game(const sf::Vector2f& center, ResManager* res) :
 		_state(Play),
 		_screenCenter(center),
-		_levels({ "assets/maps/map1_additional_1.png" }, _screenCenter, res)
+		_levels({ "assets/maps/map1.png" }, _screenCenter, res)
 	{
 	}
 

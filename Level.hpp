@@ -47,6 +47,7 @@ public:
 		// Pass map to stuff
 		_player->setMap(_map);
 		_enemies->setMap(_map);
+		_cursor->setMap(_map);
 	}
 
 	std::shared_ptr<Player> player()

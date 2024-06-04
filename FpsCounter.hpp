@@ -9,8 +9,8 @@ class FpsCounter : public Widget
 {
 private:
 	// Const
-	const sf::Vector2f _position = { 1150, 10 };
-	const sf::Vector2f _size = { 40, 48 };
+	const sf::Vector2f _position = { 1850, 10 };
+	const sf::Vector2f _size = { 60, 48 };
 	const sf::Vector2f _margin = { 8, 12 };
 	const int _charSize = 24;
 
