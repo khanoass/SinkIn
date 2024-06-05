@@ -29,6 +29,7 @@ protected:
 	bool _alive = true;
 	std::vector<sf::Vector2f> _border;
 	bool _justHit = false;
+	std::shared_ptr<Weapon> _justHitDrop = nullptr;
 	float _hp, _initialHp;
 
 	// Cosmetic
@@ -234,12 +235,20 @@ public:
 		{
 			for (const auto& w : *weapons)
 			{
-				if (w == nullptr) continue;
-				if (w->dropping() && vm::dist(w->position(), _position) < _range + w->range())
+				if (w == nullptr || !w->dropping()) continue;
+				if(vm::dist(w->position(), _position) < _range + w->range())
 				{
-					w->bounce();
-					hit(w->dropDamage(), w->dropDirection());
-					_justHit = true;
+					if (_justHitDrop == nullptr)
+					{
+						w->bounce();
+						hit(w->dropDamage(), w->dropDirection());
+						_justHitDrop = w;
+						Logger::log({ "Hit from dropped" });
+					}
+				}
+				else if(_justHitDrop == w)
+				{
+					_justHitDrop = nullptr;
 				}
 			}
 		}
