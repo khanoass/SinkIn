@@ -44,10 +44,11 @@ public:
 		_map->setContents(_items, _enemies, _bullets);
 		_map->generate();
 
-		// Pass map to stuff
+		// Pass pointers to other pointers
 		_player->setMap(_map);
 		_enemies->setMap(_map);
 		_cursor->setMap(_map);
+		_cursor->setEnemies(_enemies);
 	}
 
 	std::shared_ptr<Player> player()

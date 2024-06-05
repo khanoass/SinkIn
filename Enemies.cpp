@@ -39,6 +39,11 @@ void Enemies::setCurrentRoom(const std::string& name)
 	_currentEnemies = &_enemiesRoom[name];
 }
 
+std::vector<std::shared_ptr<Enemy>>& Enemies::getAllInRoom(const std::string& name)
+{
+	return _enemiesRoom[name];
+}
+
 void Enemies::update(float dt, const sf::Vector2f& mousePos)
 {
 	if (_currentEnemies == nullptr) return;

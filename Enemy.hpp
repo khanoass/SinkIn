@@ -142,6 +142,16 @@ public:
 		};
 	}
 
+	sf::Vector2f position() const
+	{
+		return _position;
+	}
+
+	float range() const
+	{
+		return _range;
+	}
+
 	virtual void update(float dt, const sf::Vector2f& mousePos, const std::shared_ptr<Player>& player, std::vector<Bullet>& bullets, const std::vector<std::shared_ptr<Weapon>>* weapons)
 	{
 		_eph.update(dt, mousePos);

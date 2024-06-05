@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Levels.hpp"
+#include "Enemies.h"
 
 class Cursor : public LiveEntity
 {
@@ -8,6 +9,8 @@ private:
 	// Data
 	sf::Vector2f _size;
 	std::shared_ptr<Player> _player;
+	std::shared_ptr<Map> _map;
+	std::shared_ptr<Enemies> _enemies;
 
 	// Cosmetic
 	sf::Sprite _sprite;
@@ -16,8 +19,6 @@ private:
 	sf::Texture* _d;
 	sf::Texture* _ws;
 	sf::Texture* _wn;
-	bool _canMove;
-	std::shared_ptr<Map> _map;
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const
 	{
@@ -44,12 +45,16 @@ public:
 		_ws = &res->textures.cursor_ontarget;
 
 		_sprite.setTexture(*_y);
-		_canMove = true;
 	}
 
 	void setMap(const std::shared_ptr<Map>& map)
 	{
 		_map = map;
+	}
+
+	void setEnemies(const std::shared_ptr<Enemies>& enemies)
+	{
+		_enemies = enemies;
 	}
 
 	sf::Vector2f finalPosition() const
@@ -68,13 +73,25 @@ public:
 
 		auto finalPos = mousePos - r->absoluteOffset();
 
-		if (_player->pointInPlayer(finalPos))		_sprite.setTexture(*_n);
-		else if (r->pointInDoor(finalPos, dir))		_sprite.setTexture(*_d);
-		else if (_player->activeWeapon() != nullptr)
+		if (_player->pointInPlayer(finalPos))		_sprite.setTexture(*_n);	// Player
+		else if (r->pointInDoor(finalPos, dir))		_sprite.setTexture(*_d);	// Door
+		else if (_player->activeWeapon() != nullptr && _enemies != nullptr)							
 		{
-			//if()					_sprite.setTexture(*_ws); // Todo become red when on enemy
-			/*else*/							_sprite.setTexture(*_wn);
+			auto en = _enemies->getAllInRoom(_map->currentRoom()->name());
+			bool on = false;
+			for (const auto& e : en)
+			{
+				if (vm::dist(e->position(), finalPos) < e->range())
+				{
+					on = true;
+					break;
+				}
+			}
+			if(on)					_sprite.setTexture(*_ws);	// Gun
+			else					_sprite.setTexture(*_wn);	// Gun + Enemy
 		}
-		else									_sprite.setTexture(*_y);
+		// Default
+		else
+			_sprite.setTexture(*_y);
 	}
 };
