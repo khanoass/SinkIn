@@ -39,6 +39,18 @@ namespace vm
 		return std::atan2(v.y, v.x) * 180 / (float)PI - 90;
 	}
 
+	static float dot(const sf::Vector2f& a, const sf::Vector2f& b)
+	{
+		return a.x * b.x + a.y * b.y;
+	}
+
+	static float angleTwo(const sf::Vector2f& a, const sf::Vector2f& b)
+	{
+		float d = dot(a, b);
+		float det = a.x * b.y - a.y * b.x;
+		return std::atan2(det, d) * 180 / (float)PI;
+	}
+
 	inline float degToRad(float degrees)
 	{
 		return degrees * (float)PI / 180.f;

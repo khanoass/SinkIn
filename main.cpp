@@ -7,7 +7,7 @@
 
 int main()
 {
-	//const sf::Vector2u size = { 1600, 800 };
+	//const sf::Vector2u size = { 1200, 800 };
 	//sf::Uint8 style = sf::Style::Titlebar | sf::Style::Close;
 
 	const sf::Vector2u size = { 1920, 1080 };
@@ -32,8 +32,7 @@ int main()
 	while (window.isOpen())
 	{
 		// Update
-		sf::Vector2i pos = sf::Mouse::getPosition(window);
-		sf::Vector2f posf = { (float)pos.x, (float)pos.y };
+		sf::Vector2f posf = window.mapPixelToCoords(sf::Mouse::getPosition(window), camera.view());
 		float dt = clock.restart().asSeconds();
 
 		while (window.pollEvent(event))

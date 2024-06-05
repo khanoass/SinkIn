@@ -176,6 +176,10 @@ bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& screenCen
 		
 			Logger::log({ room->name(), " has size ", std::to_string(room->size().x), ",", std::to_string(room->size().y) });
 		}
+		else
+		{
+			_items->addWeapon(std::make_shared<SMG>(room->center(), _res), room->name(), _bullets);
+		}
 
 		_rooms[i]->setContents(_player, _items, _enemies, _bullets);
 	}

@@ -61,14 +61,13 @@ private:
 
 #ifdef DEBUG
 	sf::CircleShape _hitbox;
-	sf::CircleShape _reachShape;
 #endif
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
 	sf::Vector2f getMovingVector();
 
-	void shoot(const sf::Event& event);
+	void shoot(const sf::Vector2f& mousePos);
 
 	void die();
 

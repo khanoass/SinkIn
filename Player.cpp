@@ -36,11 +36,10 @@ sf::Vector2f Player::getMovingVector()
 	return sf::Vector2f(0, 0);
 }
 
-void Player::shoot(const sf::Event& event)
+void Player::shoot(const sf::Vector2f& mousePos)
 {
 	if (_weapon == nullptr) return;
-	sf::Vector2f point = { (float)event.mouseButton.x, (float)event.mouseButton.y };
-	_weapon->shoot(point);
+	_weapon->shoot(mousePos);
 }
 
 void Player::die()
@@ -230,7 +229,7 @@ void Player::updateEvent(const sf::Event& event, float dt, const sf::Vector2f& m
 			break;
 		case Weapon::SemiAuto:
 			if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
-				shoot(event);
+				shoot(mousePos);
 			break;	
 		}
 	}
@@ -296,8 +295,6 @@ void Player::update(float dt, const sf::Vector2f& mousePos)
 		}
 
 #ifdef DEBUG
-		_line[0].position = _position;
-		_reachShape.setPosition(_position);
 		_hitbox.setPosition(_position);
 #endif
 

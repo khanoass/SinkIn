@@ -19,7 +19,7 @@
 
 class Enemy : public Entity
 {
-private:
+protected:
 	const sf::Vector2f _scale = { 1.35f, 1.35f };
 	const float _knockbackFactor = 100.f;
 
@@ -27,6 +27,7 @@ private:
 	sf::Vector2f _position, _direction, _size;
 	bool _alive = true;
 	std::vector<sf::Vector2f> _border;
+	bool _justHit = false;
 
 	// Cosmetic
 	sf::Texture* _tex;
@@ -45,17 +46,17 @@ private:
 	Ephemereal _eph;
 	sf::Texture* _ephSheet;
 
-protected:
 	// Must be defined by subclass!
 	float _range, _hp, _speed, _friction, _damage;
 
-	virtual void updateAI(const std::shared_ptr<Player>& player)
+	virtual void updateAI(float dt, const std::shared_ptr<Player>& player)
 	{
 	}
 
 private:
 #ifdef DEBUG
 	sf::CircleShape _hitbox;
+	sf::CircleShape _target;
 #endif
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const
@@ -66,7 +67,8 @@ private:
 		{
 			target.draw(_sprite, states);
 #ifdef DEBUG
-			target.draw(_hitbox, states);
+			target.draw(_hitbox);
+			target.draw(_target);
 #endif
 		}
 	}
@@ -83,6 +85,7 @@ private:
 		_knockbackDirection = direction;
 		_hp -= damage;
 		_knockedback = true;
+		_justHit = true;
 
 		Logger::log({ "-", std::to_string(damage), "hp, :", std::to_string(_hp) });
 
@@ -98,12 +101,11 @@ protected:
 		_moving = true;
 		_movTarget = target;
 		_direction = vm::normalise((_movTarget - _position));
-		_sprite.setRotation(vm::angle(_direction));
 	}
 
 	bool reachedTarget()
 	{
-		return vm::dist(_position, _movTarget) < 10.f;
+		return vm::dist(_position, _movTarget) < _range;
 	}
 
 	bool hitPlayer(const std::shared_ptr<Player>& player)
@@ -131,6 +133,8 @@ public:
 		_hitbox.setOrigin(_range, _range);
 		_hitbox.setOutlineThickness(2.f);
 		_hitbox.setPosition(_position);
+		_target.setRadius(2.f);
+		_target.setFillColor(sf::Color::Red);
 #endif
 	}
 
@@ -154,11 +158,12 @@ public:
 
 	virtual void update(float dt, const sf::Vector2f& mousePos, const std::shared_ptr<Player>& player, std::vector<Bullet>& bullets, const std::vector<std::shared_ptr<Weapon>>* weapons)
 	{
+		_sprite.setRotation(vm::angle(_direction));
 		_eph.update(dt, mousePos);
 
 		if (!_alive) return;
 
-		updateAI(player);
+		updateAI(dt, player);
 
 		// Hit
 		for (auto& b : bullets)
@@ -180,6 +185,7 @@ public:
 				{
 					w->bounce();
 					hit(w->dropDamage(), w->dropDirection());
+					_justHit = true;
 				}
 			}
 		}
@@ -211,6 +217,7 @@ public:
 
 #ifdef DEBUG
 			_hitbox.setPosition(_position);
+			_target.setPosition(_movTarget);
 #endif
 
 			// Out-of-bounds checking
