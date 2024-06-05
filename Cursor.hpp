@@ -81,7 +81,7 @@ public:
 			bool on = false;
 			for (const auto& e : en)
 			{
-				if (vm::dist(e->position(), finalPos) < e->range())
+				if (e->pointInEnemy(finalPos))
 				{
 					on = true;
 					break;

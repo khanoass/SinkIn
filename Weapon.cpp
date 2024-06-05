@@ -19,8 +19,13 @@ sf::Vector2f Weapon::gunCenter() const
 
 sf::Vector2f Weapon::gunDir(const sf::Vector2f& mousePos) const
 {
-	auto absc = gunCenter() + _player->absolutePosition() - _player->position();
+	auto absc = gunCenter() + absoluteOffset();
 	return vm::normalise(absc - mousePos);
+}
+
+sf::Vector2f Weapon::absoluteOffset() const
+{
+	return _player->absolutePosition() - _player->position();
 }
 
 void Weapon::draw(sf::RenderTarget& target, sf::RenderStates states) const
@@ -118,8 +123,7 @@ void Weapon::pick(const std::shared_ptr<Player>& player)
 
 void Weapon::shoot(const sf::Vector2f& mousePos)
 {
-	if (_player->pointInPlayer(mousePos))
-		return;
+	if (_player->pointInPlayer(mousePos - absoluteOffset())) return;
 
 	if (_ammo == 0)
 	{
@@ -162,8 +166,14 @@ bool Weapon::shooting() const
 	return _shooting;
 }
 
-void Weapon::setShooting(bool shooting)
+void Weapon::setShooting(bool shooting, const sf::Vector2f& mousePos)
 {
+	if (_player->pointInPlayer(mousePos - absoluteOffset()))
+	{
+		_shooting = false;
+		return;
+	}
+
 	_shooting = shooting;
 	if (shooting)
 		_shot = 0;

@@ -156,7 +156,12 @@ public:
 		return _range;
 	}
 
-	virtual void update(float dt, const sf::Vector2f& mousePos, const std::shared_ptr<Player>& player, std::vector<Bullet>& bullets, const std::vector<std::shared_ptr<Weapon>>* weapons)
+	bool pointInEnemy(const sf::Vector2f& point) const
+	{
+		return vm::dist(_position, point) < _range;
+	}
+
+	void update(float dt, const sf::Vector2f& mousePos, const std::shared_ptr<Player>& player, std::vector<Bullet>& bullets, const std::vector<std::shared_ptr<Weapon>>* weapons)
 	{
 		_sprite.setRotation(vm::angle(_direction));
 		_eph.update(dt, mousePos);

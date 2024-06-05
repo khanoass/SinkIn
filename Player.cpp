@@ -105,7 +105,7 @@ bool Player::pickupWeapon(const std::shared_ptr<Weapon>& weapon)
 
 void Player::dropWeapon(const sf::Vector2f& mousePos)
 {
-	if (_weapon == nullptr) return;
+	if (_weapon == nullptr || pointInPlayer(mousePos - _map->currentRoom()->absoluteOffset())) return;
 	_weapon->drop(mousePos);
 	_weapon = nullptr;
 }
@@ -195,14 +195,14 @@ bool Player::boosted() const
 
 bool Player::pointInPlayer(const sf::Vector2f& point) const
 {
-	return _sprite.getGlobalBounds().contains(point);
+	return vm::dist(_position, point) < _range;
 }
 
 void Player::updateEvent(const sf::Event& event, float dt, const sf::Vector2f& mousePos)
 {
 	if (event.type == sf::Event::MouseButtonPressed && event.key.code == sf::Mouse::Right)
 	{
-		if (_weapon != nullptr && !_weapon->dropping() && !pointInPlayer(mousePos))
+		if (_weapon != nullptr && !_weapon->dropping())
 			dropWeapon(mousePos);
 	}
 
@@ -219,18 +219,18 @@ void Player::updateEvent(const sf::Event& event, float dt, const sf::Vector2f& m
 			if (!_weapon->shooting())
 			{
 				if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
-					_weapon->setShooting(true);
+					_weapon->setShooting(true, mousePos);
 			}
 			else
 			{
 				if (event.type == sf::Event::MouseButtonReleased && event.mouseButton.button == sf::Mouse::Left)
-					_weapon->setShooting(false);
+					_weapon->setShooting(false, mousePos);
 			}
 			break;
 		case Weapon::SemiAuto:
 			if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
 				shoot(mousePos);
-			break;	
+			break;
 		}
 	}
 }

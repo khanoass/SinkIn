@@ -37,6 +37,7 @@ private:
 	sf::Vector2f tubeExit(const sf::Vector2f& mousePos) const;
 	sf::Vector2f gunCenter() const;
 	sf::Vector2f gunDir(const sf::Vector2f& mousePos) const;
+	sf::Vector2f absoluteOffset() const;
 
 	// Flash animation
 	Ephemereal _eph;
@@ -72,8 +73,8 @@ public:
 
 	// Interaction
 	virtual void pick(const std::shared_ptr<Player>& player) override;
-	void shoot(const sf::Vector2f& dir);
-	void setShooting(bool shooting);
+	void shoot(const sf::Vector2f& mousePos);
+	void setShooting(bool shooting, const sf::Vector2f& mousePos);
 	void drop(const sf::Vector2f& mousePos);
 	void bounce();
 
