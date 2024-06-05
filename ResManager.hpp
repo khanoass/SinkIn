@@ -16,8 +16,12 @@ public:
 			muzzle,
 			eph,
 			bullets,
-			shadow,
-			death,
+			shadow_body,
+			shadow_eyes_strolling,
+			shadow_eyes_aggro,
+			shadow_eyes_preparing,
+			shadow_eyes_dashing,
+			shadow_death,
 			
 			// Weapons
 			glock_ground, glock_hold,
@@ -59,8 +63,12 @@ public:
 		textures.eph.loadFromFile("assets/textures/eph.png");
 		textures.boost.loadFromFile("assets/textures/item.png");
 		textures.bullets.loadFromFile("assets/textures/bullets.png");
-		textures.shadow.loadFromFile("assets/textures/placeholder_enemy.png");
-		textures.death.loadFromFile("assets/textures/death.png");
+		textures.shadow_body.loadFromFile("assets/textures/enemy_body.png");
+		textures.shadow_eyes_strolling.loadFromFile("assets/textures/enemy_eyes_strolling2.png");
+		textures.shadow_eyes_aggro.loadFromFile("assets/textures/enemy_eyes_aggro2.png");
+		textures.shadow_eyes_preparing.loadFromFile("assets/textures/enemy_eyes_preparing2.png");
+		textures.shadow_eyes_dashing.loadFromFile("assets/textures/enemy_eyes_dashing2.png");
+		textures.shadow_death.loadFromFile("assets/textures/enemy_death.png");
 
 		fonts.font.loadFromFile("assets/fonts/Sunny Spells Basic.ttf");
 

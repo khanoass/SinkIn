@@ -10,6 +10,7 @@ private:
 	{
 		Strolling,
 		Aggro,
+		Preparing,
 		Dashing
 	};
 
@@ -23,6 +24,11 @@ private:
 	State _state;
 	sf::Clock _timoutClock;
 	sf::Clock _aggroClock;
+
+	// Textures
+	sf::Texture* _bodySheet, * _eyesStrolling, * _eyesAggro, * _eyesPreparing, * _eyesDashing;
+	Animation _bodyAnimation;
+	sf::Sprite _body, _eyes;
 
 	void rotateTowards(const sf::Vector2f& point, float dt)
 	{
@@ -44,7 +50,7 @@ private:
 		if (_justHit)
 		{
 			_justHit = false;
-			_state = State::Aggro;
+			changeState(State::Aggro);
 			_aggroClock.restart();
 			return;
 		}
@@ -100,7 +106,7 @@ private:
 		startMoving(player->position());
 
 		if (_aggroClock.getElapsedTime().asSeconds() > _aggroTimeout)
-			_state = State::Strolling;
+			changeState(State::Strolling);
 	}
 
 	void updateDashing(const std::shared_ptr<Player>& player)
@@ -108,24 +114,67 @@ private:
 
 	}
 
+	void changeState(State to)
+	{
+		_state = to;
+		
+		// Updating texture
+		_tex.clear(sf::Color::Transparent);
+
+		switch (_state)
+		{
+		case Shadow::Strolling: _eyes.setTexture(*_eyesStrolling);	break;
+		case Shadow::Aggro:		_eyes.setTexture(*_eyesAggro);		break;
+		case Shadow::Preparing:	_eyes.setTexture(*_eyesPreparing);	break;
+		case Shadow::Dashing:	_eyes.setTexture(*_eyesDashing);	break;
+		}
+
+		_tex.draw(_body);
+		_tex.draw(_eyes);
+		_tex.display();
+	}
+
 public:
 	Shadow(const sf::Vector2f& position, ResManager* res)
-		: Enemy(position, { 60, 60 }, &res->textures.shadow, &res->textures.death)
+		: Enemy(position, { 60, 60 }, &res->textures.shadow_death, { 7, 1 }, { 100, 100 }, 100)
 	{
 		_pointChosen = false;
 		_state = Strolling;
 		_maxDist = 400.f;
 		_direction = { 1.f, 0 };
 
-		_hp = 100;
+		_bodySheet = &res->textures.shadow_body;
+		_eyesStrolling = &res->textures.shadow_eyes_strolling;
+		_eyesAggro = &res->textures.shadow_eyes_aggro;
+		_eyesPreparing = &res->textures.shadow_eyes_preparing;
+		_eyesDashing = &res->textures.shadow_eyes_dashing;
+
+		_bodyAnimation.setSpritesheet(sf::IntRect(0, 0, 60, 60), {5, 1}, 0.05);
+		_bodyAnimation.start();
+
+		_body.setTexture(*_bodySheet);
+		_body.setTextureRect(_bodyAnimation.frame());
+		_body.setPosition(0, 0);
+		_eyes.setTexture(*_eyesStrolling);
+		_body.setPosition(0, 0);
+
 		_range = 50;
 		_speed = 100;
 		_friction = 6.f;
 		_damage = 8.f;
 	}
 
-	virtual void updateAI(float dt, const std::shared_ptr<Player>& player) override
+	virtual void updateEnemy(float dt, const std::shared_ptr<Player>& player) override
 	{
+		if (_bodyAnimation.changed())
+		{
+			_body.setTextureRect(_bodyAnimation.frame());
+			_tex.clear(sf::Color::Transparent);
+			_tex.draw(_body);
+			_tex.draw(_eyes);
+			_tex.display();
+		}
+
 		switch (_state)
 		{
 		case Shadow::Strolling:

@@ -29,9 +29,10 @@ protected:
 	bool _alive = true;
 	std::vector<sf::Vector2f> _border;
 	bool _justHit = false;
+	float _hp, _initialHp;
 
 	// Cosmetic
-	sf::Texture* _tex;
+	sf::RenderTexture _tex;
 	sf::Sprite _sprite;
 
 	// Movement
@@ -46,11 +47,32 @@ protected:
 	// Death animation
 	Ephemereal _eph;
 	sf::Texture* _ephSheet;
+	sf::Vector2i _frames;
+	sf::Vector2f _frameSize;
+
+	// Lifebar
+	sf::VertexArray _bar;
+	const sf::Color _bg = { 100, 30, 30, 140 };
+	const sf::Color _fg = { 240, 50, 50, 140 };
+	const sf::Vector2f _barSize = { 100, 10 };
+	const sf::Vector2f _barPadding = { 2, 2 };
+	const sf::Vector2f _barMargin = { -50, -70 };
+
+	const std::vector<sf::Vector2f> _barOffsets = {
+		{ 0, 0 },
+		{ _barSize.x, 0 },
+		{ _barSize.x, _barSize.y },
+		{ 0, _barSize.y },
+		{ _barPadding.x, _barPadding.y },
+		{ _barSize.x - _barPadding.x, _barPadding.y },
+		{ _barSize.x - _barPadding.x, _barSize.y - _barPadding.y },
+		{ _barPadding.x, _barSize.y - _barPadding.y }
+	};
 
 	// Must be defined by subclass!
-	float _range, _hp, _speed, _friction, _damage;
+	float _range, _speed, _friction, _damage;
 
-	virtual void updateAI(float dt, const std::shared_ptr<Player>& player)
+	virtual void updateEnemy(float dt, const std::shared_ptr<Player>& player)
 	{
 	}
 
@@ -67,6 +89,7 @@ private:
 		if (_alive)
 		{
 			target.draw(_sprite, states);
+			target.draw(_bar, states);
 #ifdef DEBUG
 			target.draw(_hitbox);
 			target.draw(_target);
@@ -76,7 +99,7 @@ private:
 
 	void die()
 	{
-		_eph.spawn(_position, { 64, 64 }, _ephSheet, { 5, 1 }, (float)0.05, 0);
+		_eph.spawn(_position, _frameSize, _ephSheet, _frames, (float)0.05, 0);
 		_alive = false;
 	}
 
@@ -92,6 +115,15 @@ private:
 
 		if (_hp <= 0)
 			die();
+	}
+
+	void updateBar()
+	{
+		for (int i = 0; i < _bar.getVertexCount(); i++)
+			_bar[i].position = _position + _barOffsets[i] + _barMargin;
+			
+		_bar[5].position.x = _position.x + _barMargin.x + (_hp / _initialHp) * _barSize.x - _barPadding.x * 2;
+		_bar[6].position.x = _position.x + _barMargin.x + (_hp / _initialHp) * _barSize.x - _barPadding.x * 2;
 	}
 
 protected:
@@ -115,18 +147,27 @@ protected:
 	}
 
 public:
-	Enemy(const sf::Vector2f& position, const sf::Vector2f& size, sf::Texture* texture, sf::Texture* deathSheet)
+	Enemy(const sf::Vector2f& position, const sf::Vector2f& size, sf::Texture* deathSheet, const sf::Vector2i& deathFrames, const sf::Vector2f& deathFrameSize, float hp)
 	{
 		_startPosition = position;
 		_position = position;
 		_size = size;
-		_tex = texture;
 		_ephSheet = deathSheet;
+		_frames = deathFrames;
+		_frameSize = deathFrameSize;
+		_hp = hp;
+		_initialHp = hp;
 
+		_tex.create((unsigned int)size.x, (unsigned int)size.y);
+		_sprite.setTexture(_tex.getTexture());
 		_sprite.setOrigin({ size.x / 2, size.y / 2 });
 		_sprite.setPosition(_position);
 		_sprite.setScale(_scale);
-		_sprite.setTexture(*_tex);
+
+		_bar.setPrimitiveType(sf::Quads);
+		for(int i = 0; i < 4; i++) _bar.append(sf::Vertex({ 0, 0 }, _bg));
+		for(int i = 0; i < 4; i++) _bar.append(sf::Vertex({ 0, 0 }, _fg));
+		updateBar();
 
 #ifdef DEBUG
 		_hitbox.setFillColor(sf::Color::Transparent);
@@ -172,10 +213,11 @@ public:
 	{
 		_sprite.setRotation(vm::angle(_direction));
 		_eph.update(dt, mousePos);
+		updateBar();
 
 		if (!_alive) return;
 
-		updateAI(dt, player);
+		updateEnemy(dt, player);
 
 		// Hit
 		for (auto& b : bullets)

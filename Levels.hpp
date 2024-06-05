@@ -58,10 +58,10 @@ public:
 
 		map()->getTexShaderPtr()->setUniform("screenSize", sf::Glsl::Vec2({ _screenCenter.x * 2, _screenCenter.y * 2 }));
 
-		map()->getTexShaderPtr()->setUniform("radius", 1.f);
-		/*
+		//map()->getTexShaderPtr()->setUniform("radius", 1.f);
+		
 		if(player()->boosted())	map()->getTexShaderPtr()->setUniform("radius", 0.75f);
 		else					map()->getTexShaderPtr()->setUniform("radius", 0.5f);
-		*/
+		
 	}
 };
