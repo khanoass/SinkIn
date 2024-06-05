@@ -23,6 +23,9 @@ class Enemy;
 class Map : public LiveEntity
 {
 private:
+	const float _spawnBigMargin = 100.f;
+	const float _spawnSmallMargin = 20.f;
+
 	// Data
 	std::string _filename;
 	sf::Vector2f _screenCenter;
@@ -50,7 +53,7 @@ private:
 
 	bool loadMapFromImage(const sf::Image& image, const sf::Vector2f& screenCenter);
 
-	sf::Vector2f getRandomPositionInRoom(const sf::Vector2f& pos, const sf::Vector2f& roomCenter, const sf::Vector2f& roomSize);
+	sf::Vector2f getRandomPositionInRoom(const sf::Vector2f& pos, const sf::Vector2f& roomCenter, const sf::Vector2f& roomSize, float margin);
 
 	void updateBulletBounds();
 
@@ -62,7 +65,6 @@ public:
 	bool generate();
 
 	std::shared_ptr<Room> currentRoom() const;
-	std::shared_ptr<Room> getRoomFromName(const std::string& name) const;
 
 	void setContents(const std::shared_ptr<Items>& items, const std::shared_ptr<Enemies>& enemies, const std::shared_ptr<Bullets>& bullets);
 	std::shared_ptr<Items> items();

@@ -39,6 +39,13 @@ void Enemies::setCurrentRoom(const std::string& name)
 	_currentEnemies = &_enemiesRoom[name];
 }
 
+void Enemies::resetPositionsForRoom(const std::string& name)
+{
+	auto en = getAllInRoom(name);
+	for (auto& i : en)
+		i->resetPosition();
+}
+
 std::vector<std::shared_ptr<Enemy>>& Enemies::getAllInRoom(const std::string& name)
 {
 	return _enemiesRoom[name];

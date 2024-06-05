@@ -24,6 +24,7 @@ protected:
 	const float _knockbackFactor = 100.f;
 
 	// Data
+	sf::Vector2f _startPosition;
 	sf::Vector2f _position, _direction, _size;
 	bool _alive = true;
 	std::vector<sf::Vector2f> _border;
@@ -116,6 +117,7 @@ protected:
 public:
 	Enemy(const sf::Vector2f& position, const sf::Vector2f& size, sf::Texture* texture, sf::Texture* deathSheet)
 	{
+		_startPosition = position;
 		_position = position;
 		_size = size;
 		_tex = texture;
@@ -136,6 +138,11 @@ public:
 		_target.setRadius(2.f);
 		_target.setFillColor(sf::Color::Red);
 #endif
+	}
+
+	void resetPosition()
+	{
+		_position = _startPosition;
 	}
 
 	void setBorder(const sf::Vector2f& center, const sf::Vector2f& size)

@@ -18,6 +18,7 @@ private:
 	const float _rotFriction = 5.f;
 	const float _dropSpeed = 2000;
 	const float _dropRotationSpeed = 5000;
+	const float _randomBounceDeviation = 30.f;
 
 	// Data
 	bool _active;

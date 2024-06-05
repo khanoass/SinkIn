@@ -209,6 +209,11 @@ void Weapon::bounce()
 	{
 		_direction.x *= -1;
 		_direction.y *= -1;
+
+		// Add random deviation
+		float angle = vm::angle(_direction);
+		angle += Random::fRand(-_randomBounceDeviation / 2, _randomBounceDeviation / 2);
+		_direction = vm::rotateVector(_direction, angle);
 	}
 }
 

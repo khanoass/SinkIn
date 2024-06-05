@@ -151,7 +151,7 @@ bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& screenCen
 
 		// Enemies
 		for (int j = 0; j < roomEnemies[i]; j++)
-			_enemies->add(std::make_shared<Shadow>(getRandomPositionInRoom(pos, room->center(), room->size()), _res), room);
+			_enemies->add(std::make_shared<Shadow>(getRandomPositionInRoom(pos, room->center(), room->size(), _spawnBigMargin), _res), room);
 
 		// Not first room
 		if (i != 0)
@@ -169,16 +169,16 @@ bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& screenCen
 
 			// Items & weapons generation
 
-			for (int j = 0; j < nbBoosts; j++)	_items->add(std::make_shared<Boost>(getRandomPositionInRoom(pos, room->center(), room->size()), _res), room->name());
-			for (int j = 0; j < nbPistols; j++) _items->addWeapon(std::make_shared<Pistol>(getRandomPositionInRoom(pos, room->center(), room->size()), _res), room->name(), _bullets);
-			for (int j = 0; j < nbSMG; j++)		_items->addWeapon(std::make_shared<SMG>(getRandomPositionInRoom(pos, room->center(), room->size()), _res), room->name(), _bullets);
-			for (int j = 0; j < nbShotgun; j++)	_items->addWeapon(std::make_shared<Shotgun>(getRandomPositionInRoom(pos, room->center(), room->size()), _res), room->name(), _bullets);
+			for (int j = 0; j < nbBoosts; j++)	_items->add(std::make_shared<Boost>(getRandomPositionInRoom(pos, room->center(), room->size(), _spawnBigMargin), _res), room->name());
+			for (int j = 0; j < nbPistols; j++) _items->addWeapon(std::make_shared<Pistol>(getRandomPositionInRoom(pos, room->center(), room->size(), _spawnSmallMargin), _res), room->name(), _bullets);
+			for (int j = 0; j < nbSMG; j++)		_items->addWeapon(std::make_shared<SMG>(getRandomPositionInRoom(pos, room->center(), room->size(), _spawnSmallMargin), _res), room->name(), _bullets);
+			for (int j = 0; j < nbShotgun; j++)	_items->addWeapon(std::make_shared<Shotgun>(getRandomPositionInRoom(pos, room->center(), room->size(), _spawnSmallMargin), _res), room->name(), _bullets);
 		
 			Logger::log({ room->name(), " has size ", std::to_string(room->size().x), ",", std::to_string(room->size().y) });
 		}
 		else
 		{
-			_items->addWeapon(std::make_shared<SMG>(room->center(), _res), room->name(), _bullets);
+			_items->addWeapon(std::make_shared<Pistol>(room->center(), _res), room->name(), _bullets);
 		}
 
 		_rooms[i]->setContents(_player, _items, _enemies, _bullets);
@@ -188,13 +188,15 @@ bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& screenCen
 	return true;
 }
 
-sf::Vector2f Map::getRandomPositionInRoom(const sf::Vector2f& pos, const sf::Vector2f& roomCenter, const sf::Vector2f& roomSize)
+sf::Vector2f Map::getRandomPositionInRoom(const sf::Vector2f& pos, const sf::Vector2f& roomCenter, const sf::Vector2f& roomSize, float margin)
 {
 	sf::Vector2f out = pos;
+	
 	out = {
-		Random::fRand(roomCenter.x - roomSize.x / 2, roomCenter.x + roomSize.x / 2),
-		Random::fRand(roomCenter.y - roomSize.y / 2, roomCenter.y + roomSize.y / 2)
+	Random::fRand(roomCenter.x - roomSize.x / 2 + margin, roomCenter.x + roomSize.x / 2 - margin),
+	Random::fRand(roomCenter.y - roomSize.y / 2 + margin, roomCenter.y + roomSize.y / 2 - margin)
 	};
+
 	return out;
 }
 
@@ -283,6 +285,7 @@ void Map::exitRoom(Direction door)
 	_changedRoom = true;
 	_items->setCurrentRoom(_current->name());
 	_enemies->setCurrentRoom(_current->name());
+	_enemies->resetPositionsForRoom(oldname);
 	_items->changeWeaponRoom(_player->activeWeapon(), oldname, _current->name());
 	_bullets->clearBullets();
 	updateBulletBounds();

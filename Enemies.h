@@ -28,6 +28,8 @@ public:
 	void add(const std::shared_ptr<Enemy>& enemy, const std::shared_ptr<Room>& room);
 	void setCurrentRoom(const std::string& name);
 
+	void resetPositionsForRoom(const std::string& name);
+
 	std::vector<std::shared_ptr<Enemy>>& getAllInRoom(const std::string& name);
 
 	virtual void update(float dt, const sf::Vector2f& mousePos) override;
