@@ -11,22 +11,29 @@ private:
 		Strolling,
 		Aggro,
 		Preparing,
-		Dashing
+		Dashing,
+		Hurt
 	};
 
 	const float _rotInc = 150.f;
 	const float _angleThresh = 1.f;
 	const float _bugTimeout = 15.f;
 	const float _aggroTimeout = 60.f;
+	const float _hurtTime = 0.5f;
+	const float _prepareTime = 0.7f;
+	const float _dashForce = 1500.f;
+	const float _dashRange = 200.f;
 
 	bool _pointChosen;
 	float _maxDist;
 	State _state;
 	sf::Clock _timoutClock;
 	sf::Clock _aggroClock;
+	sf::Clock _hurtClock;
+	sf::Clock _prepareClock;
 
 	// Textures
-	sf::Texture* _bodySheet, * _eyesStrolling, * _eyesAggro, * _eyesPreparing, * _eyesDashing;
+	sf::Texture* _bodySheet, * _eyesStrolling, * _eyesAggro, * _eyesPreparing, * _eyesDashing, * _eyesHurt;
 	Animation _bodyAnimation;
 	sf::Sprite _body, _eyes;
 
@@ -45,16 +52,9 @@ private:
 		return angle < _angleThresh && angle > -_angleThresh && vm::dot(_direction, point - _position) > 0;
 	}
 
+	// States
 	void updateStrolling(const std::shared_ptr<Player>& player, float dt)
 	{
-		if (_justHit)
-		{
-			_justHit = false;
-			changeState(State::Aggro);
-			_aggroClock.restart();
-			return;
-		}
-
 		if (!_moving)
 		{
 			if (!_pointChosen)
@@ -93,6 +93,14 @@ private:
 
 		if (reachedTarget())
 		{
+			// RNG can become aggro for no reason
+			int r = Random::iRand(0, 10);
+			if (r > 7)
+			{
+				changeState(Shadow::Aggro);
+				return;
+			}
+
 			// Restart when there
 			_pointChosen = false;
 			_moving = false;
@@ -105,13 +113,48 @@ private:
 	{
 		startMoving(player->position());
 
+		if (vm::dist(_position, player->position()) < _dashRange)
+		{
+			// RNG can prepare when close to player
+			int r = Random::iRand(0, 1000);
+			if (r > 998)
+			{
+				changeState(Shadow::Preparing);
+				_prepareClock.restart();
+				_moving = false;
+				return;
+			}
+		}
+
 		if (_aggroClock.getElapsedTime().asSeconds() > _aggroTimeout)
 			changeState(State::Strolling);
 	}
 
+	void updatePreparing()
+	{
+		if (_prepareClock.getElapsedTime().asSeconds() > _prepareTime)
+		{
+			changeState(Shadow::Dashing);
+			applyImpulse(_dashForce);
+		}
+	}
+
 	void updateDashing(const std::shared_ptr<Player>& player)
 	{
+		if (!_impulsing)
+		{
+			changeState(Shadow::Aggro);
+			_aggroClock.restart();
+		}
+	}
 
+	void updateHurt()
+	{
+		if (_hurtClock.getElapsedTime().asSeconds() > _hurtTime)
+		{
+			changeState(Shadow::Aggro);
+			_aggroClock.restart();
+		}
 	}
 
 	void changeState(State to)
@@ -127,6 +170,7 @@ private:
 		case Shadow::Aggro:		_eyes.setTexture(*_eyesAggro);		break;
 		case Shadow::Preparing:	_eyes.setTexture(*_eyesPreparing);	break;
 		case Shadow::Dashing:	_eyes.setTexture(*_eyesDashing);	break;
+		case Shadow::Hurt:		_eyes.setTexture(*_eyesHurt);		break;
 		}
 
 		_tex.draw(_body);
@@ -148,6 +192,7 @@ public:
 		_eyesAggro = &res->textures.shadow_eyes_aggro;
 		_eyesPreparing = &res->textures.shadow_eyes_preparing;
 		_eyesDashing = &res->textures.shadow_eyes_dashing;
+		_eyesHurt = &res->textures.shadow_eyes_hurt;
 
 		_bodyAnimation.setSpritesheet(sf::IntRect(0, 0, 60, 60), {5, 1}, 0.05);
 		_bodyAnimation.start();
@@ -175,6 +220,22 @@ public:
 			_tex.display();
 		}
 
+		if (_justHit)
+		{
+			_justHit = false;
+			_moving = false;
+			changeState(State::Hurt);
+			_hurtClock.restart();
+			return;
+		}
+		if (_justTouched)
+		{
+			_justTouched = false;
+			changeState(State::Aggro);
+			_aggroClock.restart();
+			return;
+		}
+
 		switch (_state)
 		{
 		case Shadow::Strolling:
@@ -183,8 +244,14 @@ public:
 		case Shadow::Aggro:
 			updateAggro(player);
 			break;
+		case Shadow::Preparing:
+			updatePreparing();
+			break;
 		case Shadow::Dashing:
 			updateDashing(player);
+			break;
+		case Shadow::Hurt:
+			updateHurt();
 			break;
 		}
 	}

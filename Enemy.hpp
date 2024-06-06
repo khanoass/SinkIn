@@ -29,6 +29,7 @@ protected:
 	bool _alive = true;
 	std::vector<sf::Vector2f> _border;
 	bool _justHit = false;
+	bool _justTouched = false;
 	std::shared_ptr<Weapon> _justHitDrop = nullptr;
 	float _hp, _initialHp;
 
@@ -44,6 +45,11 @@ protected:
 	bool _knockedback = false;
 	sf::Vector2f _knockbackDirection;
 	float _knockback;
+
+	// Impulse
+	bool _impulsing = false;
+	sf::Vector2f _impulseDirection;
+	float _impulse;
 
 	// Death animation
 	Ephemereal _eph;
@@ -144,7 +150,15 @@ protected:
 
 	bool hitPlayer(const std::shared_ptr<Player>& player)
 	{
-		return vm::dist(_position, player->position()) < _range + player->range();
+		_justTouched = vm::dist(_position, player->position()) < _range + player->range();
+		return _justTouched;
+	}
+
+	void applyImpulse(float force)
+	{
+		_impulse = force;
+		_impulsing = true;
+		_impulseDirection = _direction;
 	}
 
 public:
@@ -258,7 +272,7 @@ public:
 			player->hit(_damage, _direction);
 
 		// Movement update
-		if (_moving || _knockedback)
+		if (_moving || _knockedback || _impulsing)
 		{
 			if (_moving)
 			{
@@ -273,9 +287,19 @@ public:
 
 				// Friction
 				_knockback *= 1 / (1 + (dt * _friction));
-
 				if (_knockback < 1)
 					_knockedback = false;
+			}
+
+			if (_impulsing)
+			{
+				_position.x += _impulseDirection.x * _impulse * dt;
+				_position.y += _impulseDirection.y * _impulse * dt;
+
+				// Friction
+				_impulse *= 1 / (1 + (dt * _friction));
+				if (_impulse < 1)
+					_impulsing = false;
 			}
 
 #ifdef DEBUG

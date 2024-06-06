@@ -21,6 +21,7 @@ public:
 			shadow_eyes_aggro,
 			shadow_eyes_preparing,
 			shadow_eyes_dashing,
+			shadow_eyes_hurt,
 			shadow_death,
 			
 			// Weapons
@@ -69,6 +70,7 @@ public:
 		textures.shadow_eyes_aggro.loadFromFile("assets/textures/enemy_eyes_aggro2.png");
 		textures.shadow_eyes_preparing.loadFromFile("assets/textures/enemy_eyes_preparing2.png");
 		textures.shadow_eyes_dashing.loadFromFile("assets/textures/enemy_eyes_dashing2.png");
+		textures.shadow_eyes_hurt.loadFromFile("assets/textures/enemy_eyes_hurt.png");
 		textures.shadow_death.loadFromFile("assets/textures/enemy_death.png");
 
 		fonts.font.loadFromFile("assets/fonts/Sunny Spells Basic.ttf");
