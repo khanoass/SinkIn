@@ -148,6 +148,8 @@
     <ClInclude Include="AmmoCounter.hpp" />
     <ClInclude Include="Animation.hpp" />
     <ClInclude Include="Board.hpp" />
+    <ClInclude Include="Button.hpp" />
+    <ClInclude Include="PauseScreen.hpp" />
     <ClInclude Include="Sequence.hpp" />
     <ClInclude Include="Boost.h" />
     <ClInclude Include="BoostCounter.hpp" />
@@ -177,6 +179,7 @@
     <ClInclude Include="Shadow.hpp" />
     <ClInclude Include="Shotgun.hpp" />
     <ClInclude Include="SMG.hpp" />
+    <ClInclude Include="StartScreen.hpp" />
     <ClInclude Include="Tree.hpp" />
     <ClInclude Include="VeMa.hpp" />
     <ClInclude Include="Weapon.h" />

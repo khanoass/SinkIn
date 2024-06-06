@@ -3,45 +3,45 @@
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Boost.cpp">
-      <Filter>Entities\Items</Filter>
+      <Filter>Play\Items</Filter>
     </ClCompile>
     <ClCompile Include="Player.cpp">
-      <Filter>Entities\Player</Filter>
+      <Filter>Play\Player</Filter>
     </ClCompile>
     <ClCompile Include="Room.h">
-      <Filter>Entities\Map</Filter>
+      <Filter>Play\Map</Filter>
     </ClCompile>
     <ClCompile Include="Map.cpp">
-      <Filter>Entities\Map</Filter>
+      <Filter>Play\Map</Filter>
     </ClCompile>
     <ClCompile Include="Weapon.cpp">
-      <Filter>Entities\Items\Weapons</Filter>
+      <Filter>Play\Items\Weapons</Filter>
     </ClCompile>
     <ClCompile Include="Enemies.cpp">
-      <Filter>Entities\Enemies</Filter>
+      <Filter>Play\Enemies</Filter>
     </ClCompile>
     <ClCompile Include="Room.cpp">
-      <Filter>Entities\Map</Filter>
+      <Filter>Play\Map</Filter>
     </ClCompile>
     <ClCompile Include="Level.cpp">
-      <Filter>Entities\Levels</Filter>
+      <Filter>Play\Levels</Filter>
     </ClCompile>
     <ClCompile Include="Levels.cpp">
-      <Filter>Entities\Levels</Filter>
+      <Filter>Play\Levels</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Item.hpp">
-      <Filter>Entities\Items</Filter>
+      <Filter>Play\Items</Filter>
     </ClInclude>
     <ClInclude Include="Boost.h">
-      <Filter>Entities\Items</Filter>
+      <Filter>Play\Items</Filter>
     </ClInclude>
     <ClInclude Include="Player.h">
-      <Filter>Entities\Player</Filter>
+      <Filter>Play\Player</Filter>
     </ClInclude>
     <ClInclude Include="Map.h">
-      <Filter>Entities\Map</Filter>
+      <Filter>Play\Map</Filter>
     </ClInclude>
     <ClInclude Include="Logger.hpp">
       <Filter>Util</Filter>
@@ -51,9 +51,6 @@
     </ClInclude>
     <ClInclude Include="Debug.h">
       <Filter>Util</Filter>
-    </ClInclude>
-    <ClInclude Include="Game.hpp">
-      <Filter>Entities</Filter>
     </ClInclude>
     <ClInclude Include="Minimap.hpp">
       <Filter>GUI</Filter>
@@ -71,13 +68,13 @@
       <Filter>GUI</Filter>
     </ClInclude>
     <ClInclude Include="Animation.hpp">
-      <Filter>Entities\Others</Filter>
+      <Filter>Play\Others</Filter>
     </ClInclude>
     <ClInclude Include="Cursor.hpp">
-      <Filter>Entities\Others</Filter>
+      <Filter>Play\Others</Filter>
     </ClInclude>
     <ClInclude Include="Ephemereal.hpp">
-      <Filter>Entities\Others</Filter>
+      <Filter>Play\Others</Filter>
     </ClInclude>
     <ClInclude Include="Direction.hpp">
       <Filter>Util</Filter>
@@ -89,34 +86,34 @@
       <Filter>Util</Filter>
     </ClInclude>
     <ClInclude Include="Items.hpp">
-      <Filter>Entities\Items</Filter>
+      <Filter>Play\Items</Filter>
     </ClInclude>
     <ClInclude Include="AmmoCounter.hpp">
       <Filter>GUI</Filter>
     </ClInclude>
     <ClInclude Include="Pistol.hpp">
-      <Filter>Entities\Items\Weapons</Filter>
+      <Filter>Play\Items\Weapons</Filter>
     </ClInclude>
     <ClInclude Include="Shotgun.hpp">
-      <Filter>Entities\Items\Weapons</Filter>
+      <Filter>Play\Items\Weapons</Filter>
     </ClInclude>
     <ClInclude Include="SMG.hpp">
-      <Filter>Entities\Items\Weapons</Filter>
+      <Filter>Play\Items\Weapons</Filter>
     </ClInclude>
     <ClInclude Include="Enemy.hpp">
-      <Filter>Entities\Enemies</Filter>
+      <Filter>Play\Enemies</Filter>
     </ClInclude>
     <ClInclude Include="Weapon.h">
-      <Filter>Entities\Items\Weapons</Filter>
+      <Filter>Play\Items\Weapons</Filter>
     </ClInclude>
     <ClInclude Include="Enemies.h">
-      <Filter>Entities\Enemies</Filter>
+      <Filter>Play\Enemies</Filter>
     </ClInclude>
     <ClInclude Include="Shadow.hpp">
-      <Filter>Entities\Enemies</Filter>
+      <Filter>Play\Enemies</Filter>
     </ClInclude>
     <ClInclude Include="Bullets.hpp">
-      <Filter>Entities\Items\Weapons</Filter>
+      <Filter>Play\Items\Weapons</Filter>
     </ClInclude>
     <ClInclude Include="Camera.hpp">
       <Filter>Util</Filter>
@@ -128,33 +125,31 @@
       <Filter>GUI</Filter>
     </ClInclude>
     <ClInclude Include="Level.h">
-      <Filter>Entities\Levels</Filter>
+      <Filter>Play\Levels</Filter>
     </ClInclude>
     <ClInclude Include="Levels.h">
-      <Filter>Entities\Levels</Filter>
+      <Filter>Play\Levels</Filter>
     </ClInclude>
     <ClInclude Include="Sequence.hpp">
-      <Filter>Entities\Sequences</Filter>
+      <Filter>Sequences</Filter>
     </ClInclude>
     <ClInclude Include="Board.hpp">
-      <Filter>Entities\Sequences</Filter>
+      <Filter>Sequences</Filter>
+    </ClInclude>
+    <ClInclude Include="StartScreen.hpp">
+      <Filter>Menus</Filter>
+    </ClInclude>
+    <ClInclude Include="Button.hpp">
+      <Filter>Menus</Filter>
+    </ClInclude>
+    <ClInclude Include="Game.hpp" />
+    <ClInclude Include="PauseScreen.hpp">
+      <Filter>Menus</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Util">
       <UniqueIdentifier>{87bc0f02-b9e3-4f42-97a5-fa4ca1dcbc00}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Entities">
-      <UniqueIdentifier>{28c43da6-3740-4cd6-ad48-016d299ad3e5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Entities\Map">
-      <UniqueIdentifier>{393649a1-4a6a-49d6-a6d4-f47c910c0bb2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Entities\Player">
-      <UniqueIdentifier>{d1e328eb-9201-4804-a60c-7d346de9b40f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Entities\Items">
-      <UniqueIdentifier>{1ec614b9-3a4d-4c67-9d41-9ea8a281259f}</UniqueIdentifier>
     </Filter>
     <Filter Include="GUI">
       <UniqueIdentifier>{8c6b310a-4cda-43c9-a083-50a1015e4e89}</UniqueIdentifier>
@@ -162,20 +157,35 @@
     <Filter Include="Shaders">
       <UniqueIdentifier>{642cf0a8-0a17-4ca3-b5fd-e44bc3cf84ce}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Entities\Others">
-      <UniqueIdentifier>{ab2a8e7a-7e83-4154-92f5-e2683a906578}</UniqueIdentifier>
+    <Filter Include="Play">
+      <UniqueIdentifier>{28c43da6-3740-4cd6-ad48-016d299ad3e5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Entities\Items\Weapons">
+    <Filter Include="Play\Map">
+      <UniqueIdentifier>{393649a1-4a6a-49d6-a6d4-f47c910c0bb2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Play\Player">
+      <UniqueIdentifier>{d1e328eb-9201-4804-a60c-7d346de9b40f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Play\Items">
+      <UniqueIdentifier>{1ec614b9-3a4d-4c67-9d41-9ea8a281259f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Play\Items\Weapons">
       <UniqueIdentifier>{9e45e908-461f-48ae-9151-ddbeccbe5a3b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Entities\Enemies">
+    <Filter Include="Play\Others">
+      <UniqueIdentifier>{ab2a8e7a-7e83-4154-92f5-e2683a906578}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Play\Enemies">
       <UniqueIdentifier>{18f4d19b-b8f0-43b5-aa50-89c373dc661e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Entities\Levels">
+    <Filter Include="Play\Levels">
       <UniqueIdentifier>{3dee9c40-da8e-4dec-b3e9-6574d881b30f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Entities\Sequences">
+    <Filter Include="Sequences">
       <UniqueIdentifier>{9d2cc554-6ee2-4fff-b058-639947dd390b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Menus">
+      <UniqueIdentifier>{894a9753-4249-4b6c-b0b7-c89f6c450ad9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

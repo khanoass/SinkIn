@@ -9,7 +9,7 @@ class Sequence : public sf::Drawable
 {
 private:
 	// Data
-	const std::string _continue = "Press [SPACE] to continue...";
+	const std::string _continue = "[Left Click] to continue...";
 	const unsigned int _charSize = 24u;
 	const sf::Vector2f _marginRightBottom = { 50.f, 50.f };
 
@@ -84,7 +84,7 @@ public:
 
 	void updateEvent(const sf::Event& event)
 	{
-		if (event.type == sf::Event::KeyPressed && event.key.code == sf::Keyboard::Space)
+		if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left)
 		{
 			if (_boards[_i].finished())
 			{

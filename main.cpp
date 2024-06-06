@@ -12,10 +12,8 @@ int main()
 	sf::Uint8 style = sf::Style::Fullscreen | sf::Style::Close;
 
 	sf::RenderWindow window(sf::VideoMode(size.x, size.y), "Sink In", style);
-	window.setMouseCursorVisible(false);
 
 	ResManager res;
-
 	Game game({ (float)size.x / 2, (float)size.y / 2 }, &res);
 
 	sf::Event event;
@@ -30,7 +28,7 @@ int main()
 
 		while (window.pollEvent(event))
 		{
-			if (event.type == sf::Event::Closed || (event.type == sf::Event::KeyReleased && event.key.code == sf::Keyboard::Escape))
+			if (event.type == sf::Event::Closed)
 				window.close();
 			game.updateEvent(event, dt, posf);
 		}
@@ -41,6 +39,10 @@ int main()
 		lastTime = currentTime;
 
 		game.update(dt, posf, (int)fps);
+		if (game.state() == Game::Start || game.state() == Game::Pause)
+		{
+			if (game.exit()) window.close();
+		}
 
 		sf::Vector2f viPos = game.getPlayerScreenPosition();
 		sf::Vector2i screenPosition = window.mapCoordsToPixel(viPos, game.view());
