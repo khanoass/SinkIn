@@ -2,7 +2,7 @@
 
 #include <SFML/Graphics/Shader.hpp>
 
-#include "Levels.hpp"
+#include "Levels.h"
 
 class Game : public LiveEntity
 {
@@ -21,29 +21,15 @@ private:
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const
 	{
-		if (_state == Play)
-		{
+		if (_state == Play || _state == Story)
 			target.draw(_levels, states);
-		}
-		else if (_state == Story)
-		{
-
-		}
-		else if (_state == GameOver)
-		{
-
-		}
-		else
-		{
-
-		}
 	}
 
 public:
 	Game(const sf::Vector2f& center, ResManager* res) :
 		_state(Play),
 		_screenCenter(center),
-		_levels({ "assets/maps/map1.png" }, _screenCenter, res)
+		_levels({ "assets/maps/map1.png" }, { "assets/sequences/intro-en.txt" }, _screenCenter, res)
 	{
 	}
 
@@ -105,6 +91,10 @@ public:
 	void updateEvent(const sf::Event& event, float dt, const sf::Vector2f& mousePos)
 	{
 		_levels.updateEvent(event, dt, mousePos);
+		if (_levels.sequence())
+			_state = Game::Story;
+		else
+			_state = Game::Play;
 	}
 
 	virtual void update(float dt, const sf::Vector2f& mousePos) override

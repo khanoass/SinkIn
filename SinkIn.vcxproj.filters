@@ -23,6 +23,12 @@
     <ClCompile Include="Room.cpp">
       <Filter>Entities\Map</Filter>
     </ClCompile>
+    <ClCompile Include="Level.cpp">
+      <Filter>Entities\Levels</Filter>
+    </ClCompile>
+    <ClCompile Include="Levels.cpp">
+      <Filter>Entities\Levels</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Item.hpp">
@@ -127,11 +133,17 @@
     <ClInclude Include="HPcounter.hpp">
       <Filter>GUI</Filter>
     </ClInclude>
-    <ClInclude Include="Level.hpp">
+    <ClInclude Include="Level.h">
       <Filter>Entities\Levels</Filter>
     </ClInclude>
-    <ClInclude Include="Levels.hpp">
+    <ClInclude Include="Levels.h">
       <Filter>Entities\Levels</Filter>
+    </ClInclude>
+    <ClInclude Include="Sequence.hpp">
+      <Filter>Entities\Sequences</Filter>
+    </ClInclude>
+    <ClInclude Include="Board.hpp">
+      <Filter>Entities\Sequences</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -167,6 +179,9 @@
     </Filter>
     <Filter Include="Entities\Levels">
       <UniqueIdentifier>{3dee9c40-da8e-4dec-b3e9-6574d881b30f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Entities\Sequences">
+      <UniqueIdentifier>{9d2cc554-6ee2-4fff-b058-639947dd390b}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

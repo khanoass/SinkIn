@@ -17,6 +17,6 @@ public:
 		_bulletLifespan =	{ 0.6f };
 		_bulletSpeed =		{ 1200 };
 		_bulletSize =		{ 5, 5 };
-		_dropDamage = 15;
+		_dropDamage = 5;
 	}
 };

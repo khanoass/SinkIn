@@ -135,6 +135,8 @@
   <ItemGroup>
     <ClCompile Include="Boost.cpp" />
     <ClCompile Include="Enemies.cpp" />
+    <ClCompile Include="Level.cpp" />
+    <ClCompile Include="Levels.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Room.cpp" />
@@ -145,6 +147,8 @@
   <ItemGroup>
     <ClInclude Include="AmmoCounter.hpp" />
     <ClInclude Include="Animation.hpp" />
+    <ClInclude Include="Board.hpp" />
+    <ClInclude Include="Sequence.hpp" />
     <ClInclude Include="Boost.h" />
     <ClInclude Include="BoostCounter.hpp" />
     <ClInclude Include="Bullets.hpp" />
@@ -160,8 +164,8 @@
     <ClInclude Include="Game.hpp" />
     <ClInclude Include="HPcounter.hpp" />
     <ClInclude Include="Items.hpp" />
-    <ClInclude Include="Level.hpp" />
-    <ClInclude Include="Levels.hpp" />
+    <ClInclude Include="Level.h" />
+    <ClInclude Include="Levels.h" />
     <ClInclude Include="Pistol.hpp" />
     <ClInclude Include="GUI.hpp" />
     <ClInclude Include="Item.hpp" />

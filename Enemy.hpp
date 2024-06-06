@@ -236,7 +236,7 @@ public:
 			for (const auto& w : *weapons)
 			{
 				if (w == nullptr || !w->dropping()) continue;
-				if(vm::dist(w->position(), _position) < _range + w->range())
+				if (vm::dist(w->position(), _position) < _range + w->range())
 				{
 					if (_justHitDrop == nullptr)
 					{

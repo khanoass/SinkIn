@@ -2,8 +2,6 @@
 #include "Enemies.h"
 #include "Map.h"
 
-class Enemies;
-
 void Map::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
 	target.draw(*_current, states);

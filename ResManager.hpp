@@ -32,7 +32,8 @@ public:
 	struct Fonts
 	{
 		sf::Font
-			font;
+			font,
+			retro;
 	};
 
 	struct Shaders
@@ -71,6 +72,7 @@ public:
 		textures.shadow_death.loadFromFile("assets/textures/enemy_death.png");
 
 		fonts.font.loadFromFile("assets/fonts/Sunny Spells Basic.ttf");
+		fonts.retro.loadFromFile("assets/fonts/zig.ttf");
 
 		shaders.map.loadFromFile("assets/shaders/room.vert", "assets/shaders/room.frag");
 	}

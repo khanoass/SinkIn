@@ -1,5 +1,5 @@
 #include "Player.h"
-#include "Map.h"
+#include "Level.h"
 
 void Player::draw(sf::RenderTarget& target, sf::RenderStates states) const
 {
@@ -44,6 +44,7 @@ void Player::shoot(const sf::Vector2f& mousePos)
 
 void Player::die()
 {
+	_level->restart();
 }
 
 Player::Player(ResManager* res)
@@ -74,6 +75,11 @@ void Player::setMap(const std::shared_ptr<Map>& map)
 	_room = map->currentRoom();
 	_position = _room->center();
 	_sprite.setPosition(_position);
+}
+
+void Player::setLevel(const std::shared_ptr<Level>& level)
+{
+	_level = level;
 }
 
 void Player::boost()

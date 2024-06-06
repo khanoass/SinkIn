@@ -7,11 +7,11 @@
 
 int main()
 {
-	const sf::Vector2u size = { 1200, 800 };
-	sf::Uint8 style = sf::Style::Titlebar | sf::Style::Close;
+	//const sf::Vector2u size = { 1200, 800 };
+	//sf::Uint8 style = sf::Style::Titlebar | sf::Style::Close;
 
-	//const sf::Vector2u size = { 1920, 1080 };
-	//sf::Uint8 style = sf::Style::Fullscreen | sf::Style::Close;
+	const sf::Vector2u size = { 1920, 1080 };
+	sf::Uint8 style = sf::Style::Fullscreen | sf::Style::Close;
 
 	const float viewMargin = 200.f;
 
@@ -47,28 +47,36 @@ int main()
 		float fps = 1.f / (currentTime.asSeconds() - lastTime.asSeconds());
 		lastTime = currentTime;
 
-		auto size = game.map()->currentRoom()->size();
-		sf::Vector2f sizeplus = { size.x + viewMargin, size.y + viewMargin };
-		camera.updatePlayerSmooth(dt, game.getPlayerScreenPosition(), game.map()->currentRoom()->screenCenter(), sizeplus, game.map()->changedRoom());
+		if(game.state() == Game::Play)
+		{
+			auto size = game.map()->currentRoom()->size();
+			sf::Vector2f sizeplus = { size.x + viewMargin, size.y + viewMargin };
+			camera.updatePlayerSmooth(dt, game.getPlayerScreenPosition(), game.map()->currentRoom()->screenCenter(), sizeplus, game.map()->changedRoom());
+		}
+
 		game.update(dt, posf);
 
 		// GUI
-		gui.setFPS((int)fps);
-		if (game.playerHasWeapon())	gui.setAmmo(game.getPlayerAmmo());
-		else						gui.setAmmo(-1);
-		gui.setBoostTime(game.getPlayerBoostTime(), game.getPlayerMaxBoostTime());
-		gui.setHP(game.getPlayerHP(), game.getPlayerMaxHP());
-		gui.update(dt, posf);
+		if (game.state() == Game::Play)
+		{
+			gui.setFPS((int)fps);
+			if (game.playerHasWeapon())	gui.setAmmo(game.getPlayerAmmo());
+			else						gui.setAmmo(-1);
+			gui.setBoostTime(game.getPlayerBoostTime(), game.getPlayerMaxBoostTime());
+			gui.setHP(game.getPlayerHP(), game.getPlayerMaxHP());
+			gui.update(dt, posf);
 
-		//sf::Vector2f viPos = camera.playerSmoothCenter(dt, game.getPlayerScreenPosition(), game.map()->changedRoom());
-		sf::Vector2f viPos = game.getPlayerScreenPosition();
-		sf::Vector2i screenPosition = window.mapCoordsToPixel(viPos, camera.view());
-		game.setVignettePosition({ (float)screenPosition.x, (float)screenPosition.y });
+			//sf::Vector2f viPos = camera.playerSmoothCenter(dt, game.getPlayerScreenPosition(), game.map()->changedRoom());
+			sf::Vector2f viPos = game.getPlayerScreenPosition();
+			sf::Vector2i screenPosition = window.mapCoordsToPixel(viPos, camera.view());
+			game.setVignettePosition({ (float)screenPosition.x, (float)screenPosition.y });
+		}
 
-		window.clear();
+		window.clear(sf::Color::Black);
 
 		// Game
-		window.setView(camera.view());
+		if(game.state() == Game::Play)
+			window.setView(camera.view());
 		window.draw(game);
 
 		// Gui

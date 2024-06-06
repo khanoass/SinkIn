@@ -16,11 +16,12 @@
 
 class Map;
 class Room;
+class Level;
 
 class Player : public LiveEntity, public std::enable_shared_from_this<Player>
 {
 private:
-	const sf::Vector2f _size = { 60, 60 };
+	const sf::Vector2f _size = { 60.f, 60.f };
 	const sf::Vector2f _scale = { 1.35f, 1.35f };
 	const float _boostsFactor = 1.5f;
 	const float _boostsTime = 20.f;
@@ -35,6 +36,7 @@ private:
 	// Data
 	std::shared_ptr<Map> _map;
 	std::shared_ptr<Room> _room;
+	std::shared_ptr<Level> _level;
 
 	sf::Vector2f _position, _direction, _lookDirection;
 	int _boosts;
@@ -75,6 +77,7 @@ public:
 	Player(ResManager* res);
 
 	void setMap(const std::shared_ptr<Map>& map);
+	void setLevel(const std::shared_ptr<Level>& level);
 	
 	// Item interaction
 	void boost();

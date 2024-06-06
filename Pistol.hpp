@@ -17,6 +17,6 @@ public:
 		_spread =			{ 10 };
 		_bulletDamage =		{ 10 };
 		_bulletAmount =		{ 1 };
-		_dropDamage = 10;
+		_dropDamage = 5;
 	}
 };
