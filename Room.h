@@ -11,12 +11,11 @@
 #include <SFML/Graphics/RenderTexture.hpp>
 
 #include "Direction.hpp"
-#include "LiveEntity.hpp"
 #include "Items.hpp"
 
 class Enemies;
 
-class Room : public LiveEntity
+class Room : public sf::Drawable
 {
 private:
 	const sf::Vector2f _doorSize = { 100, 100 };

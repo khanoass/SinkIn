@@ -5,7 +5,7 @@
 #include "Level.h"
 #include "Sequence.hpp"
 
-class Levels : public LiveEntity
+class Levels : public sf::Drawable
 {
 private:
 	// Data

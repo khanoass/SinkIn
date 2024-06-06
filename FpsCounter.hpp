@@ -17,7 +17,7 @@ private:
 	// Cosmetic
 	sf::VertexArray _panel;
 	sf::Text _text;
-	sf::Font* _font;
+	sf::Font* _font = nullptr;
 	const sf::Color _bg = { 80, 80, 80, 100 };
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override

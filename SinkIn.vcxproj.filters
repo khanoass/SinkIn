@@ -76,13 +76,7 @@
     <ClInclude Include="Cursor.hpp">
       <Filter>Entities\Others</Filter>
     </ClInclude>
-    <ClInclude Include="Entity.hpp">
-      <Filter>Entities\Others</Filter>
-    </ClInclude>
     <ClInclude Include="Ephemereal.hpp">
-      <Filter>Entities\Others</Filter>
-    </ClInclude>
-    <ClInclude Include="LiveEntity.hpp">
       <Filter>Entities\Others</Filter>
     </ClInclude>
     <ClInclude Include="Direction.hpp">

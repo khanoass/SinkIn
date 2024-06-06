@@ -195,7 +195,7 @@ public:
 		_eyesDashing = &res->textures.shadow_eyes_dashing;
 		_eyesHurt = &res->textures.shadow_eyes_hurt;
 
-		_bodyAnimation.setSpritesheet(sf::IntRect(0, 0, 60, 60), {5, 1}, 0.05);
+		_bodyAnimation.setSpritesheet(sf::IntRect(0, 0, 60, 60), {5, 1}, 0.05f);
 		_bodyAnimation.start();
 
 		_body.setTexture(*_bodySheet);

@@ -8,7 +8,6 @@
 #include <SFML/Graphics/CircleShape.hpp>
 
 #include "Map.h"
-#include "Entity.hpp"
 #include "Debug.h"
 #include "VeMa.hpp"
 #include "Ephemereal.hpp"
@@ -17,7 +16,7 @@
 #include "Bullets.hpp"
 #include "Player.h"
 
-class Enemy : public Entity
+class Enemy : public sf::Drawable
 {
 protected:
 	const sf::Vector2f _scale = { 1.35f, 1.35f };

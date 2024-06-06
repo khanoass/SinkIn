@@ -6,8 +6,8 @@
 #include <SFML/Graphics/Texture.hpp>
 #include <SFML/Graphics/VertexArray.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
+#include <SFML/Window/Event.hpp>
 
-#include "LiveEntity.hpp"
 #include "Debug.h"
 #include "VeMa.hpp"
 #include "Ephemereal.hpp"
@@ -18,7 +18,7 @@ class Map;
 class Room;
 class Level;
 
-class Player : public LiveEntity, public std::enable_shared_from_this<Player>
+class Player : public sf::Drawable, public std::enable_shared_from_this<Player>
 {
 private:
 	const sf::Vector2f _size = { 60.f, 60.f };
@@ -104,5 +104,5 @@ public:
 	bool pointInPlayer(const sf::Vector2f& point) const;
 
 	void updateEvent(const sf::Event& event, float dt, const sf::Vector2f& mousePos);
-	void update(float dt, const sf::Vector2f& mousePos) override;
+	void update(float dt, const sf::Vector2f& mousePos);
 };

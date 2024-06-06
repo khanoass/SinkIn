@@ -7,7 +7,7 @@
 class Map;
 class Room;
 
-class Enemies : public LiveEntity
+class Enemies : public sf::Drawable
 {
 private:
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
@@ -32,5 +32,5 @@ public:
 
 	std::vector<std::shared_ptr<Enemy>>& getAllInRoom(const std::string& name);
 
-	virtual void update(float dt, const sf::Vector2f& mousePos) override;
+	void update(float dt, const sf::Vector2f& mousePos);
 };

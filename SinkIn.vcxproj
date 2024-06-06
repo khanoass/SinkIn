@@ -158,7 +158,6 @@
     <ClInclude Include="Direction.hpp" />
     <ClInclude Include="Enemies.h" />
     <ClInclude Include="Enemy.hpp" />
-    <ClInclude Include="Entity.hpp" />
     <ClInclude Include="Ephemereal.hpp" />
     <ClInclude Include="FpsCounter.hpp" />
     <ClInclude Include="Game.hpp" />
@@ -179,7 +178,6 @@
     <ClInclude Include="Shotgun.hpp" />
     <ClInclude Include="SMG.hpp" />
     <ClInclude Include="Tree.hpp" />
-    <ClInclude Include="LiveEntity.hpp" />
     <ClInclude Include="VeMa.hpp" />
     <ClInclude Include="Weapon.h" />
     <ClInclude Include="Widget.hpp" />

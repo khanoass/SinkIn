@@ -6,10 +6,9 @@
 #include <SFML/Graphics/Text.hpp>
 #include <SFML/Graphics/Sprite.hpp>
 
-#include "LiveEntity.hpp"
 #include "ResManager.hpp"
 
-class Board : public LiveEntity
+class Board : public sf::Drawable
 {
 private:
 	const unsigned int _charSize = 28u;
@@ -97,7 +96,7 @@ public:
 		return _finished;
 	}
 
-	virtual void update(float dt, const sf::Vector2f& mousePos) override
+	void update(float dt, const sf::Vector2f& mousePos)
 	{
 		if (!_started) return;
 

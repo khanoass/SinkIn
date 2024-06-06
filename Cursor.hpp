@@ -3,7 +3,7 @@
 #include "Levels.h"
 #include "Enemies.h"
 
-class Cursor : public LiveEntity
+class Cursor : public sf::Drawable
 {
 private:
 	// Data
@@ -62,7 +62,7 @@ public:
 		return _sprite.getPosition();
 	}
 
-	virtual void update(float dt, const sf::Vector2f& mousePos) override
+	void update(float dt, const sf::Vector2f& mousePos)
 	{
 		_sprite.setPosition(mousePos);
 

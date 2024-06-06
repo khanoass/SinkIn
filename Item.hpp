@@ -8,14 +8,13 @@
 #include <SFML/Graphics/CircleShape.hpp>
 
 #include "Debug.h"
-#include "Entity.hpp"
 #include "VeMa.hpp"
 #include "Logger.hpp"
 #include "ResManager.hpp"
 
 class Player; // To avoid circular reference problems
 
-class Item : public Entity
+class Item : public sf::Drawable
 {
 protected:
 	// Const

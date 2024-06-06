@@ -1,12 +1,13 @@
 #pragma once
 
+#include <SFML/Window/Event.hpp>
 #include <string>
 #include "Cursor.hpp"
 
 class Map;
 class Player;
 
-class Level : public LiveEntity, public std::enable_shared_from_this<Level>
+class Level : public sf::Drawable, public std::enable_shared_from_this<Level>
 {
 private:
 	// Data

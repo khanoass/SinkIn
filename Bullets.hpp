@@ -3,8 +3,6 @@
 #include <vector>
 #include <SFML/Graphics/RenderTarget.hpp>
 
-#include "LiveEntity.hpp"
-
 struct Bullet
 {
 	sf::Vector2f position, size, direction, origin;
@@ -25,7 +23,7 @@ struct Bullet
 	}
 };
 
-class Bullets : public LiveEntity
+class Bullets : public sf::Drawable
 {
 private:
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const
@@ -78,7 +76,7 @@ public:
 		_bullets.push_back(bullet);
 	}
 
-	virtual void update(float dt, const sf::Vector2f& mousePos) override
+	void update(float dt, const sf::Vector2f& mousePos)
 	{
 		// Remove timedout & dead bullets
 		for (int i = 0; i < _bullets.size(); i++)

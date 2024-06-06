@@ -6,7 +6,7 @@
 #include "Camera.hpp"
 #include "GUI.hpp"
 
-class Game : public Entity
+class Game : public sf::Drawable
 {
 public:
 	enum State
@@ -30,8 +30,7 @@ private:
 		switch (_state)
 		{
 		case Game::Play:
-			target.draw(_levels, states);
-			target.draw(_gui, states);
+			target.draw(_levels, states);		
 			break;
 		case Game::Story:
 			target.draw(_levels, states);
@@ -68,12 +67,12 @@ private:
 		return _levels.player()->maxBoostTime();
 	}
 
-	int getPlayerHP()
+	float getPlayerHP()
 	{
 		return _levels.player()->hp();
 	}
 
-	int getPlayerMaxHP()
+	float getPlayerMaxHP()
 	{
 		return _levels.player()->maxHp();
 	}
@@ -97,6 +96,11 @@ public:
 	void setState(State state)
 	{
 		_state = state;
+	}
+
+	GUI& gui()
+	{
+		return _gui;
 	}
 
 	sf::Vector2f getPlayerScreenPosition()

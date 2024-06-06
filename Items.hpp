@@ -2,7 +2,7 @@
 
 #include "Weapon.h"
 
-class Items : public LiveEntity
+class Items : public sf::Drawable
 {
 private:
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const
@@ -85,7 +85,7 @@ public:
 		return nullptr;
 	}
 
-	virtual void update(float dt, const sf::Vector2f& mousePos) override
+	void update(float dt, const sf::Vector2f& mousePos)
 	{
 		if (_currentWeapons == nullptr) return;
 		for (auto& i : *_currentWeapons)

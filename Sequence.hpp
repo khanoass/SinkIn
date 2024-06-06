@@ -2,9 +2,10 @@
 
 #include <fstream>
 #include <sstream>
+#include <SFML/Window/Event.hpp>
 #include "Board.hpp"
 
-class Sequence : public LiveEntity
+class Sequence : public sf::Drawable
 {
 private:
 	// Data
@@ -103,7 +104,7 @@ public:
 		return _finished;
 	}
 
-	virtual void update(float dt, const sf::Vector2f& mousePos) override
+	void update(float dt, const sf::Vector2f& mousePos)
 	{
 		_boards[_i].update(dt, mousePos);
 	}

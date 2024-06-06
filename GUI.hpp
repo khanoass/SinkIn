@@ -7,7 +7,7 @@
 #include "HPcounter.hpp"
 #include "ResManager.hpp"
 
-class GUI : public LiveEntity
+class GUI : public sf::Drawable
 {
 private:
 	// Data

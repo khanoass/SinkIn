@@ -21,9 +21,9 @@ private:
 	// Cosmetic
 	sf::VertexArray _panel;
 	sf::VertexArray _texPanel;
-	sf::Texture* _tex;
+	sf::Texture* _tex = nullptr;
 	sf::Text _text;
-	sf::Font* _font;
+	sf::Font* _font = nullptr;
 	const sf::Color _bg = { 80, 80, 80, 100 };
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override
@@ -70,9 +70,5 @@ public:
 		auto gb = _text.getGlobalBounds();
 		_panel[1].position.x = gb.width + _margin.x + _texOffset.x * 2 + _rightMargin;
 		_panel[2].position.x = gb.width + _margin.x + _texOffset.x * 2 + _rightMargin;
-	}
-
-	virtual void update(float dt, const sf::Vector2f& mousePos) override
-	{
 	}
 };

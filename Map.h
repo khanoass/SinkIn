@@ -20,7 +20,7 @@
 class Player;
 class Enemy;
 
-class Map : public LiveEntity
+class Map : public sf::Drawable
 {
 private:
 	const float _spawnBigMargin = 100.f;
@@ -89,5 +89,5 @@ public:
 
 	bool changedRoom() const;
 
-	virtual void update(float dt, const sf::Vector2f& mousePos) override;
+	void update(float dt, const sf::Vector2f& mousePos);
 };

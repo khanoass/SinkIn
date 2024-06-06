@@ -40,7 +40,7 @@ int main()
 		float fps = 1.f / (currentTime.asSeconds() - lastTime.asSeconds());
 		lastTime = currentTime;
 
-		game.update(dt, posf, fps);
+		game.update(dt, posf, (int)fps);
 
 		sf::Vector2f viPos = game.getPlayerScreenPosition();
 		sf::Vector2i screenPosition = window.mapCoordsToPixel(viPos, game.view());
@@ -53,9 +53,11 @@ int main()
 			window.setView(game.view());
 		window.draw(game);
 
-		// GUI
 		if (game.state() == Game::Play)
+		{
 			window.setView(game.guiView());
+			window.draw(game.gui());
+		}
 
 		window.display();
 	}
