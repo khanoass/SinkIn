@@ -76,8 +76,9 @@ void Weapon::createBullet(const sf::Vector2f& mousePos)
 	_bullets->addBullet(bullet);
 
 	// Muzzle flash
-	sf::Vector2f pos = tubeExit(mousePos);
-	_eph.spawn(pos, { 64, 64 }, _ephSheet, { 5, 2 }, (float)0.05, angle);
+	sf::Vector2f df = { direction.x * 32, direction.y * 32 };
+	sf::Vector2f pos = tubeExit(mousePos) + df;
+	_eph.spawn(pos, { 64, 64 }, _ephSheet, { 5, 2 }, 0.03f, vm::angle(direction));
 }
 
 Weapon::Weapon() : Item({0, 0}, {0, 0}, nullptr)

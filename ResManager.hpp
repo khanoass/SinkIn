@@ -55,7 +55,7 @@ public:
 		textures.smg_ground.loadFromFile("assets/textures/smg_ground.png");
 		textures.smg_hold.loadFromFile("assets/textures/smg_hold.png");
 		textures.player.loadFromFile("assets/textures/placeholder_player_2.png");
-		textures.muzzle.loadFromFile("assets/textures/muzzle.png");
+		textures.muzzle.loadFromFile("assets/textures/muzzle2.png");
 		textures.cursor_no.loadFromFile("assets/textures/f2.png");
 		textures.cursor_yes.loadFromFile("assets/textures/f1.png");
 		textures.cursor_door.loadFromFile("assets/textures/f3.png");
