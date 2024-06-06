@@ -23,17 +23,15 @@ private:
 	const float _prepareTime = 0.7f;
 	const float _dashForce = 1500.f;
 	const float _dashRange = 200.f;
+	const float _pointMargin = 100.f;
 
 	bool _pointChosen;
 	float _maxDist;
 	State _state;
-	sf::Clock _timoutClock;
-	sf::Clock _aggroClock;
-	sf::Clock _hurtClock;
-	sf::Clock _prepareClock;
+	sf::Clock _timoutClock, _aggroClock, _hurtClock, _prepareClock;
 
 	// Textures
-	sf::Texture* _bodySheet, * _eyesStrolling, * _eyesAggro, * _eyesPreparing, * _eyesDashing, * _eyesHurt;
+	sf::Texture* _bodySheet, *_eyesStrolling, *_eyesAggro, *_eyesPreparing, *_eyesDashing, *_eyesHurt;
 	Animation _bodyAnimation;
 	sf::Sprite _body, _eyes;
 
@@ -61,7 +59,10 @@ private:
 			{
 				// Choose random point toward player
 				do
-					_movTarget = { Random::fRand(_border[0].x, _border[0].y), Random::fRand(_border[1].x, _border[1].y) };
+					_movTarget = { 
+						Random::fRand(_border[0].x + _pointMargin, _border[0].y - _pointMargin), 
+						Random::fRand(_border[1].x + _pointMargin, _border[1].y - _pointMargin) 
+					};
 				while (vm::dist(_movTarget, player->position()) > _maxDist);
 				_pointChosen = true;
 				_timoutClock.restart();
