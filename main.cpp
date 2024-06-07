@@ -12,6 +12,7 @@ int main()
 	sf::Uint8 style = sf::Style::Fullscreen | sf::Style::Close;
 
 	sf::RenderWindow window(sf::VideoMode(size.x, size.y), "Sink In", style);
+	window.setMouseCursorVisible(false);
 
 	ResManager res;
 	Game game({ (float)size.x / 2, (float)size.y / 2 }, &res);
@@ -51,8 +52,7 @@ int main()
 			if (game.exit()) 
 				window.close();
 		}
-
-		if (state == Game::Play)
+		else if (state == Game::Play)
 		{
 			sf::Vector2f viPos = game.getPlayerScreenPosition();
 			sf::Vector2i screenPosition = window.mapCoordsToPixel(viPos, game.view());

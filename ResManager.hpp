@@ -10,6 +10,8 @@ public:
 	struct Textures
 	{
 		sf::Texture
+			logo,
+			cursor_menu,
 			cursor_yes, cursor_no, cursor_door, cursor_weapon, cursor_ontarget,
 			player,
 			boost,
@@ -49,6 +51,8 @@ public:
 
 	ResManager()
 	{
+		textures.logo.loadFromFile("assets/textures/logo.png");
+		textures.cursor_menu.loadFromFile("assets/textures/cursor.png");
 		textures.glock_ground.loadFromFile("assets/textures/glock_ground_2.png");
 		textures.glock_hold.loadFromFile("assets/textures/glock_hold_2.png");
 		textures.shotgun_ground.loadFromFile("assets/textures/shotgun_ground.png");

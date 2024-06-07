@@ -15,18 +15,21 @@ private:
 	Button _resume;
 	Button _exit;
 	sf::VertexArray _bg;
+	MenuCursor _cursor;
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const
 	{
 		target.draw(_bg, states);
 		target.draw(_resume, states);
 		target.draw(_exit, states);
+		target.draw(_cursor, states);
 	}
 
 public:
 	PauseScreen(const sf::Vector2f& center, ResManager* res) :
 		_resume({ center.x, center.y + _offsetStart }, _size, "Resume Game", res),
-		_exit({ center.x, center.y + _offsetExit }, _size, "Quit to Menu", res)
+		_exit({ center.x, center.y + _offsetExit }, _size, "Quit to Menu", res),
+		_cursor(res)
 	{
 		_bg.setPrimitiveType(sf::Quads);
 		_bg.append(sf::Vertex({ 0, 0 }, _bgCol));
@@ -59,5 +62,6 @@ public:
 	{
 		_resume.update(mousePos);
 		_exit.update(mousePos);
+		_cursor.update(mousePos);
 	}
 };

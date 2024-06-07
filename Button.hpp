@@ -13,18 +13,22 @@ private:
 		Default, Hover, Clicked
 	};
 
+	// Colors
 	const sf::Color _bg = { 0, 0, 0 };
-	const sf::Color _bgHover = { 200, 200, 200 };
-	const sf::Color _bgClicked = { 255, 255, 255 };
-	const sf::Color _fg = { 120, 120, 120 };
-	const sf::Color _fgHover = { 120, 120, 120 };
-	const sf::Color _fgClicked = { 100, 100, 100 };
+	const sf::Color _fg = { 170, 170, 170 };
 	const sf::Color _textColor = { 0, 0, 0 };
-	const sf::Color _textColorHover = { 255, 255, 255 };
-	const sf::Color _textColorClicked = { 100, 100, 100 };
+
+	const sf::Color _bgHover = sf::Color::White;
+	const sf::Color _fgHover = { 120, 120, 120 };
+	const sf::Color _textColorHover = sf::Color::White;
+
+	const sf::Color _bgClicked = { 200, 200, 200 };
+	const sf::Color _fgClicked = { 100, 100, 100 };
+	const sf::Color _textColorClicked = { 200, 200, 200 };
+
 	const unsigned int _charSize = 56u;
 	const float _padding = 4.f;
-	const float _marginY = -10.f;
+	const float _marginY = -20.f;
 
 	// Data
 	bool _clicked = false;

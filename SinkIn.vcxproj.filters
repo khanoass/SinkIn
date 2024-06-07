@@ -146,6 +146,9 @@
     <ClInclude Include="PauseScreen.hpp">
       <Filter>Menus</Filter>
     </ClInclude>
+    <ClInclude Include="MenuCursor.hpp">
+      <Filter>Menus</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Util">
