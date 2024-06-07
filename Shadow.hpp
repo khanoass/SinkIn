@@ -180,8 +180,8 @@ private:
 	}
 
 public:
-	Shadow(const sf::Vector2f& position, ResManager* res)
-		: Enemy(position, { 60, 60 }, &res->textures.shadow_death, { 7, 1 }, { 100, 100 }, 100, res)
+	Shadow(const sf::Vector2f& position, int hp, ResManager* res)
+		: Enemy(position, { 60, 60 }, &res->textures.shadow_death, { 7, 1 }, { 100, 100 }, hp, res)
 	{
 		_pointChosen = false;
 		_state = Strolling;

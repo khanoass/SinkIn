@@ -12,6 +12,7 @@
 #include "VeMa.hpp"
 #include "Ephemereal.hpp"
 #include "Weapon.h"
+#include "Direction.hpp"
 #include "ResManager.hpp"
 
 class Map;
@@ -48,6 +49,7 @@ private:
 	bool _hitVis = false;
 	bool _boosting = false;
 	sf::Clock _hitClock, _hitVisClock, _boostClock;
+	bool _tutorial;
 
 	// Cosmetic
 	sf::Texture _tex;
@@ -76,8 +78,10 @@ private:
 
 	void die();
 
+	int tutorialStageFromDir(Direction dir);
+
 public:
-	Player(ResManager* res);
+	Player(bool tutorial, ResManager* res);
 
 	void setMap(const std::shared_ptr<Map>& map);
 	void setLevel(const std::shared_ptr<Level>& level);

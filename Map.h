@@ -53,7 +53,7 @@ private:
 
 	sf::Vector2i getNextRoomOrigin(const sf::Vector2i& pixel, Direction direction) const;
 
-	bool loadMapFromImage(const sf::Image& image, const sf::Vector2f& screenCenter);
+	bool loadMapFromImage(const sf::Image& image, const sf::Vector2f& screenCenter, bool tutorial);
 
 	sf::Vector2f getRandomPositionInRoom(const sf::Vector2f& pos, const sf::Vector2f& roomCenter, const sf::Vector2f& roomSize, float margin);
 
@@ -64,7 +64,7 @@ public:
 
 	void setPlayer(const std::shared_ptr<Player>& player);
 
-	bool generate();
+	bool generate(bool tutorial = false);
 
 	std::shared_ptr<Room> currentRoom() const;
 

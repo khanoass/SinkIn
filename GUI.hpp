@@ -6,6 +6,7 @@
 #include "BoostCounter.hpp"
 #include "HPcounter.hpp"
 #include "KeyCounter.hpp"
+#include "TutorialPanel.hpp"
 #include "ResManager.hpp"
 
 class GUI : public sf::Drawable
@@ -23,6 +24,10 @@ private:
 	HPCounter _hp;
 	KeyCounter _key;
 
+	// Tutorial
+	TutorialPanel _wasd, _gun, _enemy, _book;
+	int _stage = -1;
+
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const
 	{
 		for (const auto& w : _widgets)
@@ -33,11 +38,17 @@ private:
 	}
 
 public:
-	GUI(const std::shared_ptr<Map>& map, ResManager* res) :
-		_map(map), _minimap(_map)
+	GUI(const std::shared_ptr<Map>& map, const sf::Vector2f& center, ResManager* res) :
+		_map(map),
+		_fps({ center.x * 2, center.y * 2 }),
+		_key({ center.x * 2, center.y * 2 }),
+		_wasd(center, "[WASD] to move"),
+		_gun(center, "[Left click] to shoot\n[Right click] to drop"),
+		_enemy(center, "Beware of creatures"),
+		_book(center, "Collect all books to finish a level")
 	{
 		// Minimap
-		_minimap.setRooms(_map->pixelRooms(), _map->textureSize());
+		_minimap.generate(_map);
 		_minimap.setActiveRoom(_map->currentRoom()->pixel());
 		_widgets.push_back(&_minimap);
 
@@ -61,6 +72,20 @@ public:
 		_key.setFont(&res->fonts.font);
 		_key.setTexture(&res->textures.book);
 		_widgets.push_back(&_key);
+
+		// Tutorial
+		_wasd.setFont(&res->fonts.font);
+		_wasd.setVisibility(false);
+		_gun.setFont(&res->fonts.font);
+		_wasd.setVisibility(false);
+		_enemy.setFont(&res->fonts.font);
+		_wasd.setVisibility(false);
+		_book.setFont(&res->fonts.font);
+		_wasd.setVisibility(false);
+		_widgets.push_back(&_wasd);
+		_widgets.push_back(&_gun);
+		_widgets.push_back(&_enemy);
+		_widgets.push_back(&_book);
 	}
 
 	void setFPS(int fps)
@@ -87,6 +112,33 @@ public:
 	void setHP(float hp, float max)
 	{
 		_hp.setHP(hp, max);
+	}
+
+	void setTutorialStage(int stage)
+	{
+		_stage = stage;
+		_wasd.setVisibility(false);
+		_gun.setVisibility(false);
+		_enemy.setVisibility(false);
+		_book.setVisibility(false);
+
+		if (_stage > -1)
+		{
+			switch (_stage)
+			{
+			case 0: _wasd.setVisibility(true); break;
+			case 1: _gun.setVisibility(true); break;
+			case 2: _enemy.setVisibility(true); break;
+			case 3: _book.setVisibility(true); break;
+			}
+		}
+	}
+
+	void resetMinimap(const std::shared_ptr<Map>& map)
+	{
+		_map = map;
+		_minimap.generate(_map);
+		_minimap.setActiveRoom(_map->currentRoom()->pixel());
 	}
 
 	virtual void update(float dt, const sf::Vector2f& mousePos)

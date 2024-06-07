@@ -10,14 +10,17 @@ class KeyCounter : public Widget
 {
 private:
 	// Const
-	const sf::Vector2f _position = { 10, 990 };
+	const sf::Vector2f _outMargin = { 10.f, 10.f };
 	const sf::Vector2f _size = { 150, 80 };
 	const sf::Vector2f _margin = { 80, 18 };
 	const sf::Vector2f _texOffset = { 10, 10 };
 	const sf::Vector2f _texSize = { 32, 32 };
 	const float _texScale = 2.f;
 	const int _charSize = 32;
-	const float _rightMargin = 10.f;
+	const float _rightMargin = 2.f;
+
+	sf::Vector2f _position;
+	sf::Vector2f _screenSize;
 
 	// Cosmetic
 	sf::VertexArray _panel;
@@ -35,8 +38,11 @@ private:
 	}
 
 public:
-	KeyCounter()
+	KeyCounter(const sf::Vector2f& screenSize)
 	{
+		_screenSize = screenSize;
+		_position = { screenSize.x - _size.x - _outMargin.x, _outMargin.y };
+
 		_panel.setPrimitiveType(sf::Quads);
 		_panel.append(sf::Vertex(_position, _bg));
 		_panel.append(sf::Vertex({ _position.x + _size.x, _position.y }, _bg));
@@ -71,7 +77,9 @@ public:
 		ss << keys << " / " << max;
 		_text.setString(ss.str());
 		auto gb = _text.getGlobalBounds();
-		_panel[1].position.x = gb.width + _margin.x + _texOffset.x * 2 + _rightMargin;
-		_panel[2].position.x = gb.width + _margin.x + _texOffset.x * 2 + _rightMargin;
+
+		auto x = _screenSize.x - _size.x - _outMargin.x;
+		_panel[1].position.x = gb.width + _margin.x + _texOffset.x * 2 + _rightMargin + x;
+		_panel[2].position.x = gb.width + _margin.x + _texOffset.x * 2 + _rightMargin + x;
 	}
 };

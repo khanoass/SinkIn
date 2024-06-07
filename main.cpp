@@ -21,12 +21,12 @@ int main()
 	sf::Clock clock, fpsClock;
 	sf::Time currentTime, lastTime;
 
+	Game::State state = Game::Start;
+
 	while (window.isOpen())
 	{
-		Game::State state = game.state();
-
 		// Update
-		sf::Vector2f posf = (state == Game::Play || state == Game::Story)
+		sf::Vector2f posf = (state == Game::Play)
 			? window.mapPixelToCoords(sf::Mouse::getPosition(window), game.view())
 			: window.mapPixelToCoords(sf::Mouse::getPosition(window));
 
@@ -45,8 +45,9 @@ int main()
 		lastTime = currentTime;
 
 		game.update(dt, posf, (int)fps);
+		state = game.state();
 
-		// Check for exit
+		// Updating
 		if (state == Game::Start)
 		{
 			if (game.exit()) 
@@ -58,6 +59,10 @@ int main()
 			sf::Vector2i screenPosition = window.mapCoordsToPixel(viPos, game.view());
 			game.setVignettePosition({ (float)screenPosition.x, (float)screenPosition.y });
 		}
+		else if (state == Game::Exit)
+		{
+			window.close();
+		}
 
 		window.clear(sf::Color::Black);
 
@@ -67,6 +72,11 @@ int main()
 			window.draw(game);
 			window.setView(game.guiView());
 			window.draw(game.gui());
+		}
+		else if (state == Game::Story)
+		{
+			window.setView(game.guiView());
+			window.draw(game);
 		}
 		else if (state == Game::PausePlay)
 		{

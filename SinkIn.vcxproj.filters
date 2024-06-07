@@ -164,6 +164,15 @@
     <ClInclude Include="KeyCounter.hpp">
       <Filter>GUI</Filter>
     </ClInclude>
+    <ClInclude Include="TutorialPanel.hpp">
+      <Filter>GUI</Filter>
+    </ClInclude>
+    <ClInclude Include="GameOverScreen.hpp">
+      <Filter>Menus</Filter>
+    </ClInclude>
+    <ClInclude Include="CreditScreen.hpp">
+      <Filter>Menus</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Util">

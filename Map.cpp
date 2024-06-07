@@ -15,7 +15,7 @@ sf::Vector2i Map::getNextRoomOrigin(const sf::Vector2i& pixel, Direction directi
 	return next;
 }
 
-bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& screenCenter)
+bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& screenCenter, bool tutorial)
 {
 	// Data
 	std::stack<sf::Vector2i> stack;
@@ -161,15 +161,19 @@ bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& screenCen
 		sf::Vector2f pos = { 0, 0 };
 
 		// Enemies
+		int hp = 100;
+		if (tutorial)
+			hp = 1;
+
 		for (int j = 0; j < roomEnemies[i]; j++)
-			_enemies->add(std::make_shared<Shadow>(getRandomPositionInRoom(pos, room->center(), room->size(), _spawnBigMargin), _res), room);
+			_enemies->add(std::make_shared<Shadow>(getRandomPositionInRoom(pos, room->center(), room->size(), _spawnBigMargin), hp, _res), room);
 
 		// Keys
 		if (roomKeys[i])
 			_items->add(std::make_shared<Key>(getRandomPositionInRoom(pos, room->center(), room->size(), _spawnSmallMargin), _res), room->name());
 
-		// Not first room
-		if (i != 0)
+		// Not first room or tutorial
+		if (i != 0 && !tutorial)
 		{
 			// RNG
 			int nbBoosts = Random::iRand(0, 8);
@@ -191,11 +195,14 @@ bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& screenCen
 		
 			Logger::log({ room->name(), " has size ", std::to_string(room->size().x), ",", std::to_string(room->size().y) });
 		}
-		/*
-		else
+		
+		// Tutorial
+		if (tutorial)
 		{
+			if(i == 1) _items->addWeapon(std::make_shared<Pistol>(room->center(), _res), room->name(), _bullets);
+		}
+		else if (i == 0)
 			_items->addWeapon(std::make_shared<Pistol>(room->center(), _res), room->name(), _bullets);
-		}*/
 
 		_rooms[i]->setContents(_player, _items, _enemies, _bullets);
 	}
@@ -236,11 +243,11 @@ void Map::setPlayer(const std::shared_ptr<Player>& player)
 	_player = player;
 }
 
-bool Map::generate()
+bool Map::generate(bool tutorial)
 {
 	sf::Image buf;
 	buf.loadFromFile(_filename);
-	if (!loadMapFromImage(buf, _screenCenter))
+	if (!loadMapFromImage(buf, _screenCenter, tutorial))
 		return false;
 	_current = _rooms[0];
 	_items->setCurrentRoom(_current->name());

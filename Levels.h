@@ -14,15 +14,24 @@ private:
 	std::vector<Sequence> _sequences;
 	int _i;
 	bool _sequence = false;
+	bool _finished = false;
+	bool _nextLevel = false;
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
 public:
 	Levels(const std::vector<std::string>& mapfilenames, const std::vector<std::string>& sequencesfilenames, const sf::Vector2f& center, ResManager* res);
 
-	void inc();
+	bool tutorial();
+	bool tutorialStageChanged();
+	int tutorialStage();
 
 	bool sequence();
+	bool finished();
+	bool gameOver();
+	void restartLevel();
+	void nextLevel();
+	bool isNextLevel();
 
 	std::shared_ptr<Player> player();
 	std::shared_ptr<Map> map();

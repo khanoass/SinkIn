@@ -7,13 +7,15 @@
 #include "GUI.hpp"
 #include "StartScreen.hpp"
 #include "PauseScreen.hpp"
+#include "GameOverScreen.hpp"
+#include "CreditScreen.hpp"
 
 class Game : public sf::Drawable
 {
 public:
 	enum State
 	{
-		Start, Play, Story, PausePlay, PauseStory, GameOver
+		Start, Play, Story, PausePlay, PauseStory, GameOver, Credits, Exit
 	};
 
 private:
@@ -28,6 +30,8 @@ private:
 	Camera _camera, _guiCamera;
 	StartScreen _start;
 	PauseScreen _pause;
+	GameOverScreen _gameOver;
+	CreditScreen _credits;
 	bool _exit = false;
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const
@@ -44,6 +48,10 @@ private:
 			target.draw(_levels, states);		
 			break;
 		case Game::GameOver:
+			target.draw(_gameOver, states);
+			break;
+		case Game::Credits:
+			target.draw(_credits, states);
 			break;
 		}
 	}
@@ -52,13 +60,16 @@ public:
 	Game(const sf::Vector2f& center, ResManager* res) :
 		_state(Start),
 		_screenCenter(center),
-		_levels({ "assets/maps/tutorial.png" }, { "assets/sequences/intro-en.txt" }, _screenCenter, res),
-		_gui(_levels.map(), res),
+		_levels({ "assets/maps/tutorial.png", "assets/maps/map1.png" }, {"assets/sequences/intro.txt", "assets/sequences/first.txt"}, _screenCenter, res),
+		_gui(_levels.map(), center, res),
 		_camera({ (unsigned int)center.x * 2, (unsigned int)center.y * 2 }, 0.9f),
 		_guiCamera({ (unsigned int)center.x * 2, (unsigned int)center.y * 2 }),
 		_start(center, res),
-		_pause(center, res)
+		_pause(center, res),
+		_gameOver(center, res),
+		_credits(center, res)
 	{
+		_gui.setTutorialStage(0);
 	}
 
 	State state() const
@@ -88,6 +99,7 @@ public:
 
 	sf::Vector2f getPlayerScreenPosition()
 	{
+		if (_levels.player() == nullptr) return sf::Vector2f(0, 0);
 		return _levels.player()->absolutePosition();
 	}
 
@@ -135,7 +147,10 @@ public:
 			_pause.updateEvent(event);
 			break;
 		case Game::GameOver:
+			_gameOver.updateEvent(event);
 			break;
+		case Game::Credits:
+			_credits.updateEvent(event);
 		}
 	}
 
@@ -169,10 +184,28 @@ public:
 			_gui.setBoostTime(_levels.player()->boostTime(), _levels.player()->maxBoostTime());
 			_gui.setHP(_levels.player()->hp(), _levels.player()->maxHp());
 			_gui.setKeys(_levels.player()->keys(), _levels.map()->keys());
+
+			if (_levels.tutorialStageChanged())
+				_gui.setTutorialStage(_levels.tutorialStage());
+
 			_gui.update(dt, mousePos);
 
 			// Game
 			_levels.update(dt, mousePos);
+
+			if (_levels.gameOver())
+				_state = Game::GameOver;
+
+			if (_levels.finished())
+				_state = Game::Credits;
+
+			if (_levels.isNextLevel())
+			{
+				_state = Game::Story;
+				_levels.nextLevel();
+				_gui.resetMinimap(_levels.map());
+				_gui.setTutorialStage(-1);
+			}
 			break;
 		}
 
@@ -197,6 +230,19 @@ public:
 			break;
 
 		case State::GameOver:
+			_gameOver.update(mousePos);
+			if (_gameOver.started())
+			{
+				_levels.restartLevel();
+				_state = State::Play;
+			}
+			if (_gameOver.exited())
+				_state = State::Start;
+			break;
+		case State::Credits:
+			_credits.update(mousePos);
+			if (_credits.exited())
+				_state = State::Exit;
 			break;
 		}
 	}

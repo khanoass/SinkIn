@@ -9,10 +9,12 @@ class FpsCounter : public Widget
 {
 private:
 	// Const
-	const sf::Vector2f _position = { 1850, 10 };
+	const sf::Vector2f _outMargin = { 10.f, 10.f };
 	const sf::Vector2f _size = { 60, 48 };
 	const sf::Vector2f _margin = { 8, 12 };
 	const int _charSize = 24;
+
+	sf::Vector2f _position;
 
 	// Cosmetic
 	sf::VertexArray _panel;
@@ -27,8 +29,10 @@ private:
 	}
 
 public:
-	FpsCounter()
+	FpsCounter(const sf::Vector2f& screenSize)
 	{
+		_position = { screenSize.x - _size.x - _outMargin.x, screenSize.y - _size.y - _outMargin.y };
+
 		_panel.setPrimitiveType(sf::Quads);
 		_panel.append(sf::Vertex(_position, _bg));
 		_panel.append(sf::Vertex({ _position.x + _size.x, _position.y }, _bg));

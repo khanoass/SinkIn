@@ -16,7 +16,6 @@ private:
 	const sf::Vector2f _size = { 250, 250 };
 
 	const float _outlineBorder = 3.f;
-	const float _lineLength = 12.f;
 
 	// Data
 	std::vector<sf::Vector2i> _rooms;
@@ -29,6 +28,7 @@ private:
 	sf::VertexArray _panel;
 	sf::RenderTexture _texture;
 	sf::RectangleShape _bg;
+	float _lineLength;
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const override
 	{
@@ -58,10 +58,8 @@ private:
 	}
 
 public:
-	Minimap(const std::shared_ptr<Map>& map)
+	Minimap()
 	{
-		_map = map;
-
 		_panel.setPrimitiveType(sf::Quads);
 		_minimap.setPrimitiveType(sf::Quads);
 		_doors.setPrimitiveType(sf::Lines);
@@ -80,10 +78,21 @@ public:
 		_panel.append(sf::Vertex({ _position.x, _position.y + _size.y + _outlineBorder * 2 }, { 0, _size.y }));
 	}
 
-	void setRooms(const std::vector<sf::Vector2i>& rooms, const sf::Vector2i& textureSize)
+	void generate(const std::shared_ptr<Map>& map)
 	{
-		_rooms = rooms;
-		sf::Vector2f ratio = { _size.x / textureSize.x , _size.y / textureSize.y };
+		_map = map;
+		_minimap.clear();
+		_doors.clear();
+
+		_rooms = map->pixelRooms();
+		auto ts = map->textureSize();
+
+		sf::Vector2f ratio = { _size.x / ts.x , _size.y / ts.y };
+		auto x = ratio.x * (float)_rooms[1].x - ratio.x * (float)_rooms[0].x;
+		auto y = ratio.y * (float)_rooms[1].y - ratio.y * (float)_rooms[0].y;
+		if (x < 0) x *= -1;
+		if (y < 0) y *= -1;
+		_lineLength = std::max(x, y);
 
 		for (int i = 0; i < _rooms.size(); i++)
 		{

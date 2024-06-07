@@ -8,11 +8,13 @@ void Level::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	target.draw(*_cursor, states);
 }
 
-Level::Level(const std::string& mapfilename, const sf::Vector2f& screenCenter, ResManager* res)
+Level::Level(const std::string& mapfilename, const sf::Vector2f& screenCenter, ResManager* res, bool tutorial)
 {
 	_screenCenter = screenCenter;
 	_mapFilename = mapfilename;
 	_res = res;
+	_tutorial = tutorial;
+	_stage = 0;
 	init();
 }
 
@@ -20,7 +22,7 @@ void Level::init()
 {
 	// Init all level's stuff
 	_map = std::make_shared<Map>(_mapFilename, _screenCenter, _res);
-	_player = std::make_shared<Player>(_res);
+	_player = std::make_shared<Player>(_tutorial, _res);
 	_cursor = std::make_shared<Cursor>(_player, _res);
 	_items = std::make_shared<Items>();
 	_bullets = std::make_shared<Bullets>();
@@ -32,7 +34,7 @@ void Level::start()
 	// Init map
 	_map->setPlayer(_player);
 	_map->setContents(_items, _enemies, _bullets);
-	_map->generate();
+	_map->generate(_tutorial);
 
 	// Pass pointers to other pointers
 	_player->setMap(_map);
@@ -44,8 +46,50 @@ void Level::start()
 
 void Level::restart()
 {
+	_gameOver = false;
 	init();
 	start();
+}
+
+void Level::pass()
+{
+	_passed = true;
+}
+
+bool Level::passed()
+{
+	return _passed;
+}
+
+void Level::gameOver()
+{
+	_gameOver = true;
+}
+
+bool Level::isGameOver()
+{
+	return _gameOver;
+}
+
+bool Level::tutorialStageChanged()
+{
+	if (_changed)
+	{
+		_changed = false;
+		return true;
+	}
+	return false;
+}
+
+int Level::tutorialStage()
+{
+	return _stage;
+}
+
+void Level::incdecTutorialStage(int incdec)
+{
+	_stage += incdec;
+	_changed = true;
 }
 
 std::shared_ptr<Player> Level::player()
