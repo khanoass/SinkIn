@@ -102,6 +102,13 @@ void Player::boost()
 	_sprite.setColor(newCol);
 }
 
+void Player::health(float amount)
+{
+	_hp += amount;
+	if (_hp > _initialHp)
+		_hp = _initialHp;
+}
+
 bool Player::pickupWeapon(const std::shared_ptr<Weapon>& weapon)
 {
 	if (_weapon != nullptr) return false;

@@ -15,6 +15,7 @@
 #include "ResManager.hpp"
 #include "Bullets.hpp"
 #include "Player.h"
+#include "Heart.h"
 
 class Enemy : public sf::Drawable
 {
@@ -27,10 +28,13 @@ protected:
 	sf::Vector2f _position, _direction, _size;
 	bool _alive = true;
 	std::vector<sf::Vector2f> _border;
+	std::string _roomname;
 	bool _justHit = false;
 	bool _justTouched = false;
 	std::shared_ptr<Weapon> _justHitDrop = nullptr;
 	float _hp, _initialHp;
+	ResManager* _res;
+	std::shared_ptr<Items> _items;
 
 	// Cosmetic
 	sf::RenderTexture _tex;
@@ -107,6 +111,9 @@ private:
 	{
 		_eph.spawn(_position, _frameSize, _ephSheet, _frames, (float)0.05, 0);
 		_alive = false;
+		
+		// Drop heart
+		_items->add(std::make_shared<Heart>(_position, _res), _roomname);
 	}
 
 	void hit(float damage, const sf::Vector2f& direction)
@@ -161,7 +168,7 @@ protected:
 	}
 
 public:
-	Enemy(const sf::Vector2f& position, const sf::Vector2f& size, sf::Texture* deathSheet, const sf::Vector2i& deathFrames, const sf::Vector2f& deathFrameSize, float hp)
+	Enemy(const sf::Vector2f& position, const sf::Vector2f& size, sf::Texture* deathSheet, const sf::Vector2i& deathFrames, const sf::Vector2f& deathFrameSize, float hp, ResManager* res)
 	{
 		_startPosition = position;
 		_position = position;
@@ -171,6 +178,7 @@ public:
 		_frameSize = deathFrameSize;
 		_hp = hp;
 		_initialHp = hp;
+		_res = res;
 
 		_tex.create((unsigned int)size.x, (unsigned int)size.y);
 		_sprite.setTexture(_tex.getTexture());
@@ -200,12 +208,18 @@ public:
 		_position = _startPosition;
 	}
 
-	void setBorder(const sf::Vector2f& center, const sf::Vector2f& size)
+	void setRoomParams(const sf::Vector2f& center, const sf::Vector2f& size, const std::string& name)
 	{
+		_roomname = name;
 		_border = {
 			sf::Vector2f(center.x - size.x / 2, center.x + size.x / 2),
 			sf::Vector2f(center.y - size.y / 2, center.y + size.y / 2)
 		};
+	}
+
+	void setItems(const std::shared_ptr<Items> items)
+	{
+		_items = items;
 	}
 
 	sf::Vector2f position() const

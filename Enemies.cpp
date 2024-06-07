@@ -30,7 +30,8 @@ void Enemies::addRoom(const std::string& name)
 
 void Enemies::add(const std::shared_ptr<Enemy>& enemy, const std::shared_ptr<Room>& room)
 {
-	enemy->setBorder(room->center(), room->size());
+	enemy->setRoomParams(room->center(), room->size(), room->name());
+	enemy->setItems(_items);
 	_enemiesRoom[room->name()].push_back(enemy);
 }
 

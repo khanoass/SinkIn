@@ -15,6 +15,7 @@ public:
 			cursor_yes, cursor_no, cursor_door, cursor_weapon, cursor_ontarget,
 			player,
 			boost,
+			heart,
 			muzzle,
 			eph,
 			bullets,
@@ -67,7 +68,8 @@ public:
 		textures.cursor_weapon.loadFromFile("assets/textures/f4.png");
 		textures.cursor_ontarget.loadFromFile("assets/textures/f5.png");
 		textures.eph.loadFromFile("assets/textures/eph.png");
-		textures.boost.loadFromFile("assets/textures/item.png");
+		textures.boost.loadFromFile("assets/textures/item2.png");
+		textures.heart.loadFromFile("assets/textures/heart.png");
 		textures.bullets.loadFromFile("assets/textures/bullets.png");
 		textures.shadow_body.loadFromFile("assets/textures/enemy_body.png");
 		textures.shadow_eyes_strolling.loadFromFile("assets/textures/enemy_eyes_strolling2.png");

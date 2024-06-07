@@ -37,7 +37,7 @@ private:
 			if(_showed[i])
 				target.draw(_chars[i], states);
 			if (_boost)
-				target.draw(_fakeBoost);
+				target.draw(_fakeBoost, states);
 		}
 	}
 

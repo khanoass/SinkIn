@@ -26,7 +26,7 @@ int main()
 		Game::State state = game.state();
 
 		// Update
-		sf::Vector2f posf = (state == Game::Play)
+		sf::Vector2f posf = (state == Game::Play || state == Game::Story)
 			? window.mapPixelToCoords(sf::Mouse::getPosition(window), game.view())
 			: window.mapPixelToCoords(sf::Mouse::getPosition(window));
 
@@ -68,11 +68,16 @@ int main()
 			window.setView(game.guiView());
 			window.draw(game.gui());
 		}
-		else if (state == Game::Pause)
+		else if (state == Game::PausePlay)
 		{
 			window.setView(game.view());
 			window.draw(game);
 			window.setView(game.guiView());
+			window.draw(game.pauseScreen());
+		}
+		else if (state == Game::PauseStory)
+		{
+			window.draw(game);
 			window.draw(game.pauseScreen());
 		}
 		else

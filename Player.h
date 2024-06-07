@@ -81,6 +81,7 @@ public:
 	
 	// Item interaction
 	void boost();
+	void health(float amount);
 	bool pickupWeapon(const std::shared_ptr<Weapon>& weapon);
 	void dropWeapon(const sf::Vector2f& mousePos);
 	void setKnockback(float knockback, const sf::Vector2f& direction);

@@ -13,7 +13,7 @@ class Game : public sf::Drawable
 public:
 	enum State
 	{
-		Play, Story, Start, GameOver, Pause
+		Start, Play, Story, PausePlay, PauseStory, GameOver
 	};
 
 private:
@@ -34,56 +34,18 @@ private:
 	{
 		switch (_state)
 		{
-		case Game::Play:
-			target.draw(_levels, states);		
-			break;
-		case Game::Story:
-			target.draw(_levels, states);
-			break;
 		case Game::Start:
 			target.draw(_start, states);
 			break;
+		case Game::Play:
+		case Game::Story:
+		case Game::PausePlay:
+		case Game::PauseStory:
+			target.draw(_levels, states);		
+			break;
 		case Game::GameOver:
 			break;
-		case Game::Pause:
-			target.draw(_levels, states);
-			break;
 		}
-	}
-
-	std::shared_ptr<Map> map()
-	{
-		return _levels.map();
-	}
-
-	int getPlayerAmmo()
-	{
-		return _levels.player()->ammo();
-	}
-
-	bool playerHasWeapon()
-	{
-		return _levels.player()->activeWeapon() != nullptr;
-	}
-
-	float getPlayerBoostTime()
-	{
-		return _levels.player()->boostTime();
-	}
-
-	float getPlayerMaxBoostTime()
-	{
-		return _levels.player()->maxBoostTime();
-	}
-
-	float getPlayerHP()
-	{
-		return _levels.player()->hp();
-	}
-
-	float getPlayerMaxHP()
-	{
-		return _levels.player()->maxHp();
 	}
 
 public:
@@ -146,26 +108,34 @@ public:
 
 	void updateEvent(const sf::Event& event, float dt, const sf::Vector2f& mousePos)
 	{
-		if (_state == State::Start)
+		if (_state == Play || _state == Story)
 		{
-			_start.updateEvent(event);
-		}
-		else if (_state == State::Story || _state == State::Play)
-		{
-			// Pause
-			if (event.type == event.KeyReleased && event.key.code == sf::Keyboard::Escape)
-			{
-				_state = State::Pause;
-				return;
-			}
-
 			_levels.updateEvent(event, dt, mousePos);
 			if (_levels.sequence())	_state = State::Story;
 			else					_state = State::Play;
 		}
-		else if (_state == State::Pause)
+
+		switch (_state)
 		{
+		case Game::Start:
+			_start.updateEvent(event);
+			break;
+
+		case Game::Play:
+			// Pause from play
+			if (event.type == event.KeyReleased && event.key.code == sf::Keyboard::Escape)
+				_state = State::PausePlay;
+			break;
+		case Game::Story:
+			if (event.type == event.KeyReleased && event.key.code == sf::Keyboard::Escape)
+				_state = State::PauseStory;
+			break;
+		case Game::PausePlay:
+		case Game::PauseStory:
 			_pause.updateEvent(event);
+			break;
+		case Game::GameOver:
+			break;
 		}
 	}
 
@@ -176,38 +146,56 @@ public:
 		case State::Start:
 			_start.update(mousePos);
 			if (_start.started())
-				_state = State::Story;
+			{
+				_state = (_levels.sequence()) ? State::Story : State::Play;
+			}
 			if (_start.exited())
 				_exit = true;
 			break;
-		case State::Pause:
-			_pause.update(mousePos);
-			if (_pause.resumed())
-				_state = State::Play;
-			if (_pause.exited())
-				_state = State::Start;
-			break;
+
 		case State::Play:
 		{
 			// Camera
-			auto size = map()->currentRoom()->size();
+			auto size = _levels.map()->currentRoom()->size();
 			sf::Vector2f sizeplus = { size.x + _viewMargin, size.y + _viewMargin };
-			_camera.updatePlayerSmooth(dt, getPlayerScreenPosition(), map()->currentRoom()->screenCenter(), sizeplus, map()->changedRoom());
+			_camera.updatePlayerSmooth(dt, getPlayerScreenPosition(), _levels.map()->currentRoom()->screenCenter(), sizeplus, _levels.map()->changedRoom());
 
 			// GUI
 			_gui.setFPS((int)fps);
-			if (playerHasWeapon())	_gui.setAmmo(getPlayerAmmo());
-			else					_gui.setAmmo(-1);
-			_gui.setBoostTime(getPlayerBoostTime(), getPlayerMaxBoostTime());
-			_gui.setHP(getPlayerHP(), getPlayerMaxHP());
+			if (_levels.player()->activeWeapon() != nullptr)
+				_gui.setAmmo(_levels.player()->ammo());
+			else
+				_gui.setAmmo(-1);
+			_gui.setBoostTime(_levels.player()->boostTime(), _levels.player()->maxBoostTime());
+			_gui.setHP(_levels.player()->hp(), _levels.player()->maxHp());
 			_gui.update(dt, mousePos);
 
 			// Game
 			_levels.update(dt, mousePos);
 			break;
 		}
+
 		case State::Story:
 			_levels.update(dt, mousePos);
+			break;
+
+		case State::PausePlay:
+			_pause.update(mousePos);
+			if (_pause.resumed())
+				_state = State::Play;
+			if (_pause.exited())
+				_state = State::Start;
+			break;
+
+		case State::PauseStory:
+			_pause.update(mousePos);
+			if (_pause.resumed())
+				_state = State::Story;
+			if (_pause.exited())
+				_state = State::Start;
+			break;
+
+		case State::GameOver:
 			break;
 		}
 	}

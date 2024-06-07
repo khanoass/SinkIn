@@ -29,6 +29,9 @@
     <ClCompile Include="Levels.cpp">
       <Filter>Play\Levels</Filter>
     </ClCompile>
+    <ClCompile Include="Heart.cpp">
+      <Filter>Play\Items\Weapons</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Item.hpp">
@@ -148,6 +151,9 @@
     </ClInclude>
     <ClInclude Include="MenuCursor.hpp">
       <Filter>Menus</Filter>
+    </ClInclude>
+    <ClInclude Include="Heart.h">
+      <Filter>Play\Items\Weapons</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

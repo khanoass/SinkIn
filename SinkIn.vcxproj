@@ -135,6 +135,7 @@
   <ItemGroup>
     <ClCompile Include="Boost.cpp" />
     <ClCompile Include="Enemies.cpp" />
+    <ClCompile Include="Heart.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="Levels.cpp" />
     <ClCompile Include="Map.cpp" />
@@ -149,6 +150,7 @@
     <ClInclude Include="Animation.hpp" />
     <ClInclude Include="Board.hpp" />
     <ClInclude Include="Button.hpp" />
+    <ClInclude Include="Heart.h" />
     <ClInclude Include="MenuCursor.hpp" />
     <ClInclude Include="PauseScreen.hpp" />
     <ClInclude Include="Sequence.hpp" />
