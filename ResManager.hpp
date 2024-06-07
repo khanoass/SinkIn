@@ -44,7 +44,7 @@ public:
 
 	struct Shaders
 	{
-		sf::Shader
+		std::shared_ptr<sf::Shader>
 			map;
 	};
 
@@ -86,6 +86,7 @@ public:
 		fonts.font.loadFromFile("assets/fonts/Sunny Spells Basic.ttf");
 		fonts.retro.loadFromFile("assets/fonts/zig.ttf");
 
-		shaders.map.loadFromFile("assets/shaders/room.vert", "assets/shaders/room.frag");
+		shaders.map = std::make_shared<sf::Shader>();
+		shaders.map->loadFromFile("assets/shaders/room.vert", "assets/shaders/room.frag");
 	}
 };

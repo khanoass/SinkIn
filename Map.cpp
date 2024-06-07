@@ -232,7 +232,7 @@ void Map::updateBulletBounds()
 }
 
 Map::Map(const std::string& filename, const sf::Vector2f& center, ResManager* res)
-	: _current(nullptr), _player(nullptr), _shaderTex(&res->shaders.map), _res(res), _items(nullptr)
+	: _current(nullptr), _player(nullptr), _shaderTex(res->shaders.map), _res(res), _items(nullptr)
 {
 	_filename = filename;
 	_screenCenter = center;
