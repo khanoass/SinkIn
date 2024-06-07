@@ -47,7 +47,6 @@ public:
 		_center = center;
 		_index = 0;
 		
-		// TODO: Generalize
 		_boost = boost;
 		_fakeBoost.setTexture(res->textures.boost);
 		_fakeBoost.setOrigin({ 16, 16 });

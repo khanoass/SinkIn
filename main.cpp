@@ -64,7 +64,7 @@ int main()
 			window.close();
 		}
 
-		window.clear(sf::Color::Black);
+		window.clear(sf::Color::Transparent);
 
 		if (state == Game::Play)
 		{

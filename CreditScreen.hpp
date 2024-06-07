@@ -43,7 +43,7 @@ public:
 		_bg.append(sf::Vertex({ 0, _center.y * 2 }, _bot));
 
 		_text.setFont(res->fonts.retro);
-		_text.setCharacterSize(42.f);
+		_text.setCharacterSize(56.f);
 		_text.setString("Made by Rafael Félix - 2024");
 		_text.setFillColor(sf::Color::Black);
 		auto tsize = _text.getGlobalBounds();

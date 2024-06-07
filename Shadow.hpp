@@ -25,6 +25,7 @@ private:
 	const float _dashRange = 200.f;
 	const float _pointMargin = 100.f;
 
+	int _hostility;
 	bool _pointChosen;
 	float _maxDist;
 	State _state;
@@ -94,12 +95,15 @@ private:
 
 		if (reachedTarget())
 		{
-			// RNG can become aggro for no reason
-			int r = Random::iRand(0, 10);
-			if (r > 7)
+			// Can become aggro for no reason depending on hostility level
+			if (_hostility > 0)
 			{
-				changeState(Shadow::Aggro);
-				return;
+				int r = Random::iRand(0, 10);
+				if (r > 7 || _hostility == 2)
+				{
+					changeState(Shadow::Aggro);
+					return;
+				}
 			}
 
 			// Restart when there
@@ -116,9 +120,17 @@ private:
 
 		if (vm::dist(_position, player->position()) < _dashRange)
 		{
-			// RNG can prepare when close to player
+			// RNG can prepare when close to player, depending on hostility level
 			int r = Random::iRand(0, 1000);
-			if (r > 998)
+			int t;
+			switch (_hostility)
+			{
+			case 0: t = 1000; break;
+			case 1: t = 998; break;
+			default:t = 0; break;
+			}
+
+			if (r > t)
 			{
 				changeState(Shadow::Preparing);
 				_prepareClock.restart();
@@ -180,9 +192,10 @@ private:
 	}
 
 public:
-	Shadow(const sf::Vector2f& position, int hp, ResManager* res)
+	Shadow(const sf::Vector2f& position, int hp, int hostility, ResManager* res)
 		: Enemy(position, { 60, 60 }, &res->textures.shadow_death, { 7, 1 }, { 100, 100 }, hp, res)
 	{
+		_hostility = hostility;
 		_pointChosen = false;
 		_state = Strolling;
 		_maxDist = 400.f;
@@ -232,7 +245,8 @@ public:
 		if (_justTouched)
 		{
 			_justTouched = false;
-			changeState(State::Aggro);
+			if(_hostility > 0)
+				changeState(State::Aggro);
 			_aggroClock.restart();
 			return;
 		}

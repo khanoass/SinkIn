@@ -15,7 +15,7 @@ sf::Vector2i Map::getNextRoomOrigin(const sf::Vector2i& pixel, Direction directi
 	return next;
 }
 
-bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& screenCenter, bool tutorial)
+bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& screenCenter, bool tutorial, int mobHostility)
 {
 	// Data
 	std::stack<sf::Vector2i> stack;
@@ -166,7 +166,7 @@ bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& screenCen
 			hp = 1;
 
 		for (int j = 0; j < roomEnemies[i]; j++)
-			_enemies->add(std::make_shared<Shadow>(getRandomPositionInRoom(pos, room->center(), room->size(), _spawnBigMargin), hp, _res), room);
+			_enemies->add(std::make_shared<Shadow>(getRandomPositionInRoom(pos, room->center(), room->size(), _spawnBigMargin), hp, mobHostility, _res), room);
 
 		// Keys
 		if (roomKeys[i])
@@ -243,11 +243,11 @@ void Map::setPlayer(const std::shared_ptr<Player>& player)
 	_player = player;
 }
 
-bool Map::generate(bool tutorial)
+bool Map::generate(bool tutorial, int mobHostility)
 {
 	sf::Image buf;
 	buf.loadFromFile(_filename);
-	if (!loadMapFromImage(buf, _screenCenter, tutorial))
+	if (!loadMapFromImage(buf, _screenCenter, tutorial, mobHostility))
 		return false;
 	_current = _rooms[0];
 	_items->setCurrentRoom(_current->name());

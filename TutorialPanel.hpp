@@ -10,7 +10,7 @@ class TutorialPanel : public Widget
 private:
 	// Const
 	const float _outMargin = 50.f;
-	const int _charSize = 36;
+	const int _charSize = 42;
 
 	// Cosmetic
 	sf::Vector2f _center;

@@ -8,8 +8,9 @@ void Level::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	target.draw(*_cursor, states);
 }
 
-Level::Level(const std::string& mapfilename, const sf::Vector2f& screenCenter, ResManager* res, bool tutorial)
+Level::Level(const std::string& mapfilename, const sf::Vector2f& screenCenter, ResManager* res, bool tutorial, int mobHostility)
 {
+	_mobHostility = mobHostility;
 	_screenCenter = screenCenter;
 	_mapFilename = mapfilename;
 	_res = res;
@@ -34,7 +35,7 @@ void Level::start()
 	// Init map
 	_map->setPlayer(_player);
 	_map->setContents(_items, _enemies, _bullets);
-	_map->generate(_tutorial);
+	_map->generate(_tutorial, _mobHostility);
 
 	// Pass pointers to other pointers
 	_player->setMap(_map);
@@ -86,9 +87,9 @@ int Level::tutorialStage()
 	return _stage;
 }
 
-void Level::incdecTutorialStage(int incdec)
+void Level::incTutorialStage()
 {
-	_stage += incdec;
+	_stage++;
 	_changed = true;
 }
 

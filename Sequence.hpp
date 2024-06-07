@@ -10,7 +10,7 @@ class Sequence : public sf::Drawable
 private:
 	// Data
 	const std::string _continue = "[Left Click] to continue...";
-	const unsigned int _charSize = 24u;
+	const unsigned int _charSize = 36u;
 	const sf::Vector2f _marginRightBottom = { 50.f, 50.f };
 
 	ResManager* _res;

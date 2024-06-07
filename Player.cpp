@@ -47,13 +47,6 @@ void Player::die()
 	_level->gameOver();
 }
 
-int Player::tutorialStageFromDir(Direction dir)
-{
-	if (dir == Direction::Right) return 1;
-	if (dir == Direction::Left) return -1;
-	return 0;
-}
-
 Player::Player(bool tutorial, ResManager* res)
 	: _map(nullptr), _room(nullptr), _weapon(nullptr)
 {
@@ -384,7 +377,7 @@ void Player::update(float dt, const sf::Vector2f& mousePos)
 		_sprite.setPosition(_position);
 
 		if (_tutorial)
-			_level->incdecTutorialStage(tutorialStageFromDir(dir));
+			_level->incTutorialStage();
 
 		Logger::log({ "Player entered: ", _room->name() });
 	}

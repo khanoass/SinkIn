@@ -15,6 +15,7 @@ private:
 	std::string _mapFilename;
 	ResManager* _res;
 	bool _tutorial;
+	int _mobHostility;
 	int _stage;
 	bool _changed = false;
 	bool _passed = false;
@@ -30,7 +31,7 @@ private:
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
 public:
-	Level(const std::string& mapfilename, const sf::Vector2f& screenCenter, ResManager* res, bool tutorial = false);
+	Level(const std::string& mapfilename, const sf::Vector2f& screenCenter, ResManager* res, bool tutorial = false, int mobHostility = 0);
 
 	void init();
 	void start();
@@ -42,7 +43,7 @@ public:
 
 	bool tutorialStageChanged();
 	int tutorialStage();
-	void incdecTutorialStage(int incdec);
+	void incTutorialStage();
 
 	std::shared_ptr<Player> player();
 	std::shared_ptr<Map> map();

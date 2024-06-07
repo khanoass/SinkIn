@@ -44,7 +44,7 @@ public:
 		_key({ center.x * 2, center.y * 2 }),
 		_wasd(center, "[WASD] to move"),
 		_gun(center, "[Left click] to shoot\n[Right click] to drop"),
-		_enemy(center, "Beware of creatures"),
+		_enemy(center, "Beware of creatures\nThey are usually friendly, but you never know"),
 		_book(center, "Collect all books to finish a level")
 	{
 		// Minimap

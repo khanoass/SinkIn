@@ -78,8 +78,6 @@ private:
 
 	void die();
 
-	int tutorialStageFromDir(Direction dir);
-
 public:
 	Player(bool tutorial, ResManager* res);
 
