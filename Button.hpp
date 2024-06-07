@@ -70,15 +70,26 @@ public:
 
 		_text.setFont(res->fonts.font);
 		_text.setCharacterSize(_charSize);
-		_text.setString(str);
 		_text.setFillColor(_textColor);
+		changeString(str);
+	}
+
+	void changeString(const std::string& str)
+	{
+		_text.setString(str);
 		auto tsize = _text.getGlobalBounds();
-		_text.setPosition({ position.x - tsize.width / 2, position.y - tsize.height / 2 + _marginY });
+		_text.setPosition({ _position.x - tsize.width / 2, _position.y - tsize.height / 2 + _marginY });
 	}
 
 	bool clicked() const
 	{
 		return _clicked;
+	}
+
+	void reset()
+	{
+		_clicked = false;
+		_state = State::Default;
 	}
 
 	void updateEvent(const sf::Event& event)

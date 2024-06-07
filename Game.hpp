@@ -46,7 +46,7 @@ private:
 		case Game::GameOver:
 			break;
 		case Game::Pause:
-			target.draw(_pause, states);
+			target.draw(_levels, states);
 			break;
 		}
 	}
@@ -114,6 +114,11 @@ public:
 		return _gui;
 	}
 
+	PauseScreen& pauseScreen()
+	{
+		return _pause;
+	}
+
 	bool exit() const
 	{
 		return _exit;
@@ -173,10 +178,7 @@ public:
 			if (_start.started())
 				_state = State::Story;
 			if (_start.exited())
-			{
 				_exit = true;
-				return;
-			}
 			break;
 		case State::Pause:
 			_pause.update(mousePos);

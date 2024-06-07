@@ -37,12 +37,16 @@ public:
 
 	bool resumed()
 	{
-		return _resume.clicked();
+		bool c = _resume.clicked();
+		if (c) _resume.reset();
+		return c;
 	}
 
 	bool exited()
 	{
-		return _exit.clicked();
+		bool c = _exit.clicked();
+		if (c) _exit.reset();
+		return c;
 	}
 
 	void updateEvent(const sf::Event& event)

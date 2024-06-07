@@ -46,12 +46,20 @@ public:
 
 	bool started()
 	{
-		return _start.clicked();
+		bool c = _start.clicked();
+		if (c)
+		{
+			_start.reset();
+			_start.changeString("Continue Game");
+		}
+		return c;
 	}
 
 	bool exited()
 	{
-		return _exit.clicked();
+		bool c = _exit.clicked();
+		if (c) _exit.reset();
+		return c;
 	}
 
 	void updateEvent(const sf::Event& event)

@@ -22,8 +22,13 @@ int main()
 
 	while (window.isOpen())
 	{
+		Game::State state = game.state();
+
 		// Update
-		sf::Vector2f posf = window.mapPixelToCoords(sf::Mouse::getPosition(window), game.view());
+		sf::Vector2f posf = (state == Game::Play)
+			? window.mapPixelToCoords(sf::Mouse::getPosition(window), game.view())
+			: window.mapPixelToCoords(sf::Mouse::getPosition(window));
+
 		float dt = clock.restart().asSeconds();
 
 		while (window.pollEvent(event))
@@ -39,26 +44,40 @@ int main()
 		lastTime = currentTime;
 
 		game.update(dt, posf, (int)fps);
-		if (game.state() == Game::Start || game.state() == Game::Pause)
+
+		// Check for exit
+		if (state == Game::Start)
 		{
-			if (game.exit()) window.close();
+			if (game.exit()) 
+				window.close();
 		}
 
-		sf::Vector2f viPos = game.getPlayerScreenPosition();
-		sf::Vector2i screenPosition = window.mapCoordsToPixel(viPos, game.view());
-		game.setVignettePosition({ (float)screenPosition.x, (float)screenPosition.y });
+		if (state == Game::Play)
+		{
+			sf::Vector2f viPos = game.getPlayerScreenPosition();
+			sf::Vector2i screenPosition = window.mapCoordsToPixel(viPos, game.view());
+			game.setVignettePosition({ (float)screenPosition.x, (float)screenPosition.y });
+		}
 
 		window.clear(sf::Color::Black);
 
-		// Game
-		if(game.state() == Game::Play)
-			window.setView(game.view());
-		window.draw(game);
-
-		if (game.state() == Game::Play)
+		if (state == Game::Play)
 		{
+			window.setView(game.view());
+			window.draw(game);
 			window.setView(game.guiView());
 			window.draw(game.gui());
+		}
+		else if (state == Game::Pause)
+		{
+			window.setView(game.view());
+			window.draw(game);
+			window.setView(game.guiView());
+			window.draw(game.pauseScreen());
+		}
+		else
+		{
+			window.draw(game);
 		}
 
 		window.display();
