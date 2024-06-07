@@ -99,7 +99,7 @@ private:
 			if (_hostility > 0)
 			{
 				int r = Random::iRand(0, 10);
-				if (r > 7 || _hostility == 2)
+				if (r > 7 && _hostility > 1)
 				{
 					changeState(Shadow::Aggro);
 					return;
@@ -245,9 +245,11 @@ public:
 		if (_justTouched)
 		{
 			_justTouched = false;
-			if(_hostility > 0)
+			if (_hostility > 1)
+			{
 				changeState(State::Aggro);
-			_aggroClock.restart();
+				_aggroClock.restart();
+			}
 			return;
 		}
 

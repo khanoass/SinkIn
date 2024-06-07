@@ -60,7 +60,13 @@ public:
 	Game(const sf::Vector2f& center, ResManager* res) :
 		_state(Start),
 		_screenCenter(center),
-		_levels({ "assets/maps/tutorial.png", "assets/maps/map1.png" }, {"assets/sequences/intro.txt", "assets/sequences/first.txt"}, _screenCenter, res),
+		_levels({ 
+			"assets/maps/tutorial.png", 
+			"assets/maps/map1.png",
+			"assets/maps/map2.png"}, {
+			"assets/sequences/intro.txt", 
+			"assets/sequences/first.txt",
+			"assets/sequences/second.txt"}, _screenCenter, res),
 		_gui(_levels.map(), center, res),
 		_camera({ (unsigned int)center.x * 2, (unsigned int)center.y * 2 }, 0.9f),
 		_guiCamera({ (unsigned int)center.x * 2, (unsigned int)center.y * 2 }),

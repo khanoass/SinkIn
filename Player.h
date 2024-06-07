@@ -78,6 +78,8 @@ private:
 
 	void die();
 
+	void updateCollisions(const sf::Vector2f& borderX, const sf::Vector2f& borderY);
+
 public:
 	Player(bool tutorial, ResManager* res);
 

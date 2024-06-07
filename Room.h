@@ -20,6 +20,8 @@ class Room : public sf::Drawable
 private:
 	const sf::Vector2f _doorSize = { 100, 100 };
 
+	bool _justEntered = true;
+
 	// Data
 	std::vector<Direction> _doors;
 	std::map<Direction, std::shared_ptr<Room>> _nextRooms;
@@ -57,7 +59,6 @@ public:
 	void setContents(const std::shared_ptr<Player>& player, const std::shared_ptr<Items>& items, const std::shared_ptr<Enemies>& enemies, const std::shared_ptr<Bullets>& bullets);
 
 	sf::Vector2i pixel() const;
-
 	std::vector<Direction> doors() const;
 
 	virtual void update(float dt, const sf::Vector2f& mousePos);
@@ -65,23 +66,22 @@ public:
 	void setNextRooms(const std::vector<Direction>& doors, const std::vector<std::shared_ptr<Room>>& next);
 
 	bool pointInRoom(const sf::Vector2f& point);
-
 	bool pointInDoor(const sf::Vector2f& point, Direction& direction);
-
 	bool pointInDoor(const sf::Vector2f& point);
 
 	sf::Vector2f center() const;
 	sf::Vector2f screenCenter() const;
-
 	sf::Vector2f absoluteOffset() const;
-
 	sf::Vector2f size() const;
-
 	std::string name() const;
-
+	bool justEntered() const;
+	
 	sf::Vector2f doorBorder(Direction dir) const;
+	Direction doorDirectionFromPoint(const sf::Vector2f& point);
+	sf::Vector2f doorBorderX(Direction dir);
+	sf::Vector2f doorBorderY(Direction dir);
 
 	sf::Vector2f spawn(Direction dir) const;
-
+	void exit();
 	std::shared_ptr<Room> nextRoom(Direction dir);
 };

@@ -70,6 +70,13 @@ std::vector<Direction> Room::doors() const
 
 void Room::update(float dt, const sf::Vector2f& mousePos)
 {
+	// Just entered
+	if (_justEntered)
+	{
+		if (!pointInDoor(_player->position()))
+			_justEntered = false;
+	}
+
 	_buffer->clear();
 
 	sf::RenderStates bufferstates;
@@ -151,6 +158,11 @@ std::string Room::name() const
 	return _name;
 }
 
+bool Room::justEntered() const
+{
+	return _justEntered;
+}
+
 sf::Vector2f Room::doorBorder(Direction dir) const
 {
 	sf::Vector2f offset = _center;
@@ -164,6 +176,13 @@ sf::Vector2f Room::doorBorder(Direction dir) const
 	return offset;
 }
 
+Direction Room::doorDirectionFromPoint(const sf::Vector2f& point)
+{
+	Direction dir;
+	pointInDoor(point, dir);
+	return dir;
+}
+
 sf::Vector2f Room::spawn(Direction dir) const
 {
 	sf::Vector2f border = doorBorder(dir);
@@ -171,10 +190,37 @@ sf::Vector2f Room::spawn(Direction dir) const
 	int h = 0, v = 0;
 	Directions::getHV(h, v, dir);
 
-	border.x += h * 50;
-	border.y += v * 50;
+	border.x -= h * _doorSize.x / 2;
+	border.y -= v * _doorSize.y / 2;
 
 	return border;
+}
+
+void Room::exit()
+{
+	_justEntered = true;
+}
+
+sf::Vector2f Room::doorBorderX(Direction dir)
+{
+	int h = 0, v = 0;
+	Directions::getHV(h, v, dir);
+	sf::Vector2f doorCenter(
+		h * (_size.x / 2 + _doorSize.x / 2), 
+		v * (_size.y / 2 + _doorSize.y / 2)
+	);
+	return { doorCenter.x - _doorSize.x / 2, doorCenter.x + _doorSize.x / 2 };
+}
+
+sf::Vector2f Room::doorBorderY(Direction dir)
+{
+	int h = 0, v = 0;
+	Directions::getHV(h, v, dir);
+	sf::Vector2f doorCenter(
+		h * (_size.x / 2 + _doorSize.x / 2),
+		v * (_size.y / 2 + _doorSize.y / 2)
+	);
+	return { doorCenter.y - _doorSize.y / 2, doorCenter.y + _doorSize.y / 2 };
 }
 
 std::shared_ptr<Room> Room::nextRoom(Direction dir)

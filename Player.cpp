@@ -47,6 +47,39 @@ void Player::die()
 	_level->gameOver();
 }
 
+void Player::updateCollisions(const sf::Vector2f& borderX, const sf::Vector2f& borderY)
+{
+	sf::Vector2f old(_position);
+	if (!_room->justEntered())
+	{
+		if (_position.x - _size.x / 2 < borderX.x && !_room->pointInDoor(_position - sf::Vector2f(_size.x / 2, 0)))
+			_position.x = borderX.x + _size.x / 2;
+		if (_position.x + _size.x / 2 > borderX.y && !_room->pointInDoor(_position + sf::Vector2f(_size.x / 2, 0)))
+			_position.x = borderX.y - _size.x / 2;
+		if (_position.y - _size.y / 2 < borderY.x && !_room->pointInDoor(_position - sf::Vector2f(0, _size.y / 2)))
+			_position.y = borderY.x + _size.y / 2;
+		if (_position.y + _size.y / 2 > borderY.y && !_room->pointInDoor(_position + sf::Vector2f(0, _size.y / 2)))
+			_position.y = borderY.y - _size.y / 2;
+	}
+	else
+	{
+		// TODO: FIX
+		Direction dir = _room->doorDirectionFromPoint(_position);
+		sf::Vector2f dbx = _room->doorBorderX(dir);
+		sf::Vector2f dby = _room->doorBorderY(dir);
+
+		if (_position.x - _size.x / 2 < dbx.x)
+			_position.x = dbx.x + _size.x / 2;
+		if (_position.x + _size.x / 2 > dbx.y)
+			_position.x = dbx.y - _size.x / 2;
+		if (_position.y - _size.y / 2 < dby.x)
+			_position.y = dby.x + _size.y / 2;
+		if (_position.y + _size.y / 2 > dby.y)
+			_position.y = dby.y - _size.y / 2;
+	}
+	if (_position != old) _moving = false;
+}
+
 Player::Player(bool tutorial, ResManager* res)
 	: _map(nullptr), _room(nullptr), _weapon(nullptr)
 {
@@ -337,22 +370,10 @@ void Player::update(float dt, const sf::Vector2f& mousePos)
 		_hitbox.setPosition(_position);
 #endif
 
-		std::vector<sf::Vector2f> border = {
-			sf::Vector2f(_room->center().x - _room->size().x / 2, _room->center().x + _room->size().x / 2),
-			sf::Vector2f(_room->center().y - _room->size().y / 2, _room->center().y + _room->size().y / 2)
-		};
-
 		// Out-of-bounds checking
-		sf::Vector2f old(_position);
-		if (_position.x - _size.x / 2 < border[0].x && !_room->pointInDoor(_position - sf::Vector2f(_size.x / 2, 0)))
-			_position.x = border[0].x + _size.x / 2;
-		if (_position.x + _size.x / 2 > border[0].y && !_room->pointInDoor(_position + sf::Vector2f(_size.x / 2, 0)))
-			_position.x = border[0].y - _size.x / 2;
-		if (_position.y - _size.y / 2 < border[1].x && !_room->pointInDoor(_position - sf::Vector2f(0, _size.y / 2)))
-			_position.y = border[1].x + _size.y / 2;
-		if (_position.y + _size.y / 2 > border[1].y && !_room->pointInDoor(_position + sf::Vector2f(0, _size.y / 2)))
-			_position.y = border[1].y - _size.y / 2;
-		if (_position != old) _moving = false;
+		updateCollisions(
+			{ _room->center().x - _room->size().x / 2, _room->center().x + _room->size().x / 2 }, 
+			{ _room->center().y - _room->size().y / 2, _room->center().y + _room->size().y / 2 });
 
 		_sprite.setPosition(_position);
 	}
@@ -368,8 +389,9 @@ void Player::update(float dt, const sf::Vector2f& mousePos)
 
 	// Room exit
 	Direction dir = None;
-	if (_room->pointInDoor(_position, dir))
+	if (_room->pointInDoor(_position, dir) && !_room->justEntered())
 	{
+		_room->exit();
 		_map->exitRoom(dir);
 		_room = _map->currentRoom();
 		_moving = false;
