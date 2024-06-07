@@ -23,12 +23,12 @@ class Player : public sf::Drawable, public std::enable_shared_from_this<Player>
 private:
 	const sf::Vector2f _size = { 60.f, 60.f };
 	const sf::Vector2f _scale = { 1.35f, 1.35f };
-	const float _boostsFactor = 1.5f;
+	const float _boostsFactor = 1.2f;
 	const float _boostsTime = 20.f;
-	const float _baseSpeed = 200.f;
+	const float _baseSpeed = 300.f;
 	const float _range = 35.f;
 	const float _friction = 5.f;
-	const float _knockbackDamageFactor = 50.f;
+	const float _knockbackDamageFactor = 30.f;
 	const float _hitCooldown = 3.f;
 	const float _hitVisSpeed = 0.1f;
 	const float _initialHp = 100.f;
@@ -40,6 +40,9 @@ private:
 
 	sf::Vector2f _position, _direction, _lookDirection;
 	int _boosts;
+	int _totalBoosts;
+	int _keys;
+	int _totalKeys;
 	float _hp;
 	bool _hit = false;
 	bool _hitVis = false;
@@ -82,6 +85,7 @@ public:
 	// Item interaction
 	void boost();
 	void health(float amount);
+	void key();
 	bool pickupWeapon(const std::shared_ptr<Weapon>& weapon);
 	void dropWeapon(const sf::Vector2f& mousePos);
 	void setKnockback(float knockback, const sf::Vector2f& direction);
@@ -100,6 +104,8 @@ public:
 	float hp() const;
 	float maxHp() const;
 	bool boosted() const;
+	int keys() const;
+	int maxKeys() const;
 
 	// Util
 	bool pointInPlayer(const sf::Vector2f& point) const;

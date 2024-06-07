@@ -5,6 +5,7 @@
 #include "AmmoCounter.hpp"
 #include "BoostCounter.hpp"
 #include "HPcounter.hpp"
+#include "KeyCounter.hpp"
 #include "ResManager.hpp"
 
 class GUI : public sf::Drawable
@@ -20,6 +21,7 @@ private:
 	AmmoCounter _ammo;
 	BoostCounter _boost;
 	HPCounter _hp;
+	KeyCounter _key;
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const
 	{
@@ -54,6 +56,11 @@ public:
 
 		// HP
 		_widgets.push_back(&_hp);
+
+		// Keys
+		_key.setFont(&res->fonts.font);
+		_key.setTexture(&res->textures.book);
+		_widgets.push_back(&_key);
 	}
 
 	void setFPS(int fps)
@@ -65,6 +72,11 @@ public:
 	{
 		_ammo.setAmmo(ammo);
 		_ammo.setVisibility(ammo >= 0);
+	}
+
+	void setKeys(int keys, int max)
+	{
+		_key.setKeys(keys, max);
 	}
 
 	void setBoostTime(float seconds, float max)

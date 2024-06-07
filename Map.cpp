@@ -24,7 +24,7 @@ bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& screenCen
 	const sf::Vector2i doorsOffset[doorsNb] = { { 1, 0 },{ 2, 1 },{ 1, 2 },{ 0, 1 } };
 	const sf::Vector2i sizeOffset = { 0, 0 };
 	const sf::Vector2i enemyOffset = { 1, 1 };
-	const sf::Vector2i pistolOffset = { 0, 2 };
+	const sf::Vector2i keyOffset = { 0, 2 };
 
 	// Doors
 	std::vector<sf::Vector2i> pixels;
@@ -41,6 +41,9 @@ bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& screenCen
 
 	// Enemies
 	std::vector<int> roomEnemies;
+
+	// Keys
+	std::vector<bool> roomKeys;
 
 	// First pass, door recon
 	while (!stack.empty())
@@ -106,6 +109,16 @@ bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& screenCen
 			roomEnemies.push_back(nb);
 		}
 
+		// Keys from encoded image
+		sf::Color kenc = image.getPixel(startPx.x + keyOffset.x, startPx.y + keyOffset.y);
+		if (kenc == sf::Color::White)
+			roomKeys.push_back(false);
+		else
+		{
+			roomKeys.push_back(true);
+			_keys++;
+		}
+
 		_rooms.push_back(std::make_shared<Room>(Room(_shaderTex, roomSize, screenCenter, startPx, name.str())));
 
 		_items->addRoom(name.str());
@@ -151,6 +164,10 @@ bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& screenCen
 		for (int j = 0; j < roomEnemies[i]; j++)
 			_enemies->add(std::make_shared<Shadow>(getRandomPositionInRoom(pos, room->center(), room->size(), _spawnBigMargin), _res), room);
 
+		// Keys
+		if (roomKeys[i])
+			_items->add(std::make_shared<Key>(getRandomPositionInRoom(pos, room->center(), room->size(), _spawnSmallMargin), _res), room->name());
+
 		// Not first room
 		if (i != 0)
 		{
@@ -174,10 +191,11 @@ bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& screenCen
 		
 			Logger::log({ room->name(), " has size ", std::to_string(room->size().x), ",", std::to_string(room->size().y) });
 		}
+		/*
 		else
 		{
 			_items->addWeapon(std::make_shared<Pistol>(room->center(), _res), room->name(), _bullets);
-		}
+		}*/
 
 		_rooms[i]->setContents(_player, _items, _enemies, _bullets);
 	}
@@ -297,6 +315,11 @@ sf::Vector2f Map::getPlayerPosition() const
 bool Map::changedRoom() const
 {
 	return _changedRoom;
+}
+
+int Map::keys()
+{
+	return _keys;
 }
 
 std::shared_ptr<sf::Shader> Map::getTexShaderPtr()

@@ -16,6 +16,7 @@ public:
 			player,
 			boost,
 			heart,
+			book,
 			muzzle,
 			eph,
 			bullets,
@@ -70,6 +71,7 @@ public:
 		textures.eph.loadFromFile("assets/textures/eph.png");
 		textures.boost.loadFromFile("assets/textures/item2.png");
 		textures.heart.loadFromFile("assets/textures/heart.png");
+		textures.book.loadFromFile("assets/textures/book.png");
 		textures.bullets.loadFromFile("assets/textures/bullets.png");
 		textures.shadow_body.loadFromFile("assets/textures/enemy_body.png");
 		textures.shadow_eyes_strolling.loadFromFile("assets/textures/enemy_eyes_strolling2.png");

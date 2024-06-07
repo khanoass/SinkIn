@@ -136,6 +136,7 @@
     <ClCompile Include="Boost.cpp" />
     <ClCompile Include="Enemies.cpp" />
     <ClCompile Include="Heart.cpp" />
+    <ClCompile Include="Key.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="Levels.cpp" />
     <ClCompile Include="Map.cpp" />
@@ -151,6 +152,8 @@
     <ClInclude Include="Board.hpp" />
     <ClInclude Include="Button.hpp" />
     <ClInclude Include="Heart.h" />
+    <ClInclude Include="Key.h" />
+    <ClInclude Include="KeyCounter.hpp" />
     <ClInclude Include="MenuCursor.hpp" />
     <ClInclude Include="PauseScreen.hpp" />
     <ClInclude Include="Sequence.hpp" />

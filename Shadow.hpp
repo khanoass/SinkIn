@@ -207,7 +207,7 @@ public:
 		_range = 50;
 		_speed = 100;
 		_friction = 6.f;
-		_damage = 8.f;
+		_damage = 25.f;
 	}
 
 	virtual void updateEnemy(float dt, const std::shared_ptr<Player>& player) override

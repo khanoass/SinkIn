@@ -52,7 +52,9 @@ Player::Player(ResManager* res)
 {
 	_position = { 0, 0 };
 	_boosts = 0;
+	_totalBoosts = 0;
 	_hp = _initialHp;
+	_keys = 0;
 
 	_sprite.setOrigin({ _size.x / 2, _size.y / 2 });
 	_sprite.setTexture(res->textures.player);
@@ -85,18 +87,19 @@ void Player::setLevel(const std::shared_ptr<Level>& level)
 void Player::boost()
 {
 	_boosts++;
+	_totalBoosts++;
 	_boostClock.restart();
 	_boosting = true;
 
 	// Darken in steps
 	sf::Color newCol;
-	if(_boosts > 0 && _boosts < 20)
+	if(_totalBoosts > 0 && _totalBoosts < 20)
 		newCol = sf::Color(200, 200, 200);
-	else if(_boosts < 30)
+	else if(_totalBoosts < 50)
 		newCol = sf::Color(150, 150, 150);
-	else if (_boosts < 50)
+	else if (_totalBoosts < 75)
 		newCol = sf::Color(100, 100, 100);
-	else if (_boosts < 75)
+	else
 		newCol = sf::Color(100, 30, 30);
 
 	_sprite.setColor(newCol);
@@ -107,6 +110,11 @@ void Player::health(float amount)
 	_hp += amount;
 	if (_hp > _initialHp)
 		_hp = _initialHp;
+}
+
+void Player::key()
+{
+	_keys++;
 }
 
 bool Player::pickupWeapon(const std::shared_ptr<Weapon>& weapon)
@@ -206,6 +214,16 @@ bool Player::boosted() const
 	return _boosting;
 }
 
+int Player::keys() const
+{
+	return _keys;
+}
+
+int Player::maxKeys() const
+{
+	return _totalKeys;
+}
+
 bool Player::pointInPlayer(const sf::Vector2f& point) const
 {
 	return vm::dist(_position, point) < _range;
@@ -281,12 +299,16 @@ void Player::update(float dt, const sf::Vector2f& mousePos)
 	{
 		if (_moving)
 		{
-			// Const speed when not boosted, + malus
-			float s = _baseSpeed - (_boostsFactor * _boosts);
+			// Const speed when not boosted + malus
+			float s = _baseSpeed - (_boostsFactor * _totalBoosts);
 			if (_boosting)
 			{
 				if (_boostClock.getElapsedTime().asSeconds() > _boostsTime)
+				{
+					// Lose the boosts when time is up
 					_boosting = false;
+					_boosts = 0;
+				}
 				// a log(1 + x) function to calculate speed when boosted
 				s = _baseSpeed + ((_boostsFactor * std::log10f(float(1 + _boosts))) * _baseSpeed);
 			}

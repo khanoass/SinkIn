@@ -30,7 +30,10 @@
       <Filter>Play\Levels</Filter>
     </ClCompile>
     <ClCompile Include="Heart.cpp">
-      <Filter>Play\Items\Weapons</Filter>
+      <Filter>Play\Items</Filter>
+    </ClCompile>
+    <ClCompile Include="Key.cpp">
+      <Filter>Play\Items</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -153,7 +156,13 @@
       <Filter>Menus</Filter>
     </ClInclude>
     <ClInclude Include="Heart.h">
-      <Filter>Play\Items\Weapons</Filter>
+      <Filter>Play\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="Key.h">
+      <Filter>Play\Items</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyCounter.hpp">
+      <Filter>GUI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -16,6 +16,7 @@
 #include "Shotgun.hpp"
 #include "SMG.hpp"
 #include "Shadow.hpp"
+#include "Key.h"
 
 class Player;
 class Enemy;
@@ -34,6 +35,7 @@ private:
 	std::shared_ptr<Items> _items;
 	std::shared_ptr<Enemies> _enemies;
 	std::shared_ptr<Bullets> _bullets;
+	int _keys = 0;
 
 	std::shared_ptr<Room> _current;
 	std::vector<std::shared_ptr<Room>> _rooms;
@@ -88,6 +90,8 @@ public:
 	void resetChangedRoom();
 
 	bool changedRoom() const;
+
+	int keys();
 
 	void update(float dt, const sf::Vector2f& mousePos);
 };

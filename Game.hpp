@@ -52,7 +52,7 @@ public:
 	Game(const sf::Vector2f& center, ResManager* res) :
 		_state(Start),
 		_screenCenter(center),
-		_levels({ "assets/maps/map1.png" }, { "assets/sequences/intro-en.txt" }, _screenCenter, res),
+		_levels({ "assets/maps/tutorial.png" }, { "assets/sequences/intro-en.txt" }, _screenCenter, res),
 		_gui(_levels.map(), res),
 		_camera({ (unsigned int)center.x * 2, (unsigned int)center.y * 2 }, 0.9f),
 		_guiCamera({ (unsigned int)center.x * 2, (unsigned int)center.y * 2 }),
@@ -168,6 +168,7 @@ public:
 				_gui.setAmmo(-1);
 			_gui.setBoostTime(_levels.player()->boostTime(), _levels.player()->maxBoostTime());
 			_gui.setHP(_levels.player()->hp(), _levels.player()->maxHp());
+			_gui.setKeys(_levels.player()->keys(), _levels.map()->keys());
 			_gui.update(dt, mousePos);
 
 			// Game

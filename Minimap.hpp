@@ -83,7 +83,7 @@ public:
 	void setRooms(const std::vector<sf::Vector2i>& rooms, const sf::Vector2i& textureSize)
 	{
 		_rooms = rooms;
-		sf::Vector2f ratio = { _size.x / textureSize.y , _size.y / textureSize.y };
+		sf::Vector2f ratio = { _size.x / textureSize.x , _size.y / textureSize.y };
 
 		for (int i = 0; i < _rooms.size(); i++)
 		{
