@@ -299,8 +299,17 @@ void Weapon::updateDrop(float dt, const sf::Vector2f& mousePos)
 			auto& bounds = _bullets->getBounds();
 
 			// Collisions with walls
-			if (_position.x < bounds[0].x || _position.x > bounds[0].y)	_direction.x *= -1.f;
-			if (_position.y < bounds[1].x || _position.y > bounds[1].y)	_direction.y *= -1.f;
+			if (_position.x - _range < bounds[0].x || _position.x + _range > bounds[0].y) _direction.x *= -1.f;
+			if (_position.y - _range < bounds[1].x || _position.y + _range > bounds[1].y) _direction.y *= -1.f;
+
+			if (_position.x - _range < bounds[0].x)
+				_position.x = bounds[0].x + _range;
+			if (_position.x + _range > bounds[0].y)
+				_position.x = bounds[0].y - _range;
+			if (_position.y - _range < bounds[1].x)
+				_position.y = bounds[1].x + _range;
+			if (_position.y + _range > bounds[1].y)
+				_position.y = bounds[1].y - _range;
 		}
 
 		setGroundSettings(_position, _angle);
