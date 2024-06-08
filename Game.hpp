@@ -15,11 +15,12 @@ class Game : public sf::Drawable
 public:
 	enum State
 	{
-		Start, Play, Story, PausePlay, PauseStory, GameOver, Credits, Exit
+		Start, Play, Story, PausePlay, PauseStory, GameOver, Credits, Exit, GameOverTransition
 	};
 
 private:
 	const float _viewMargin = 200.f;
+	const float _gotraninc = 0.05f;
 
 	// Data
 	sf::Vector2f _screenCenter;
@@ -33,6 +34,8 @@ private:
 	GameOverScreen _gameOver;
 	CreditScreen _credits;
 	bool _exit = false;
+	float _gotranf = 1.f;
+	sf::Clock _gotranclock;
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const
 	{
@@ -53,6 +56,10 @@ private:
 		case Game::Credits:
 			target.draw(_credits, states);
 			break;
+		case Game::GameOverTransition:
+			target.draw(_levels, states);
+			break;
+		default:break;
 		}
 	}
 
@@ -157,6 +164,7 @@ public:
 			break;
 		case Game::Credits:
 			_credits.updateEvent(event);
+		default:break;
 		}
 	}
 
@@ -200,7 +208,11 @@ public:
 			_levels.update(dt, mousePos);
 
 			if (_levels.gameOver())
-				_state = Game::GameOver;
+			{
+				_state = Game::GameOverTransition;
+				_gotranclock.restart();
+				break;
+			}
 
 			if (_levels.finished())
 				_state = Game::Credits;
@@ -240,6 +252,7 @@ public:
 			if (_gameOver.started())
 			{
 				_levels.restartLevel();
+				_gui.resetMinimap(_levels.map());
 				_state = State::Play;
 			}
 			if (_gameOver.exited())
@@ -250,6 +263,17 @@ public:
 			if (_credits.exited())
 				_state = State::Exit;
 			break;
+		case State::GameOverTransition:
+			if (_gotranclock.getElapsedTime().asSeconds() > _gotraninc)
+			{
+				_gotranclock.restart();
+				_gotranf -= _gotraninc;
+				_levels.map()->getTexShaderPtr()->setUniform("radius", _gotranf);
+				if (_gotranf <= 0.f)
+					_state = State::GameOver;
+			}
+			break;
+		default: break;
 		}
 	}
 };

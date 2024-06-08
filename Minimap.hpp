@@ -83,6 +83,7 @@ public:
 		_map = map;
 		_minimap.clear();
 		_doors.clear();
+		_current = { -1, -1 };
 
 		_rooms = map->pixelRooms();
 		auto ts = map->textureSize();

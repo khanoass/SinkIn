@@ -90,8 +90,14 @@ int main()
 			window.draw(game);
 			window.draw(game.pauseScreen());
 		}
+		else if (state == Game::GameOverTransition)
+		{
+			window.setView(game.view());
+			window.draw(game);
+		}
 		else
 		{
+			window.setView(game.guiView());
 			window.draw(game);
 		}
 
