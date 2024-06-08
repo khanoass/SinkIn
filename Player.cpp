@@ -63,19 +63,22 @@ void Player::updateCollisions(const sf::Vector2f& borderX, const sf::Vector2f& b
 	}
 	else
 	{
-		// TODO: FIX
-		Direction dir = _room->doorDirectionFromPoint(_position);
+		Direction dir = None;
+		_room->pointInDoor(_position, dir);
 		sf::Vector2f dbx = _room->doorBorderX(dir);
 		sf::Vector2f dby = _room->doorBorderY(dir);
 
-		if (_position.x - _size.x / 2 < dbx.x)
-			_position.x = dbx.x + _size.x / 2;
-		if (_position.x + _size.x / 2 > dbx.y)
-			_position.x = dbx.y - _size.x / 2;
-		if (_position.y - _size.y / 2 < dby.x)
-			_position.y = dby.x + _size.y / 2;
-		if (_position.y + _size.y / 2 > dby.y)
-			_position.y = dby.y - _size.y / 2;
+		if (dir != None)
+		{
+			if (_position.x - _size.x / 2 < dbx.x && dir != Direction::Right)
+				_position.x = dbx.x + _size.x / 2;
+			if (_position.x + _size.x / 2 > dbx.y && dir != Direction::Left)
+				_position.x = dbx.y - _size.x / 2;
+			if (_position.y - _size.y / 2 < dby.x && dir != Direction::Down)
+				_position.y = dby.x + _size.y / 2;
+			if (_position.y + _size.y / 2 > dby.y && dir != Direction::Up)
+				_position.y = dby.y - _size.y / 2;
+		}
 	}
 	if (_position != old) _moving = false;
 }

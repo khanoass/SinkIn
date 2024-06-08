@@ -77,9 +77,8 @@ public:
 	bool justEntered() const;
 	
 	sf::Vector2f doorBorder(Direction dir) const;
-	Direction doorDirectionFromPoint(const sf::Vector2f& point);
-	sf::Vector2f doorBorderX(Direction dir);
-	sf::Vector2f doorBorderY(Direction dir);
+	sf::Vector2f doorBorderX(Direction dir) const;
+	sf::Vector2f doorBorderY(Direction dir) const;
 
 	sf::Vector2f spawn(Direction dir) const;
 	void exit();

@@ -75,14 +75,10 @@ private:
 			else
 			{
 				rotateTowards(_movTarget, dt);
-
-				Logger::log({ "rotating" });
 			}
 		}
 		else
 		{
-			Logger::log({ "moving" });
-
 			// Avoid bugs with walls collisions
 			if (_pointChosen && _timoutClock.getElapsedTime().asSeconds() > _bugTimeout)
 			{

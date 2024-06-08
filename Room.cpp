@@ -176,13 +176,6 @@ sf::Vector2f Room::doorBorder(Direction dir) const
 	return offset;
 }
 
-Direction Room::doorDirectionFromPoint(const sf::Vector2f& point)
-{
-	Direction dir;
-	pointInDoor(point, dir);
-	return dir;
-}
-
 sf::Vector2f Room::spawn(Direction dir) const
 {
 	sf::Vector2f border = doorBorder(dir);
@@ -201,24 +194,24 @@ void Room::exit()
 	_justEntered = true;
 }
 
-sf::Vector2f Room::doorBorderX(Direction dir)
+sf::Vector2f Room::doorBorderX(Direction dir) const
 {
 	int h = 0, v = 0;
 	Directions::getHV(h, v, dir);
 	sf::Vector2f doorCenter(
-		h * (_size.x / 2 + _doorSize.x / 2), 
-		v * (_size.y / 2 + _doorSize.y / 2)
+		h * (_size.x / 2 + _doorSize.x / 2) + _center.x, 
+		v * (_size.y / 2 + _doorSize.y / 2) + _center.y
 	);
 	return { doorCenter.x - _doorSize.x / 2, doorCenter.x + _doorSize.x / 2 };
 }
 
-sf::Vector2f Room::doorBorderY(Direction dir)
+sf::Vector2f Room::doorBorderY(Direction dir) const
 {
 	int h = 0, v = 0;
 	Directions::getHV(h, v, dir);
 	sf::Vector2f doorCenter(
-		h * (_size.x / 2 + _doorSize.x / 2),
-		v * (_size.y / 2 + _doorSize.y / 2)
+		h * (_size.x / 2 + _doorSize.x / 2) + _center.x,
+		v * (_size.y / 2 + _doorSize.y / 2) + _center.y
 	);
 	return { doorCenter.y - _doorSize.y / 2, doorCenter.y + _doorSize.y / 2 };
 }
