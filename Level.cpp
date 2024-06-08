@@ -8,7 +8,7 @@ void Level::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	target.draw(*_cursor, states);
 }
 
-Level::Level(const std::string& mapfilename, const sf::Vector2f& screenCenter, ResManager* res, bool tutorial, int mobHostility)
+Level::Level(const std::string& mapfilename, const sf::Vector2f& screenCenter, ResManager* res, bool tutorial, int mobHostility, int oldBoosts)
 {
 	_mobHostility = mobHostility;
 	_screenCenter = screenCenter;
@@ -16,14 +16,14 @@ Level::Level(const std::string& mapfilename, const sf::Vector2f& screenCenter, R
 	_res = res;
 	_tutorial = tutorial;
 	_stage = 0;
-	init();
+	init(oldBoosts);
 }
 
-void Level::init()
+void Level::init(int oldBoosts)
 {
 	// Init all level's stuff
 	_map = std::make_shared<Map>(_mapFilename, _screenCenter, _res);
-	_player = std::make_shared<Player>(_tutorial, _res);
+	_player = std::make_shared<Player>(_tutorial, oldBoosts, _res);
 	_cursor = std::make_shared<Cursor>(_player, _res);
 	_items = std::make_shared<Items>();
 	_bullets = std::make_shared<Bullets>();
@@ -45,10 +45,10 @@ void Level::start()
 	_cursor->setEnemies(_enemies);
 }
 
-void Level::restart()
+void Level::restart(int oldBoosts)
 {
 	_gameOver = false;
-	init();
+	init(oldBoosts);
 	start();
 }
 

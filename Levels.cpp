@@ -46,7 +46,7 @@ bool Levels::gameOver()
 void Levels::restartLevel()
 {
 	if (_i < _levels.size())
-		_levels[_i]->restart();
+		_levels[_i]->restart(_oldBoosts);
 }
 
 void Levels::nextLevel()
@@ -129,6 +129,7 @@ void Levels::update(float dt, const sf::Vector2f& mousePos)
 	// Next level
 	if (_levels[_i]->passed())
 	{
+		_oldBoosts = _levels[_i]->player()->collectedBoosts();
 		_i++;
 		if (_i >= _levels.size())
 		{
@@ -136,7 +137,10 @@ void Levels::update(float dt, const sf::Vector2f& mousePos)
 			return;
 		}
 		else
+		{
 			_nextLevel = true;
+			_levels[_i]->init(_oldBoosts);
+		}
 	}
 
 	map()->getTexShaderPtr()->setUniform("screenSize", sf::Glsl::Vec2({ _screenCenter.x * 2, _screenCenter.y * 2 }));

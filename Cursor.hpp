@@ -73,8 +73,10 @@ public:
 
 		auto finalPos = mousePos - r->absoluteOffset();
 
-		if (_player->pointInPlayer(finalPos))		_sprite.setTexture(*_n);	// Player
-		else if (r->pointInDoor(finalPos, dir))		_sprite.setTexture(*_d);	// Door
+		if (_player->pointInPlayer(finalPos) || _player->safezone())	
+			_sprite.setTexture(*_n);	// Verboten
+		else if (r->pointInDoor(finalPos, dir))		
+			_sprite.setTexture(*_d);	// Door
 		else if (_player->activeWeapon() != nullptr && _enemies != nullptr)							
 		{
 			auto en = _enemies->getAllInRoom(_map->currentRoom()->name());
@@ -87,8 +89,10 @@ public:
 					break;
 				}
 			}
-			if(on)					_sprite.setTexture(*_ws);	// Gun
-			else					_sprite.setTexture(*_wn);	// Gun + Enemy
+			if(on)
+				_sprite.setTexture(*_ws);	// Gun
+			else					
+				_sprite.setTexture(*_wn);	// Gun + Enemy
 		}
 		// Default
 		else

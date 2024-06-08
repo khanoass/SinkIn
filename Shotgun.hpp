@@ -10,7 +10,7 @@ public:
 	{
 		_bulletSize =		{ 5.f, 5.f };
 		_mode =				Mode::SemiAuto;
-		_recoil =			1000.f;
+		_recoil =			800.f;
 		_fireRate =			1.f;
 		_bulletLifespan =	0.3f;
 		_bulletSpeed =		1200.f;

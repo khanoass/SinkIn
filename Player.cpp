@@ -52,13 +52,14 @@ void Player::updateCollisions(const sf::Vector2f& borderX, const sf::Vector2f& b
 	sf::Vector2f old(_position);
 	if (!_room->justEntered())
 	{
-		if (_position.x - _size.x / 2 < borderX.x && !_room->pointInDoor(_position - sf::Vector2f(_size.x / 2, 0)))
+		_safezone = false;
+		if (_position.x - _size.x / 2 < borderX.x && (!_room->pointInDoor(_position - sf::Vector2f(_size.x / 2, 0)) || _knockedback))
 			_position.x = borderX.x + _size.x / 2;
-		if (_position.x + _size.x / 2 > borderX.y && !_room->pointInDoor(_position + sf::Vector2f(_size.x / 2, 0)))
+		if (_position.x + _size.x / 2 > borderX.y && (!_room->pointInDoor(_position + sf::Vector2f(_size.x / 2, 0)) || _knockedback))
 			_position.x = borderX.y - _size.x / 2;
-		if (_position.y - _size.y / 2 < borderY.x && !_room->pointInDoor(_position - sf::Vector2f(0, _size.y / 2)))
+		if (_position.y - _size.y / 2 < borderY.x && (!_room->pointInDoor(_position - sf::Vector2f(0, _size.y / 2)) || _knockedback))
 			_position.y = borderY.x + _size.y / 2;
-		if (_position.y + _size.y / 2 > borderY.y && !_room->pointInDoor(_position + sf::Vector2f(0, _size.y / 2)))
+		if (_position.y + _size.y / 2 > borderY.y && (!_room->pointInDoor(_position + sf::Vector2f(0, _size.y / 2)) || _knockedback))
 			_position.y = borderY.y - _size.y / 2;
 	}
 	else
@@ -67,6 +68,7 @@ void Player::updateCollisions(const sf::Vector2f& borderX, const sf::Vector2f& b
 		_room->pointInDoor(_position, dir);
 		sf::Vector2f dbx = _room->doorBorderX(dir);
 		sf::Vector2f dby = _room->doorBorderY(dir);
+		_safezone = true;
 
 		if (dir != None)
 		{
@@ -83,14 +85,15 @@ void Player::updateCollisions(const sf::Vector2f& borderX, const sf::Vector2f& b
 	if (_position != old) _moving = false;
 }
 
-Player::Player(bool tutorial, ResManager* res)
+Player::Player(bool tutorial, int boosts, ResManager* res)
 	: _map(nullptr), _room(nullptr), _weapon(nullptr)
 {
 	_position = { 0, 0 };
 	_boosts = 0;
-	_totalBoosts = 0;
+	_totalBoosts = boosts;
 	_hp = _initialHp;
 	_keys = 0;
+	_knockback = 0.f;
 	_tutorial = tutorial;
 
 	_sprite.setOrigin({ _size.x / 2, _size.y / 2 });
@@ -259,9 +262,14 @@ int Player::keys() const
 	return _keys;
 }
 
-int Player::maxKeys() const
+bool Player::safezone() const
 {
-	return _totalKeys;
+	return _safezone;
+}
+
+int Player::collectedBoosts() const
+{
+	return _totalBoosts;
 }
 
 bool Player::pointInPlayer(const sf::Vector2f& point) const
@@ -278,7 +286,7 @@ void Player::updateEvent(const sf::Event& event, float dt, const sf::Vector2f& m
 	}
 
 	// Weapon
-	if (_weapon != nullptr)
+	if (_weapon != nullptr && !_safezone)
 	{
 		// Shoot
 		Weapon::Mode mode = _weapon->mode();
@@ -376,7 +384,8 @@ void Player::update(float dt, const sf::Vector2f& mousePos)
 		// Out-of-bounds checking
 		updateCollisions(
 			{ _room->center().x - _room->size().x / 2, _room->center().x + _room->size().x / 2 }, 
-			{ _room->center().y - _room->size().y / 2, _room->center().y + _room->size().y / 2 });
+			{ _room->center().y - _room->size().y / 2, _room->center().y + _room->size().y / 2 }
+		);
 
 		_sprite.setPosition(_position);
 	}

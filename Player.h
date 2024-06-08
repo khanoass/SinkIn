@@ -43,11 +43,11 @@ private:
 	int _boosts;
 	int _totalBoosts;
 	int _keys;
-	int _totalKeys;
 	float _hp;
 	bool _hit = false;
 	bool _hitVis = false;
 	bool _boosting = false;
+	bool _safezone = false;
 	sf::Clock _hitClock, _hitVisClock, _boostClock;
 	bool _tutorial;
 
@@ -81,7 +81,7 @@ private:
 	void updateCollisions(const sf::Vector2f& borderX, const sf::Vector2f& borderY);
 
 public:
-	Player(bool tutorial, ResManager* res);
+	Player(bool tutorial, int boosts, ResManager* res);
 
 	void setMap(const std::shared_ptr<Map>& map);
 	void setLevel(const std::shared_ptr<Level>& level);
@@ -109,7 +109,8 @@ public:
 	float maxHp() const;
 	bool boosted() const;
 	int keys() const;
-	int maxKeys() const;
+	bool safezone() const;
+	int collectedBoosts() const;
 
 	// Util
 	bool pointInPlayer(const sf::Vector2f& point) const;

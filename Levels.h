@@ -16,6 +16,7 @@ private:
 	bool _sequence = false;
 	bool _finished = false;
 	bool _nextLevel = false;
+	int _oldBoosts = 0;
 
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 

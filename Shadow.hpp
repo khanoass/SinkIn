@@ -64,7 +64,7 @@ private:
 						Random::fRand(_border[0].x + _pointMargin, _border[0].y - _pointMargin), 
 						Random::fRand(_border[1].x + _pointMargin, _border[1].y - _pointMargin) 
 					};
-				while (vm::dist(_movTarget, player->position()) > _maxDist);
+				while (vm::dist(_movTarget, player->position()) > _maxDist && !player->safezone());
 				_pointChosen = true;
 				_timoutClock.restart();
 			}
@@ -92,7 +92,7 @@ private:
 		if (reachedTarget())
 		{
 			// Can become aggro for no reason depending on hostility level
-			if (_hostility > 0)
+			if (_hostility > 0 && !player->safezone())
 			{
 				int r = Random::iRand(0, 10);
 				if (r > 7 && _hostility > 1)
@@ -112,9 +112,10 @@ private:
 
 	void updateAggro(const std::shared_ptr<Player>& player)
 	{
-		startMoving(player->position());
+		if(!player->safezone())
+			startMoving(player->position());
 
-		if (vm::dist(_position, player->position()) < _dashRange)
+		if (vm::dist(_position, player->position()) < _dashRange && !player->safezone())
 		{
 			// RNG can prepare when close to player, depending on hostility level
 			int r = Random::iRand(0, 1000);
@@ -122,8 +123,9 @@ private:
 			switch (_hostility)
 			{
 			case 0: t = 1000; break;
-			case 1: t = 998; break;
-			default:t = 0; break;
+			case 1: t = 1000; break;
+			case 2: t = 995; break;
+			default: t = 1000; break;
 			}
 
 			if (r > t)

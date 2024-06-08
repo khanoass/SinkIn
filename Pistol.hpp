@@ -10,13 +10,13 @@ public:
 	{
 		_bulletSize =		{ 5, 5 };
 		_mode =				Mode::SemiAuto;
-		_recoil =			{ 500 };
-		_fireRate =			{ 0.5 };
-		_bulletLifespan =	{ 1.5 };
-		_bulletSpeed =		{ 1200 };
-		_spread =			{ 10 };
-		_bulletDamage =		{ 10 };
+		_recoil =			{ 300.f };
+		_fireRate =			{ 0.5f };
+		_bulletLifespan =	{ 1.5f };
+		_bulletSpeed =		{ 1200.f };
+		_spread =			{ 10.f };
+		_bulletDamage =		{ 12.f };
 		_bulletAmount =		{ 1 };
-		_dropDamage = 5;
+		_dropDamage = 5.f;
 	}
 };

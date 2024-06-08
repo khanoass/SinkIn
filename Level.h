@@ -31,11 +31,11 @@ private:
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
 public:
-	Level(const std::string& mapfilename, const sf::Vector2f& screenCenter, ResManager* res, bool tutorial = false, int mobHostility = 0);
+	Level(const std::string& mapfilename, const sf::Vector2f& screenCenter, ResManager* res, bool tutorial = false, int mobHostility = 0, int oldBoosts = 0);
 
-	void init();
+	void init(int oldBoosts);
 	void start();
-	void restart();
+	void restart(int oldBoosts);
 	void pass();
 	bool passed();
 	void gameOver();
