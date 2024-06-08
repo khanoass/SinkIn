@@ -85,6 +85,22 @@ void Player::updateCollisions(const sf::Vector2f& borderX, const sf::Vector2f& b
 	if (_position != old) _moving = false;
 }
 
+void Player::updateBoostColor()
+{
+	// Darken in steps
+	sf::Color newCol;
+	if (_totalBoosts > 0 && _totalBoosts < 20)
+		newCol = sf::Color(200, 200, 200);
+	else if (_totalBoosts < 50)
+		newCol = sf::Color(150, 150, 150);
+	else if (_totalBoosts < 75)
+		newCol = sf::Color(100, 100, 100);
+	else
+		newCol = sf::Color(100, 30, 30);
+
+	_sprite.setColor(newCol);
+}
+
 Player::Player(bool tutorial, int boosts, ResManager* res)
 	: _map(nullptr), _room(nullptr), _weapon(nullptr)
 {
@@ -99,8 +115,8 @@ Player::Player(bool tutorial, int boosts, ResManager* res)
 	_sprite.setOrigin({ _size.x / 2, _size.y / 2 });
 	_sprite.setTexture(res->textures.player);
 	_sprite.setScale(_scale);
-
 	_sprite.setPosition(_position);
+	updateBoostColor();
 
 #ifdef DEBUG
 	_hitbox.setFillColor(sf::Color::Transparent);
@@ -130,19 +146,7 @@ void Player::boost()
 	_totalBoosts++;
 	_boostClock.restart();
 	_boosting = true;
-
-	// Darken in steps
-	sf::Color newCol;
-	if(_totalBoosts > 0 && _totalBoosts < 20)
-		newCol = sf::Color(200, 200, 200);
-	else if(_totalBoosts < 50)
-		newCol = sf::Color(150, 150, 150);
-	else if (_totalBoosts < 75)
-		newCol = sf::Color(100, 100, 100);
-	else
-		newCol = sf::Color(100, 30, 30);
-
-	_sprite.setColor(newCol);
+	updateBoostColor();
 }
 
 void Player::health(float amount)
