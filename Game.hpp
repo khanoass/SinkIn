@@ -270,7 +270,10 @@ public:
 				_gotranf -= _gotraninc;
 				_levels.map()->getTexShaderPtr()->setUniform("radius", _gotranf);
 				if (_gotranf <= 0.f)
+				{
+					_gotranf = 1.f;
 					_state = State::GameOver;
+				}
 			}
 			break;
 		default: break;
