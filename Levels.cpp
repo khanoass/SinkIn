@@ -16,7 +16,7 @@ Levels::Levels(const std::vector<std::string>& mapfilenames, const std::vector<s
 	_screenCenter = center;
 
 	for (int i = 0; i < mapfilenames.size(); i++)
-		_levels.push_back(std::make_shared<Level>(mapfilenames[i], center, res, i == 0, i));
+		_levels.push_back(std::make_shared<Level>(mapfilenames[i], center, res, i, i));
 
 	for (const auto& f : sequencesfilenames)
 		_sequences.push_back(Sequence(f, _screenCenter, res));

@@ -8,13 +8,13 @@ void Level::draw(sf::RenderTarget& target, sf::RenderStates states) const
 	target.draw(*_cursor, states);
 }
 
-Level::Level(const std::string& mapfilename, const sf::Vector2f& screenCenter, ResManager* res, bool tutorial, int mobHostility, int oldBoosts)
+Level::Level(const std::string& mapfilename, const sf::Vector2f& screenCenter, ResManager* res, int number, int mobHostility, int oldBoosts)
 {
 	_mobHostility = mobHostility;
 	_screenCenter = screenCenter;
 	_mapFilename = mapfilename;
 	_res = res;
-	_tutorial = tutorial;
+	_number = number;
 	_stage = 0;
 	init(oldBoosts);
 }
@@ -23,7 +23,7 @@ void Level::init(int oldBoosts)
 {
 	// Init all level's stuff
 	_map = std::make_shared<Map>(_mapFilename, _screenCenter, _res);
-	_player = std::make_shared<Player>(_tutorial, oldBoosts, _res);
+	_player = std::make_shared<Player>((_number == 0), oldBoosts, _res);
 	_cursor = std::make_shared<Cursor>(_player, _res);
 	_items = std::make_shared<Items>();
 	_bullets = std::make_shared<Bullets>();
@@ -35,7 +35,7 @@ void Level::start()
 	// Init map
 	_map->setPlayer(_player);
 	_map->setContents(_items, _enemies, _bullets);
-	_map->generate(_tutorial, _mobHostility);
+	_map->generate(_number, _mobHostility);
 
 	// Pass pointers to other pointers
 	_player->setMap(_map);

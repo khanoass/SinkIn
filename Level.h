@@ -14,7 +14,7 @@ private:
 	sf::Vector2f _screenCenter;
 	std::string _mapFilename;
 	ResManager* _res;
-	bool _tutorial;
+	int _number;
 	int _mobHostility;
 	int _stage;
 	bool _changed = false;
@@ -31,7 +31,7 @@ private:
 	virtual void draw(sf::RenderTarget& target, sf::RenderStates states) const;
 
 public:
-	Level(const std::string& mapfilename, const sf::Vector2f& screenCenter, ResManager* res, bool tutorial = false, int mobHostility = 0, int oldBoosts = 0);
+	Level(const std::string& mapfilename, const sf::Vector2f& screenCenter, ResManager* res, int number, int mobHostility = 0, int oldBoosts = 0);
 
 	void init(int oldBoosts);
 	void start();

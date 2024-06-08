@@ -158,6 +158,7 @@
     <ClInclude Include="KeyCounter.hpp" />
     <ClInclude Include="MenuCursor.hpp" />
     <ClInclude Include="PauseScreen.hpp" />
+    <ClInclude Include="Rifle.hpp" />
     <ClInclude Include="Sequence.hpp" />
     <ClInclude Include="Boost.h" />
     <ClInclude Include="BoostCounter.hpp" />

@@ -15,6 +15,7 @@
 #include "Pistol.hpp"
 #include "Shotgun.hpp"
 #include "SMG.hpp"
+#include "Rifle.hpp"
 #include "Shadow.hpp"
 #include "Key.h"
 
@@ -53,7 +54,7 @@ private:
 
 	sf::Vector2i getNextRoomOrigin(const sf::Vector2i& pixel, Direction direction) const;
 
-	bool loadMapFromImage(const sf::Image& image, const sf::Vector2f& screenCenter, bool tutorial, int mobHostility);
+	bool loadMapFromImage(const sf::Image& image, const sf::Vector2f& screenCenter, int level, int mobHostility);
 
 	sf::Vector2f getRandomPositionInRoom(const sf::Vector2f& pos, const sf::Vector2f& roomCenter, const sf::Vector2f& roomSize, float margin);
 
@@ -64,7 +65,7 @@ public:
 
 	void setPlayer(const std::shared_ptr<Player>& player);
 
-	bool generate(bool tutorial = false, int mobHostility = 0);
+	bool generate(int level, int mobHostility = 0);
 
 	std::shared_ptr<Room> currentRoom() const;
 

@@ -173,6 +173,9 @@
     <ClInclude Include="CreditScreen.hpp">
       <Filter>Menus</Filter>
     </ClInclude>
+    <ClInclude Include="Rifle.hpp">
+      <Filter>Play\Items\Weapons</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Util">

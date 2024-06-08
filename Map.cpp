@@ -15,7 +15,7 @@ sf::Vector2i Map::getNextRoomOrigin(const sf::Vector2i& pixel, Direction directi
 	return next;
 }
 
-bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& screenCenter, bool tutorial, int mobHostility)
+bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& screenCenter, int level, int mobHostility)
 {
 	// Data
 	std::stack<sf::Vector2i> stack;
@@ -162,7 +162,7 @@ bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& screenCen
 
 		// Enemies
 		int hp = 100;
-		if (tutorial)
+		if (level == 0)
 			hp = 1;
 
 		for (int j = 0; j < roomEnemies[i]; j++)
@@ -173,7 +173,7 @@ bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& screenCen
 			_items->add(std::make_shared<Key>(getRandomPositionInRoom(pos, room->center(), room->size(), _spawnSmallMargin), _res), room->name());
 
 		// Not first room or tutorial
-		if (i != 0 && !tutorial)
+		if (i > 0 && level > 0)
 		{
 			// RNG
 			int nbBoosts = Random::iRand(0, 8);
@@ -181,10 +181,13 @@ bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& screenCen
 			int r1 = Random::iRand(0, 100);
 			int r2 = Random::iRand(0, 100);
 			int r3 = Random::iRand(0, 100);
+			int r4 = Random::iRand(0, 100);
 			int nbPistols = (r1 < 75) ? 0 : 1;
 			if (nbPistols == 1 && r1 > 95) nbPistols = 2;
 			int nbSMG = (r2 < 80) ? 0 : 1;
 			int nbShotgun = (r3 < 90) ? 0 : 1;
+			int nbRifles = (r4 < 90) ? 0 : 1;
+			if (level < 2 && r4 < 98) nbRifles = 0;
 
 			// Items & weapons generation
 
@@ -192,14 +195,16 @@ bool Map::loadMapFromImage(const sf::Image& image, const sf::Vector2f& screenCen
 			for (int j = 0; j < nbPistols; j++) _items->addWeapon(std::make_shared<Pistol>(getRandomPositionInRoom(pos, room->center(), room->size(), _spawnSmallMargin), _res), room->name(), _bullets);
 			for (int j = 0; j < nbSMG; j++)		_items->addWeapon(std::make_shared<SMG>(getRandomPositionInRoom(pos, room->center(), room->size(), _spawnSmallMargin), _res), room->name(), _bullets);
 			for (int j = 0; j < nbShotgun; j++)	_items->addWeapon(std::make_shared<Shotgun>(getRandomPositionInRoom(pos, room->center(), room->size(), _spawnSmallMargin), _res), room->name(), _bullets);
+			for (int j = 0; j < nbRifles; j++)	_items->addWeapon(std::make_shared<Rifle>(getRandomPositionInRoom(pos, room->center(), room->size(), _spawnSmallMargin), _res), room->name(), _bullets);
 		
 			Logger::log({ room->name(), " has size ", std::to_string(room->size().x), ",", std::to_string(room->size().y) });
 		}
 		
 		// Tutorial
-		if (tutorial)
+		if (level == 0)
 		{
-			if(i == 1) _items->addWeapon(std::make_shared<Pistol>(room->center(), _res), room->name(), _bullets);
+			if(i == 1)
+				_items->addWeapon(std::make_shared<Pistol>(room->center(), _res), room->name(), _bullets);
 		}
 		else if (i == 0)
 			_items->addWeapon(std::make_shared<Pistol>(room->center(), _res), room->name(), _bullets);
@@ -243,11 +248,11 @@ void Map::setPlayer(const std::shared_ptr<Player>& player)
 	_player = player;
 }
 
-bool Map::generate(bool tutorial, int mobHostility)
+bool Map::generate(int level, int mobHostility)
 {
 	sf::Image buf;
 	buf.loadFromFile(_filename);
-	if (!loadMapFromImage(buf, _screenCenter, tutorial, mobHostility))
+	if (!loadMapFromImage(buf, _screenCenter, level, mobHostility))
 		return false;
 	_current = _rooms[0];
 	_items->setCurrentRoom(_current->name());
