@@ -28,6 +28,7 @@ private:
 	int _hostility;
 	bool _pointChosen;
 	float _maxDist;
+	float _initialDamage;
 	State _state;
 	sf::Clock _timoutClock, _aggroClock, _hurtClock, _prepareClock;
 
@@ -152,8 +153,10 @@ private:
 
 	void updateDashing(const std::shared_ptr<Player>& player)
 	{
+		_damage = _initialDamage * 1.5;
 		if (!_impulsing)
 		{
+			_damage = _initialDamage;
 			changeState(Shadow::Aggro);
 			_aggroClock.restart();
 		}
@@ -219,6 +222,7 @@ public:
 		_speed = 100;
 		_friction = 6.f;
 		_damage = 25.f;
+		_initialDamage = _damage;
 	}
 
 	virtual void updateEnemy(float dt, const std::shared_ptr<Player>& player) override
