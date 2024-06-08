@@ -308,7 +308,7 @@ void Map::exitRoom(Direction door)
 	_changedRoom = true;
 	_items->setCurrentRoom(_current->name());
 	_enemies->setCurrentRoom(_current->name());
-	_enemies->resetPositionsForRoom(oldname);
+	//_enemies->resetPositionsForRoom(oldname);
 	_items->changeWeaponRoom(_player->activeWeapon(), oldname, _current->name());
 	_bullets->clearBullets();
 	updateBulletBounds();

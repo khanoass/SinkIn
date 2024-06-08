@@ -157,6 +157,21 @@ protected:
 	bool hitPlayer(const std::shared_ptr<Player>& player)
 	{
 		_justTouched = vm::dist(_position, player->position()) < _range + player->range();
+		/*sf::Vector2f v = _position - player->position();
+		auto d = vm::norm(v);
+		float combinedRange = player->range() + _range;
+		if (d < combinedRange)
+		{
+			auto p = player->position();
+			sf::Vector2f n = vm::normalise(v);
+			float penetrationDepth = combinedRange - d;
+			p.x -= n.x * penetrationDepth / 2;
+			p.y -= n.y * penetrationDepth / 2;
+			_position.x += n.x * penetrationDepth / 2;
+			_position.y += n.y * penetrationDepth / 2;
+			player->setPosition(p);
+			_sprite.setPosition(_position);
+		}*/
 		return _justTouched;
 	}
 
@@ -237,7 +252,7 @@ public:
 		return vm::dist(_position, point) < _range;
 	}
 
-	void update(float dt, const sf::Vector2f& mousePos, const std::shared_ptr<Player>& player, std::vector<Bullet>& bullets, const std::vector<std::shared_ptr<Weapon>>* weapons)
+	void update(float dt, const sf::Vector2f& mousePos, const std::shared_ptr<Player>& player, std::vector<Bullet>& bullets, const std::vector<std::shared_ptr<Weapon>>* weapons, const std::vector<std::shared_ptr<Enemy>>* population)
 	{
 		_sprite.setRotation(vm::angle(_direction));
 		_eph.update(dt, mousePos);
@@ -331,6 +346,25 @@ public:
 			if (_position.y + _size.y / 2 > _border[1].y)
 				_position.y = _border[1].y - _size.y / 2;
 			if (_position != old) _moving = false;
+
+			// Collision with other enemies
+			for (auto& i : *population)
+			{
+				if (i.get() == this) continue;
+				sf::Vector2f v = _position - i->_position;
+				auto d = vm::norm(v);
+				float combinedRange = i->_range + _range;
+				if (d < combinedRange)
+				{
+					sf::Vector2f n = vm::normalise(v);
+					float penetrationDepth = combinedRange - d;
+					i->_position.x -= n.x * penetrationDepth / 2;
+					i->_position.y -= n.y * penetrationDepth / 2;
+					_position.x += n.x * penetrationDepth / 2;
+					_position.y += n.y * penetrationDepth / 2;
+					i->_sprite.setPosition(i->_position);
+				}
+			}
 
 			_sprite.setPosition(_position);
 			if (reachedTarget()) _moving = false;

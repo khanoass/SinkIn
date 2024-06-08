@@ -215,7 +215,7 @@ public:
 		_eyes.setTexture(*_eyesStrolling);
 		_body.setPosition(0, 0);
 
-		_range = 50;
+		_range = 40.f;
 		_speed = 100;
 		_friction = 6.f;
 		_damage = 25.f;

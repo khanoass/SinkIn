@@ -272,6 +272,12 @@ int Player::collectedBoosts() const
 	return _totalBoosts;
 }
 
+void Player::setPosition(const sf::Vector2f& pos)
+{
+	_position = pos;
+	_sprite.setPosition(_position);
+}
+
 bool Player::pointInPlayer(const sf::Vector2f& point) const
 {
 	return vm::dist(_position, point) < _range;

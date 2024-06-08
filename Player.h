@@ -27,7 +27,7 @@ private:
 	const float _boostsFactor = 1.2f;
 	const float _boostsTime = 20.f;
 	const float _baseSpeed = 300.f;
-	const float _range = 35.f;
+	const float _range = 40.f;
 	const float _friction = 5.f;
 	const float _knockbackDamageFactor = 30.f;
 	const float _hitCooldown = 3.f;
@@ -111,6 +111,7 @@ public:
 	int keys() const;
 	bool safezone() const;
 	int collectedBoosts() const;
+	void setPosition(const sf::Vector2f& pos);
 
 	// Util
 	bool pointInPlayer(const sf::Vector2f& point) const;

@@ -58,6 +58,6 @@ void Enemies::update(float dt, const sf::Vector2f& mousePos)
 	for (auto& i : *_currentEnemies)
 	{
 		if (i != nullptr)
-			i->update(dt, mousePos, _player, _bullets->getBullets(), _items->currentWeapons());
+			i->update(dt, mousePos, _player, _bullets->getBullets(), _items->currentWeapons(), _currentEnemies);
 	}
 }
